@@ -1,13 +1,14 @@
 # Phase 1 — Technical foundation · Completion report
 
-**Date:** 2026-09-02 · **Status:** Complete, with two criteria unverifiable on this machine
+**Date:** 2026-09-02 · **Status:** Complete, with one criterion unverifiable on this machine
+**Amended:** 2026-09-02, retargeted from Expo SDK 57 to SDK 54 so the project runs in Expo Go on the review device. See _SDK change_ at the end.
 **Plan:** [`../plan.md`](../plan.md) Phase 1 · **Architecture:** [`../architecture.md`](../architecture.md)
 
 ---
 
 ## What was implemented
 
-A running Expo SDK 57 / React Native 0.86 / TypeScript application whose Clean Architecture
+A running Expo SDK 54 / React Native 0.81 / TypeScript application whose Clean Architecture
 boundaries are enforced by tooling before any feature code exists. The app builds for both
 platforms, reads validated configuration, and renders it on a diagnostics screen.
 
@@ -51,7 +52,8 @@ These are new, small, and all reversible. None contradicts `architecture.md`.
 | 6   | The diagnostics screen receives configuration as props from `App`; it imports nothing from `infrastructure`.                                                                 | The placeholder demonstrates the pattern every feature follows from Phase 5 onward.                                                                                              |
 | 7   | `react-native-safe-area-context` replaces React Native's `SafeAreaView`.                                                                                                     | The built-in is deprecated and warned on every render. The architecture already listed SafeArea as a provider.                                                                   |
 | 8   | `NODE_OPTIONS=--experimental-vm-modules` is set in the test scripts.                                                                                                         | ESLint 9 loads its flat config through a dynamic import, and the architecture tests run ESLint inside Jest's VM.                                                                 |
-| 9   | `baseUrl` removed from `tsconfig.json`; path targets are relative.                                                                                                           | TypeScript 6 deprecates `baseUrl` and errors on it.                                                                                                                              |
+| 9   | `baseUrl` removed from `tsconfig.json`; path targets are relative.                                                                                                           | Deprecated in TypeScript 6, and relative `paths` work without it on 5.x too, so the config is version-independent.                                                               |
+| 10  | Platform minimums moved to the `expo-build-properties` plugin.                                                                                                               | SDK 54 has no `ios.deploymentTarget` field on the config object. This is the supported way to express D15 there.                                                                 |
 
 ## Tests added
 
@@ -134,8 +136,9 @@ than defects.
 2. **Confirm decision 2 above** — domain and core denying every external package by default, with an
    empty allowlist. It is stricter than the plan specified. It is easy to relax and hard to
    retrofit, which is why it went in this way.
-3. **Confirm the pinned versions.** Expo 57, React Native 0.86.3, React 19.2.3, TypeScript 6.0,
+3. **Confirm the pinned versions.** Expo 54.0.37, React Native 0.81.5, React 19.1.0, TypeScript 5.9,
    ESLint 9.39.5. ESLint is held at 9 because `eslint-plugin-import` does not yet support ESLint 10.
+   The SDK is held at 54 for the reason in _SDK change_ below.
 4. **Review the layer READMEs.** They are the rules the next twelve phases are written against, and
    they are cheaper to correct now than later.
 
@@ -145,3 +148,39 @@ Yes, subject to the two review items above. Phase 2 (design system and UI founda
 prerequisite that this phase left open: the theme stub is in place and marked for replacement, the
 colour-literal rule is live and will force tokens to be used, and the RTL rule is live and will
 force logical properties from the first component.
+
+---
+
+## SDK change: 57 to 54
+
+**Why.** The review device runs an Expo Go capped at SDK 54, and the App Store offers no update for
+it. An SDK 57 project cannot load in an SDK 54 Expo Go, because the runtime is compiled into the
+client app. The alternatives were a paid Apple Developer membership for a cloud-built development
+client, or roughly 15 GB of Xcode for a signing certificate that expires every seven days. Neither
+is worth it to see a diagnostics screen.
+
+**What changed.**
+
+| Package               | Was         | Now                   |
+| --------------------- | ----------- | --------------------- |
+| expo                  | 57.0.19     | 54.0.37               |
+| react-native          | 0.86.3      | 0.81.5                |
+| react                 | 19.2.3      | 19.1.0                |
+| typescript            | 6.0.3       | 5.9.2                 |
+| jest-expo             | 57.0.5      | 54.0.18               |
+| eslint-config-expo    | 57.0.2      | 10.0.0                |
+| react-test-renderer   | 19.2.3      | 19.1.0                |
+| expo-build-properties | not present | added, to express D15 |
+
+**What did not change.** Every line under `src/`. The boundary rules, the architecture tests, the
+config module, the theme stub and the diagnostics screen are all version-independent and none needed
+an edit. Only `app.config.ts` changed, to move the platform minimums onto the plugin.
+
+**Verification after the change.** Type-check, lint, format, boundaries and all 35 tests pass. Both
+platforms bundle. The dev server serves `runtimeVersion: exposdk:54.0.0` for iOS and for Android,
+which is what the review device's Expo Go requires.
+
+**How long this holds.** Every native package the plan calls for through Phase 12 is bundled in Expo
+Go: secure store, image, font, FlashList, SVG and safe-area-context. Navigation, i18next, TanStack
+Query and Axios are pure JavaScript. So Expo Go can carry the project to about Phase 13, where
+release builds and the Maestro end-to-end suite need a real development build regardless.

@@ -7,7 +7,7 @@
 > This document is the technical architecture for the BRANDHUB React Native application.
 > It is derived **only** from what is present in `design-reference/`.
 > Every question this document raised has been decided; §34 now records those decisions as
-> **D1–D17**, and the work they hand to other teams as **FA1–FA6**.
+> **D1–D22**, and the work they hand to other teams as **FA1–FA5**.
 > No application code exists yet. Phase 1 of `plan.md` is cleared to begin.
 
 ---
@@ -176,30 +176,70 @@ review count, category index), 8 categories, 6 influencers (each with 2 tagged p
 
 ### 3.4 The real API contract
 
-`ECommerce_API_Postman_Collection.json` describes a Spring Boot API at
-`http://localhost:8081/api/v1`, JWT bearer auth, role-based (`ROLE_ADMIN`, `ROLE_SELLER`,
-customer). Endpoints relevant to the customer app:
+Two copies of the Postman collection exist. **The authoritative one is
+`docs/ECommerce_API_Postman_Collection.json`**, which carries 198 distinct endpoints. The copy under
+`design-reference/uploads/BRAND HUB (6)/uploads/` is an earlier, smaller export and is superseded
+(decision D18).
 
-| Area          | Endpoints                                                                                                                                                                              |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Auth          | `POST /auth/login`, `/auth/register`, `/auth/refresh`, `/auth/logout`, `/auth/forgot-password`, `/auth/reset-password`, `GET /auth/verify-email`                                       |
-| Catalogue     | `GET /products`, `/products/featured`, `/products/new-arrivals`, `/products/best-sellers`, `/products/search?q=`, `/products/{id}`, `/products/slug/{slug}`, `/products/category/{id}` |
-| Categories    | `GET /categories/tree`, `/categories/{id}`, `/categories/slug/{slug}`                                                                                                                  |
-| Search        | `GET /search/products?q=&page=&size=`                                                                                                                                                  |
-| Cart          | `GET /cart`, `POST /cart/items`, `PUT /cart/items/{id}?quantity=`, `DELETE /cart/items/{id}`, `DELETE /cart`                                                                           |
-| Orders        | `POST /orders`, `GET /orders`, `GET /orders/{id}`, `POST /orders/{id}/cancel?reason=`                                                                                                  |
-| Wallet        | `GET /wallet`, `POST /wallet/charge`, `GET /wallet/transactions`                                                                                                                       |
-| Profile       | `GET /users/me`, `PUT /users/me`, `PATCH /users/me/password`                                                                                                                           |
-| Addresses     | `GET                                                                                                                                                                                   | POST /users/me/addresses`, `PUT | DELETE /users/me/addresses/{id}`, `POST …/{id}/set-default` |
-| Wishlist      | `GET /wishlist`, `POST                                                                                                                                                                 | DELETE /wishlist/{productId}`   |
-| Reviews       | `GET /reviews/product/{id}`, `POST /reviews`                                                                                                                                           |
-| Coupons       | `GET /coupons`, `POST /coupons/validate`                                                                                                                                               |
-| Notifications | `GET /notifications?isRead=&page=&size=`                                                                                                                                               |
-| Payments      | `POST /payments/webhook/qpay` (server-side)                                                                                                                                            |
+The API is Spring Boot at `http://localhost:8081/api/v1`, JWT bearer auth, role-based across
+`ROLE_ADMIN`, `ROLE_SELLER`, `ROLE_SUPPORT`, a delivery role, and customer.
 
-Response envelopes, inferred from the collection's test scripts: paged lists are Spring `Page`
-objects (`{ content: [...], … }`), some endpoints wrap in `{ data: … }`, login returns
-`{ accessToken, refreshToken, user: { id, … } }`.
+**Endpoints the customer app consumes**
+
+| Area               | Endpoints                                                                                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Auth               | `POST /auth/login`, `POST /auth/register`, `POST /auth/refresh`, `POST /auth/logout`, `POST /auth/forgot-password`, `POST /auth/reset-password`, `GET /auth/verify-email` |
+| Catalogue          | `GET /products`, `/products/featured`, `/products/new-arrivals`, `/products/best-sellers`, `/products/search?q=`, `/products/{id}`, `/products/category/{id}`             |
+| Categories         | `GET /categories/tree`, `/categories/{id}`, `/categories/slug/{slug}`                                                                                                     |
+| Search             | `GET /search/products?q=&page=&size=`                                                                                                                                     |
+| Images             | `GET {appUrl}{productImageUrl}`, `{categoryImageUrl}`, `{appUrl}{sellerProfileImageUrl}`, `GET /users/{userId}/profile-image`                                             |
+| Sellers            | `GET /sellers`, `GET /sellers/{id}/products`, `GET /sellers/{id}/profile-image`                                                                                           |
+| Cart               | `GET /cart`, `POST /cart/items`, `PUT /cart/items/{id}?quantity=`, `DELETE /cart/items/{id}`, `DELETE /cart`                                                              |
+| Orders             | `POST /orders`, `GET /orders`, `GET /orders/{id}`, `POST /orders/{id}/cancel?reason=`                                                                                     |
+| Areas and shipping | `GET /areas`, `GET /areas/governorate/{name}`, `GET /areas/{id}`, `GET /shipping-rates`                                                                                   |
+| Returns            | `POST /returns`, `GET /returns`, `GET /returns/{id}`                                                                                                                      |
+| Support            | `POST /support/tickets`, `GET /support/tickets`, `GET /support/tickets/{id}`, `POST /support/tickets/{id}/messages`, and attachment upload and listing                    |
+| Wallet             | `GET /wallet`, `POST /wallet/charge`, `GET /wallet/transactions`                                                                                                          |
+| Wallet transfers   | `GET /wallet/transfers/settings`, `POST /wallet/transfers/recipient-preview`, `POST /wallet/transfers`, `GET /wallet/transfers`, `GET /wallet/transfers/{id}`             |
+| Gifts              | `POST /gifts`, `GET /gifts/sent`, `GET /gifts/received`, `POST /gifts/{id}/claim`, `POST /gifts/{id}/cancel`                                                              |
+| Payments           | `GET /payments/PAYMOB/status?orderId=`, plus a server-side PAYMOB webhook                                                                                                 |
+| Profile            | `GET /users/me`, `PUT /users/me`, `PATCH /users/me/password`                                                                                                              |
+| Addresses          | `GET` and `POST` on `/users/me/addresses`, `PUT` and `DELETE` on `/users/me/addresses/{id}`, `POST /users/me/addresses/{id}/set-default`                                  |
+| Wishlist           | `GET /wishlist`, `POST` and `DELETE` on `/wishlist/{productId}`                                                                                                           |
+| Reviews            | `GET /reviews/product/{id}`, `POST /reviews`                                                                                                                              |
+| Coupons            | `GET /coupons`, `POST /coupons/validate`                                                                                                                                  |
+| Notifications      | `GET /notifications?isRead=&page=&size=`                                                                                                                                  |
+
+**Request shapes that constrain the UI**
+
+| Endpoint                   | Body                                                                                                                   |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `POST /cart/items`         | `{ productId, variantId, quantity }`. `variantId` is required, which is what forces D8                                 |
+| `POST /orders`             | `{ shippingAddressId, couponCode?, paymentMethod?, walletPayment?, notes? }`                                           |
+| `POST /reviews`            | `{ productId, rating, comment }`                                                                                       |
+| `POST /returns`            | `{ orderId, reason }`. The reason is free text, not an enum                                                            |
+| `POST /support/tickets`    | `{ orderId?, category, priority, subject, description }`. Category and priority are enums such as `ORDER` and `NORMAL` |
+| `POST /gifts`              | `{ recipient, amount, currency, occasion, message, deliveryMethod, senderMode, scheduledAt }`. The currency is `OMR`   |
+| `POST /wallet/charge`      | `{ amount, paymentMethod }` where the method is `PAYMOB`                                                               |
+| `POST /wallet/transfers`   | `{ recipientEmail, amount, message, password }`. The sender re-enters their password                                   |
+| `POST /users/me/addresses` | `{ fullName, phone, addressLine1, addressLine2?, city, state?, postalCode?, country, isDefault }`                      |
+
+**Conventions that shape the data layer**
+
+- **Idempotency.** `POST /orders`, `POST /wallet/charge` and `POST /wallet/transfers` accept an
+  `Idempotency-Key` header. Every money-moving mutation must send one.
+- **Envelopes are mixed.** Newer endpoints return `{ success, data }`, where `data` may itself be a
+  Spring `Page` with a `content` array. Older endpoints return the `Page` or the entity directly.
+  The DTO layer normalises both at the boundary (decision D22).
+- **Auth.** Login returns `{ accessToken, refreshToken, user: { id, … } }`.
+- **Delivery OTP.** The order object carries `deliveryOtp`. The courier submits it to
+  `POST /delivery/orders/{id}/delivered` and the server compares.
+- **Areas carry the shipping economics.** An area is
+  `{ name, governorate, shippingPrice, minOrderAmount, estimatedDeliveryDays }`, with real Omani
+  governorates such as Muscat. This supplies the delivery fee and the free-delivery threshold that
+  the prototype only hinted at.
+- **No `Accept-Language` anywhere**, and no `nameAr` or `nameEn` fields. Catalogue content is
+  single-language, so GAP-7 remains open.
 
 **This contract is the single most valuable artefact in the reference.** It means the DTO layer can
 be written against the _real_ API today, and JSON Server can be shaped to serve that same contract.
@@ -207,26 +247,26 @@ Migration then reduces to a base-URL change. See §18 and §19.
 
 ### 3.5 Gaps between the UI and the API contract
 
-These are real. Each one now carries the decision that closes it; the decisions are stated in full in
-§34, and the work they hand to the backend team is tracked as FA1–FA3.
+Reassessed against the expanded collection on 2026-09-02. **Four of the six features that previously
+had no contract now have one.** One feature remains entirely uncontracted.
 
-| #      | UI shows                                                     | API provides                                                 | Resolution                                                                                                                                         |
-| ------ | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GAP-1  | Influencers, follows, shoppable posts, stories               | Nothing                                                      | **D1 / FA1** — domain port with a mock-only implementation; endpoints specified for the backend.                                                   |
-| GAP-2  | Support tickets with threads                                 | Nothing                                                      | **FA1** — same treatment.                                                                                                                          |
-| GAP-3  | Return requests with reasons                                 | Only `orders/{id}/cancel`                                    | **FA1** — same treatment.                                                                                                                          |
-| GAP-4  | Gift-money to a recipient                                    | Only wallet charge                                           | **FA1** — same treatment.                                                                                                                          |
-| GAP-5  | Delivery OTP on order detail                                 | Nothing                                                      | **FA1** — same treatment.                                                                                                                          |
-| GAP-6  | Delivery slots and the "Hub Express" badge                   | Nothing                                                      | **FA1** — same treatment; slot fees feed BR3 per D10.                                                                                              |
-| GAP-7  | Bilingual product titles (`ar` / `en` per product)           | Single `name` / `description`                                | **D9** — the client sends `Accept-Language`; the server returns one resolved language; query keys are locale-scoped.                               |
-| GAP-8  | Onboarding leads with phone + OTP; Apple / Google sign-in    | Email + password only                                        | **D12** — email and password ship in v1; the OTP screen runs against mock-only endpoints.                                                          |
-| GAP-9  | PDP shows 4 colour swatches, no size picker                  | `POST /cart/items` requires `variantId`                      | **D8** — the PDP gains a variant selector; a single-variant product resolves automatically.                                                        |
-| GAP-10 | Product cards show rating and review count                   | Reviews are a separate endpoint                              | **D14 / FA2** — `averageRating` and `reviewCount` move onto the product DTO. No N+1.                                                               |
-| GAP-11 | Prices in OMR, 3 decimals; addresses in Muscat/Sohar/Salalah | Sample data is SAR, 2 decimals, Riyadh, `state`/`postalCode` | **D13** — the UI shape is the entity; `state` and `postalCode` are optional and `country` defaults to Oman. Money is always `Money` at 3 decimals. |
-| GAP-12 | Cart "Total" excludes VAT; checkout "Total" adds 5% VAT      | —                                                            | **D10** — BR3 is implemented once and consistently. The cart screen will differ from the prototype's number.                                       |
-| GAP-13 | Free-shipping hint is a fixed string ("add OMR 5 more")      | —                                                            | **D11 / FA6** — a configurable `deliveryPolicy` threshold, initially OMR 20.000.                                                                   |
-| GAP-14 | Slot fee (+1.500) and COD fee (+0.500) are displayed         | —                                                            | **D10** — both are added to the order total.                                                                                                       |
-| GAP-15 | Filters include "in stock" and "express only"                | Stock lives on variants; no express flag                     | **FA1** — the mock serves both fields; the backend is asked to provide them.                                                                       |
+| #      | UI shows                                                           | API provides                                                                                                 | Resolution                                                                                                                                                                           |
+| ------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| GAP-1  | Influencers, follows, shoppable posts, stories                     | Nothing                                                                                                      | **Still open.** The only feature with no contract at all. Domain port with a mock-only implementation, and endpoints specified for the backend (FA1).                                |
+| GAP-2  | Support tickets with threads                                       | `/support/tickets` with messages and attachments                                                             | **Closed.** A real HTTP repository from the start. Category and priority become domain enums mapped onto the server's.                                                               |
+| GAP-3  | Return requests with reasons                                       | `POST /returns`, `GET /returns`, `GET /returns/{id}`                                                         | **Closed**, with one caveat: the API takes a free-text `reason` while the prototype offers five fixed choices. The five map to text on the way out.                                  |
+| GAP-4  | Gift-money to a recipient                                          | `/gifts` with sent, received, claim and cancel                                                               | **Closed.** The API also offers `/wallet/transfers`, a distinct person-to-person transfer the prototype does not show.                                                               |
+| GAP-5  | Delivery OTP on order detail                                       | `order.deliveryOtp`                                                                                          | **Closed.** The field is on the order the customer already fetches.                                                                                                                  |
+| GAP-6  | Delivery slots and the "Hub Express" badge                         | `/areas` and `/shipping-rates` give price, minimum order and `estimatedDeliveryDays` per area                | **Partly closed.** Cost and expected days are contracted. Time slots are not: nothing expresses "within 2 hours" against "tomorrow 9am to 2pm", and no express flag exists. See D21. |
+| GAP-7  | Bilingual product titles                                           | Single `name` and `description`, no `Accept-Language`                                                        | **Still open.** D9 stands, tracked as FA3.                                                                                                                                           |
+| GAP-8  | Onboarding leads with phone plus OTP, and Apple and Google sign-in | Email and password only                                                                                      | **Still open.** D12 stands: email and password ship, the OTP screen runs on mock endpoints.                                                                                          |
+| GAP-9  | PDP shows four colour swatches, no size picker                     | `POST /cart/items` still requires `variantId`                                                                | **Unchanged.** D8 stands: the PDP gains a variant selector.                                                                                                                          |
+| GAP-10 | Product cards show rating and review count                         | No `averageRating` or `reviewCount` on any product response                                                  | **Still open.** D14 stands, tracked as FA2.                                                                                                                                          |
+| GAP-11 | Prices in OMR and Omani cities                                     | Address sample data is Saudi, but `/areas` uses Omani governorates and `POST /gifts` sends `currency: "OMR"` | **Closed on currency and market.** The address shape is unchanged, so D13 stands.                                                                                                    |
+| GAP-12 | Cart total excludes VAT while checkout adds it                     | Nothing either way                                                                                           | **Unchanged.** D10 applies BR3 once, consistently.                                                                                                                                   |
+| GAP-13 | Free-shipping hint is a fixed string                               | `area.minOrderAmount`                                                                                        | **Closed.** The threshold is real server data, not a configured guess. D11 is amended and FA6 closes.                                                                                |
+| GAP-14 | Slot fee and cash-on-delivery fee are displayed                    | `area.shippingPrice` supplies the delivery fee. No payment-method fee exists                                 | **Partly closed.** Delivery cost is contracted. A cash-on-delivery surcharge is not.                                                                                                 |
+| GAP-15 | Filters include "in stock" and "express only"                      | Variants carry stock. No express flag                                                                        | **Partly closed.** Stock is real. Express is not, and follows GAP-6.                                                                                                                 |
 
 ---
 
@@ -261,6 +301,11 @@ empty state, checkout button.
 **F8 Checkout** — three-step indicator, delivery address with change action, two delivery slots,
 four payment methods (Thawani, card, Apple Pay, cash on delivery), order summary with VAT,
 place-order action.
+
+> The API contracts delivery by **area**, not by time slot: an area carries a shipping price, a
+> minimum order for free delivery, and an estimated number of days. The prototype's two-hour and
+> next-morning slots have no counterpart. D21 resolves this by showing the area's cost and estimated
+> days in the slot's place for v1.
 
 **F9 Order confirmation** — success mark, order number, four-step tracking timeline, courier card,
 continue-shopping.
@@ -641,21 +686,21 @@ formatter. Rounding is half-up at the baisa. No arithmetic on prices happens out
 
 ### 11.3 Business rules that belong in the domain
 
-| Rule | Statement                                                                                                  | Source                                                        |
-| ---- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| BR1  | Cart subtotal = Σ(unit price × quantity).                                                                  | Prototype.                                                    |
-| BR2  | VAT = 5% of subtotal.                                                                                      | Prototype.                                                    |
-| BR3  | Order total = subtotal + VAT + delivery-slot fee + payment-method fee − coupon discount.                   | Decision D10.                                                 |
-| BR4  | Decrementing a line to zero removes it.                                                                    | `bump()`.                                                     |
-| BR5  | A cart with zero lines cannot proceed to checkout.                                                         | Prototype.                                                    |
-| BR6  | Wishlist membership toggles; it never duplicates.                                                          | `toggleWish()`.                                               |
-| BR7  | Exactly one address is the default; setting a new one clears the previous.                                 | Prototype.                                                    |
-| BR8  | Returns may be requested only for delivered orders.                                                        | `canReturn: o.step === 3`.                                    |
-| BR9  | Order status advances Created → Processing → Shipped → Delivered.                                          | Prototype.                                                    |
-| BR10 | Seller sign-up creates a pending account and does not grant a session.                                     | `submitAuth()`.                                               |
-| BR11 | A discount percentage is derived from base and sale price, not stored independently.                       | Reconciles prototype `disc` with API `basePrice`/`salePrice`. |
-| BR12 | Checkout requires an authenticated session, a shipping address and a payment method.                       | Decision D3.                                                  |
-| BR13 | Delivery is free at or above the `deliveryPolicy` threshold; below it the cart shows the remaining amount. | Decision D11.                                                 |
+| Rule | Statement                                                                                                        | Source                                                        |
+| ---- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| BR1  | Cart subtotal = Σ(unit price × quantity).                                                                        | Prototype.                                                    |
+| BR2  | VAT = 5% of subtotal.                                                                                            | Prototype.                                                    |
+| BR3  | Order total = subtotal + VAT + area shipping price + payment-method fee − coupon discount.                       | Decision D10, amended by D21.                                 |
+| BR4  | Decrementing a line to zero removes it.                                                                          | `bump()`.                                                     |
+| BR5  | A cart with zero lines cannot proceed to checkout.                                                               | Prototype.                                                    |
+| BR6  | Wishlist membership toggles; it never duplicates.                                                                | `toggleWish()`.                                               |
+| BR7  | Exactly one address is the default; setting a new one clears the previous.                                       | Prototype.                                                    |
+| BR8  | Returns may be requested only for delivered orders.                                                              | `canReturn: o.step === 3`.                                    |
+| BR9  | Order status advances Created → Processing → Shipped → Delivered.                                                | Prototype.                                                    |
+| BR10 | Seller sign-up creates a pending account and does not grant a session.                                           | `submitAuth()`.                                               |
+| BR11 | A discount percentage is derived from base and sale price, not stored independently.                             | Reconciles prototype `disc` with API `basePrice`/`salePrice`. |
+| BR12 | Checkout requires an authenticated session, a shipping address and a payment method.                             | Decision D3.                                                  |
+| BR13 | Delivery is free at or above the shipping area's `minOrderAmount`; below it the cart shows the remaining amount. | Decision D11, amended by D21.                                 |
 
 ### 11.4 Repository ports
 
@@ -739,7 +784,7 @@ Repository impl   orchestrates data sources, maps DTO → entity, converts error
 - Mappers are pure and total: given a DTO they always produce an entity or a mapping error.
 - Every DTO is **validated at the boundary** with Zod. An unexpected server shape becomes a
   `ContractError` at the edge, not a `undefined is not an object` crash three screens later.
-- Where the API has no contract (GAP-1 to GAP-6), the repository is still defined by a domain port;
+- Where the API has no contract (GAP-1 only, since the expanded collection landed), the repository is still defined by a domain port;
   only the implementation is JSON-Server-specific, and it is named so (`MockInfluencerRepository`).
 
 ### 13.3 Caching and offline
@@ -960,7 +1005,27 @@ Infinite lists (search results, category grids, orders, notifications) use
 `useInfiniteQuery` driven by `hasNext`. JSON Server's `X-Total-Count` header is translated into the
 same shape by the mock middleware, so the presentation code is identical against both backends.
 
-### 17.4 Query key convention
+### 17.4 Response envelopes
+
+The API is not uniform. Newer endpoints answer with `{ success, data }`, where `data` is either the
+entity or a Spring `Page` carrying `content`. Older endpoints answer with the `Page` or the entity
+directly. Rather than let that inconsistency spread, **one unwrapping helper sits in the data
+layer** and every data source runs its response through it before Zod validation. The DTO schemas
+therefore describe the payload only, never the envelope, and a future server-side clean-up changes
+one file. See decision D22.
+
+### 17.5 Idempotency (D20)
+
+`POST /orders`, `POST /wallet/charge` and `POST /wallet/transfers` accept an `Idempotency-Key`
+header, and every one of them moves money. The rule is: **a mutation that moves money or creates an
+order generates a key once, at the start of the user's attempt, and reuses that same key across
+every retry of that attempt.** The key is generated in the use case, not the interceptor, because
+only the use case knows where one logical attempt begins and ends. A user who taps "place order",
+loses signal and taps again gets one order.
+
+This is what makes AC8.18 achievable rather than aspirational.
+
+### 17.6 Query key convention
 
 `[feature, operation, params]`, for example `['catalog', 'search', { q, sort, filters, page }]` and
 `['cart']`. Keys are produced by a `queryKeys` factory per feature so invalidation after a mutation
@@ -1092,6 +1157,9 @@ The server's shape and the app's shape differ in ways that matter:
   reasons.
 - **`data/**/dto` is import-restricted to `data/**` by lint.** This is the mechanical guarantee
   behind DR7.
+- DTOs describe the **payload**, never the transport envelope. The `{ success, data }` wrapper is
+  removed by the shared unwrapping helper in §17.4 before a schema ever sees the body, so a server
+  that later standardises its envelopes costs one edit rather than forty.
 
 ### 20.3 Handling unknown enum values
 
@@ -1140,6 +1208,9 @@ AppError
 | `ValidationError`   | No retry; map to form fields                                                 |
 | `DomainError`       | No retry; show as a toast or inline message                                  |
 | `ContractError`     | No retry; generic message to the user, full detail to the log                |
+
+Retries of a money-moving mutation reuse the attempt's `Idempotency-Key` (§17.5), so an automatic
+retry after a network failure cannot create a second order, charge or transfer.
 
 ---
 
@@ -1450,32 +1521,32 @@ projects, not refactors.
 All decisions below are **approved** as of 2026-09-02. The final column records whether the decision
 was one the reviewer explicitly signed off (§34) or a consequence of the architecture itself.
 
-| ID    | Decision                                                                                                                          | Alternatives rejected                        | Rationale                                                                                                                                                       | Sign-off      |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| AD-1  | Scope v1 to the **customer** app                                                                                                  | Both apps; customer + seller                 | The seller app is a distinct product with its own domain (payouts, approvals, variant authoring). Bundling doubles v1 and delays the revenue flow.              | **D1**        |
-| AD-2  | **Expo** (with Dev Client and prebuild available)                                                                                 | Bare React Native                            | Faster iteration, EAS builds, first-class `expo-image` / `expo-secure-store` / `expo-localization`. Prebuild is the escape hatch if a native module demands it. | Approved      |
-| AD-3  | **TypeScript strict**                                                                                                             | JavaScript                                   | Layer boundaries, DTO/entity separation and `Result` are unenforceable without types.                                                                           | Architectural |
-| AD-4  | **Layers at the top, slices inside**                                                                                              | Slices at the top                            | Boundary lint rules are per-layer; this makes them expressible and greppable.                                                                                   | Architectural |
-| AD-5  | **TanStack Query** for server state                                                                                               | Redux Toolkit Query, hand-rolled, Zustand    | Caching, retry, invalidation and a status model that maps onto §22 for free.                                                                                    | Approved      |
-| AD-6  | **Zustand** for session, locale, toast                                                                                            | Redux Toolkit, Context                       | Three tiny slices; RTK is ceremony, Context re-renders.                                                                                                         | Approved      |
-| AD-7  | **React Navigation** with tabs + per-tab stacks + a modal group                                                                   | Expo Router                                  | The reference's model is imperative and stack-based; React Navigation maps to it directly and its typed param lists suit id-only params.                        | **D4**        |
-| AD-8  | **JSON Server behind an Express contract adapter**                                                                                | Plain `json-server`                          | Makes the DTOs, auth and pagination identical to the real API, which is the whole point of G3.                                                                  | **D2**        |
-| AD-9  | **DTOs validated with Zod at the boundary**                                                                                       | Trusting the response                        | A contract break becomes a precise error at the edge instead of a crash in a screen.                                                                            | Architectural |
-| AD-10 | **`Result<T, E>`** from use cases                                                                                                 | Throwing                                     | Expected failures are values; exceptions are reserved for bugs.                                                                                                 | Architectural |
-| AD-11 | **`Money` as integer baisa**                                                                                                      | `number`                                     | OMR is 3-decimal; float arithmetic on prices is a defect.                                                                                                       | Architectural |
-| AD-12 | **Axios behind an `HttpClient` port**                                                                                             | Bare `fetch`                                 | Interceptors, cancellation, error normalisation — with the port keeping it swappable.                                                                           | Approved      |
-| AD-13 | **StyleSheet + typed theme**                                                                                                      | NativeWind, styled-components, Tamagui       | The reference is token-driven; a typed theme maps 1:1, keeps RTL logical properties explicit, and adds no runtime cost.                                         | Approved      |
-| AD-14 | **RHF + Zod** for forms                                                                                                           | Formik, controlled state                     | Fewer re-renders; schemas shared with validation vocabulary.                                                                                                    | Approved      |
-| AD-15 | **Maestro** for E2E                                                                                                               | Detox                                        | Simpler flows, Expo-friendly, much lower maintenance.                                                                                                           | Approved      |
-| AD-16 | **`eslint-plugin-boundaries` + dependency-cruiser** enforce §9                                                                    | Convention and review                        | A rule nobody can violate beats a rule everyone agrees with.                                                                                                    | Architectural |
-| AD-17 | **i18next**, Arabic default, AR/EN from the reference's own strings                                                               | Hard-coded Arabic, later i18n                | Every string already exists in both languages in the prototype; retrofitting i18n is far costlier.                                                              | Architectural |
-| AD-18 | **`FlashList` + `expo-image`** for lists and imagery                                                                              | `FlatList` + `Image`                         | The app is a grid-and-rail product browser; these are the components that hold 60 fps.                                                                          | Architectural |
-| AD-19 | Contract test suite runs against mock **and** real API                                                                            | Manual verification at migration             | Converts migration risk into a test result.                                                                                                                     | Architectural |
-| AD-20 | Features with no API contract (GAP-1…GAP-6) get **domain ports and mock-only implementations**, listed in `INVENTED_ENDPOINTS.md` | Skipping them; hard-coding in the UI         | The UI stays real and the backend team gets an exact specification.                                                                                             | **D1 / FA1**  |
-| AD-21 | **Noto Kufi Arabic** ships as the Arabic face, behind a single theme token                                                        | Blocking on the GE Dinar One licence         | The prototype already renders with it, and the token makes a later swap a one-line change.                                                                      | **D16**       |
-| AD-22 | **Guest cart**: adding, editing and removing work without a session; the gate is at checkout                                      | Gating the cart entirely; gating nothing     | Fewest steps before a user sees value, and one clear point where identity is needed.                                                                            | **D3**        |
-| AD-23 | **Locale-scoped query keys**; the server resolves catalogue language from `Accept-Language`                                       | A `LocalizedText` value object in the domain | Keeps the DTO single-language and identical to the real API; the cost is a refetch on language change, which already requires a restart.                        | **D9**        |
-| AD-24 | **`deliveryPolicy` is data, not code** — served by the API and cached like any other resource                                     | A hard-coded threshold constant              | Merchandising rules change more often than releases do.                                                                                                         | **D11**       |
+| ID    | Decision                                                                                                                                        | Alternatives rejected                        | Rationale                                                                                                                                                       | Sign-off           |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| AD-1  | Scope v1 to the **customer** app                                                                                                                | Both apps; customer + seller                 | The seller app is a distinct product with its own domain (payouts, approvals, variant authoring). Bundling doubles v1 and delays the revenue flow.              | **D1**             |
+| AD-2  | **Expo** (with Dev Client and prebuild available)                                                                                               | Bare React Native                            | Faster iteration, EAS builds, first-class `expo-image` / `expo-secure-store` / `expo-localization`. Prebuild is the escape hatch if a native module demands it. | Approved           |
+| AD-3  | **TypeScript strict**                                                                                                                           | JavaScript                                   | Layer boundaries, DTO/entity separation and `Result` are unenforceable without types.                                                                           | Architectural      |
+| AD-4  | **Layers at the top, slices inside**                                                                                                            | Slices at the top                            | Boundary lint rules are per-layer; this makes them expressible and greppable.                                                                                   | Architectural      |
+| AD-5  | **TanStack Query** for server state                                                                                                             | Redux Toolkit Query, hand-rolled, Zustand    | Caching, retry, invalidation and a status model that maps onto §22 for free.                                                                                    | Approved           |
+| AD-6  | **Zustand** for session, locale, toast                                                                                                          | Redux Toolkit, Context                       | Three tiny slices; RTK is ceremony, Context re-renders.                                                                                                         | Approved           |
+| AD-7  | **React Navigation** with tabs + per-tab stacks + a modal group                                                                                 | Expo Router                                  | The reference's model is imperative and stack-based; React Navigation maps to it directly and its typed param lists suit id-only params.                        | **D4**             |
+| AD-8  | **JSON Server behind an Express contract adapter**                                                                                              | Plain `json-server`                          | Makes the DTOs, auth and pagination identical to the real API, which is the whole point of G3.                                                                  | **D2**             |
+| AD-9  | **DTOs validated with Zod at the boundary**                                                                                                     | Trusting the response                        | A contract break becomes a precise error at the edge instead of a crash in a screen.                                                                            | Architectural      |
+| AD-10 | **`Result<T, E>`** from use cases                                                                                                               | Throwing                                     | Expected failures are values; exceptions are reserved for bugs.                                                                                                 | Architectural      |
+| AD-11 | **`Money` as integer baisa**                                                                                                                    | `number`                                     | OMR is 3-decimal; float arithmetic on prices is a defect.                                                                                                       | Architectural      |
+| AD-12 | **Axios behind an `HttpClient` port**                                                                                                           | Bare `fetch`                                 | Interceptors, cancellation, error normalisation — with the port keeping it swappable.                                                                           | Approved           |
+| AD-13 | **StyleSheet + typed theme**                                                                                                                    | NativeWind, styled-components, Tamagui       | The reference is token-driven; a typed theme maps 1:1, keeps RTL logical properties explicit, and adds no runtime cost.                                         | Approved           |
+| AD-14 | **RHF + Zod** for forms                                                                                                                         | Formik, controlled state                     | Fewer re-renders; schemas shared with validation vocabulary.                                                                                                    | Approved           |
+| AD-15 | **Maestro** for E2E                                                                                                                             | Detox                                        | Simpler flows, Expo-friendly, much lower maintenance.                                                                                                           | Approved           |
+| AD-16 | **`eslint-plugin-boundaries` + dependency-cruiser** enforce §9                                                                                  | Convention and review                        | A rule nobody can violate beats a rule everyone agrees with.                                                                                                    | Architectural      |
+| AD-17 | **i18next**, Arabic default, AR/EN from the reference's own strings                                                                             | Hard-coded Arabic, later i18n                | Every string already exists in both languages in the prototype; retrofitting i18n is far costlier.                                                              | Architectural      |
+| AD-18 | **`FlashList` + `expo-image`** for lists and imagery                                                                                            | `FlatList` + `Image`                         | The app is a grid-and-rail product browser; these are the components that hold 60 fps.                                                                          | Architectural      |
+| AD-19 | Contract test suite runs against mock **and** real API                                                                                          | Manual verification at migration             | Converts migration risk into a test result.                                                                                                                     | Architectural      |
+| AD-20 | Features with no API contract get **domain ports and mock-only implementations**, listed in `INVENTED_ENDPOINTS.md`                             | Skipping them; hard-coding in the UI         | The UI stays real and the backend team gets an exact specification. After the expanded collection this applies to social commerce alone.                        | **D1 / D19 / FA1** |
+| AD-21 | **Noto Kufi Arabic** ships as the Arabic face, behind a single theme token                                                                      | Blocking on the GE Dinar One licence         | The prototype already renders with it, and the token makes a later swap a one-line change.                                                                      | **D16**            |
+| AD-22 | **Guest cart**: adding, editing and removing work without a session; the gate is at checkout                                                    | Gating the cart entirely; gating nothing     | Fewest steps before a user sees value, and one clear point where identity is needed.                                                                            | **D3**             |
+| AD-23 | **Locale-scoped query keys**; the server resolves catalogue language from `Accept-Language`                                                     | A `LocalizedText` value object in the domain | Keeps the DTO single-language and identical to the real API; the cost is a refetch on language change, which already requires a restart.                        | **D9**             |
+| AD-24 | **Delivery economics are data, not code** — `area.shippingPrice` and `area.minOrderAmount` come from `/areas` and cache like any other resource | A hard-coded threshold constant              | Merchandising rules change more often than releases do.                                                                                                         | **D11**            |
 
 ---
 
@@ -1485,9 +1556,11 @@ These survive the decisions in §34. Each is accepted, not open.
 
 1. **The prototype is not a specification.** Motion, gesture behaviour, error copy, loading
    behaviour and edge cases are absent. Reasonable choices are made and flagged; some will be wrong.
-2. **Six features run on invented endpoints** (GAP-1 to GAP-6). They work against the mock host and
-   will stop working at migration until the backend implements FA1. This is a scheduling
-   dependency on another team, not a defect in the app.
+2. **One feature runs on invented endpoints.** Influencers and shoppable posts (GAP-1) have no
+   contract at all. Support tickets, returns, gift money and the delivery OTP were in the same
+   position until the expanded collection arrived; they now run on the real API (D19). Social
+   commerce works against the mock host and stops at migration until the backend implements FA1.
+   That is a scheduling dependency on another team, not a defect in the app.
 3. **A language change requires an app restart**, and under D9 it also refetches catalogue content
    because query keys are locale-scoped. The restart makes the refetch invisible, but it is real.
 4. **The PDP variant selector is an addition to the reference** (D8). The prototype's four colour
@@ -1495,12 +1568,14 @@ These survive the decisions in §34. Each is accepted, not open.
    not show. This is a deliberate, visible deviation.
 5. **The cart total will not match the prototype's number** (D10). BR3 is implemented once and
    consistently, so the cart shows VAT where the prototype omitted it.
-6. **The free-delivery threshold is a placeholder** at OMR 20.000 until FA6 confirms it. It is a
-   data value served by the API, so correcting it needs no release.
+6. **Delivery slots are not what the prototype draws** (D21). The API contracts delivery by area,
+   giving a price, a free-delivery minimum and an estimated number of days. It has no concept of a
+   two-hour window against a next-morning window, so checkout shows the area's cost and estimated
+   days instead. The "Hub Express" badge and its search filter are held back with them.
 7. **Muted text fails WCAG AA** at the sizes the prototype uses (§30 A3). Accessibility wins, which
    means a visible visual deviation from the reference in meta and caption text.
-8. **Stock and "Hub Express" are fabricated** in the prototype (GAP-15). The mock serves both
-   fields, but the filters built on them are only as real as what the backend eventually provides.
+8. **The express filter has no data behind it** (GAP-15). Stock is real, carried on product
+   variants. "Hub Express" is not, and follows the delivery-slot gap above.
 9. **No design assets beyond the prototype.** No icon export, no image specification, no motion
    spec. Icons are redrawn from the prototype's inline SVGs.
 10. **The brand Arabic face is not the one the tokens name** (D16). Noto Kufi Arabic ships; GE Dinar
@@ -1509,7 +1584,15 @@ These survive the decisions in §34. Each is accepted, not open.
     attempted offline fails with a message rather than queueing.
 12. **The seller app is out of scope** (D1), so the shared-domain reuse the architecture is designed
     for remains unproven until Phase 14.
-13. **Notifications have no push delivery** (D17), so the list only updates when the app is opened
+13. **An address does not yet resolve to a shipping area by contract** (D13, amended). The app
+    matches the address city against the area name and governorate, which is correct for the seeded
+    Omani data and wrong the moment the backend introduces an explicit link. It is contained in one
+    mapper.
+14. **Wallet-to-wallet transfers exist in the API but not in the UI.** `/wallet/transfers` is a
+    distinct feature from gifts, with a recipient preview and a password confirmation. The prototype
+    never shows it, so it is not built. Worth raising as a product question rather than assuming it
+    was an oversight.
+15. **Notifications have no push delivery** (D17), so the list only updates when the app is opened
     or refreshed.
 
 ---
@@ -1519,44 +1602,49 @@ These survive the decisions in §34. Each is accepted, not open.
 All 17 questions raised in Phase 0 were reviewed and **approved as recommended on 2026-09-02**.
 They are recorded here as decisions **D1–D17**. Nothing in this section is open.
 
+**Amended the same day**, after an expanded API collection was added to `docs/`. It carries 198
+endpoints against the 153 requests in the copy under `design-reference/`, and it closes four of the
+six features that previously had no contract. The consequences are **D18–D22** in §34.4, where D11
+and D13 are amended as well.
+
 Where a decision hands work to someone outside this project, it is tracked as a follow-up action
-**FA1–FA6** in §34.2. A follow-up action does not block implementation; each one has a defined
+**FA1–FA5** in §34.2. A follow-up action does not block implementation; each one has a defined
 interim behaviour that lets the app be built and tested now.
 
 ### 34.1 Decisions
 
-| ID      | Decision                                                                                                                    | What it means in practice                                                                                                                                                                                                                                                                                         | Affects                |
-| ------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| **D1**  | **v1 is the customer app only.** The seller app is a separate later track.                                                  | `plan.md` Phases 1–13 cover the customer app. Phase 14 holds the seller app and is not scheduled. The domain and design system are built so a second presentation layer can reuse them.                                                                                                                           | Whole plan             |
-| **D2**  | **JSON Server runs behind an Express contract adapter.**                                                                    | The mock serves the real API's routes, Spring `Page` envelopes, bearer auth with refresh, and real status codes. The app's DTOs are written against the real contract and do not change at migration.                                                                                                             | §18, Phase 3           |
-| **D3**  | **Browsing is public; the cart is fully usable as a guest; checkout and every identity-bound screen require a session.**    | A guest can add, change quantity and remove cart lines. The sign-in prompt appears once, at checkout, and returns the user to checkout with the cart intact. Wishlist, orders, addresses, wallet, gifts, support, notifications and profile are gated.                                                            | §5, §15.4, Phase 5     |
-| **D4**  | **Per-tab navigation stacks are preserved.** Re-tapping the active tab resets that tab to its root.                         | Standard platform behaviour, and a deliberate deviation from the prototype, which cleared the stack on every tab switch.                                                                                                                                                                                          | §15.2, Phase 5         |
-| **D5**  | **The `BRANDHUB App.dc.html` home is canonical for v1.**                                                                    | The richer `app-home-live.jsx` home — stories rail, auto-rotating hero, live countdown, shoppable feed, trust strip — is recorded as a v1.1 backlog item and is not built now.                                                                                                                                    | §4 F2, Phase 6         |
-| **D6**  | **`_ds/modernist-…/` is ignored.**                                                                                          | It is an unrelated design system that contradicts every BRANDHUB token. It is not referenced anywhere in the build.                                                                                                                                                                                               | §3.1, Phase 2          |
-| **D7**  | **Missing AR/EN copy is drafted now and reviewed by a native Arabic speaker before release.**                               | Loading, error and empty-state copy for the screens the prototype never covered — orders, notifications, tickets, addresses, wallet transactions — is drafted in both languages during Phase 2. The native review is a release gate in Phase 13 (FA5).                                                            | §22.3, Phases 2 and 13 |
-| **D8**  | **The PDP gains a variant selector.** A product with exactly one variant resolves automatically and the selector is hidden. | This closes GAP-9: `POST /cart/items` requires a `variantId`, and the prototype's decorative colour swatches could not supply one. Add-to-cart is blocked until a variant is resolved.                                                                                                                            | §4 F6, Phase 7         |
-| **D9**  | **Catalogue content is resolved server-side from `Accept-Language`.**                                                       | The client sends the header, the server returns one already-resolved language, the DTO stays single-language and identical to the real API, and the mapper never branches on locale. **Query keys include the locale**, so changing language refetches. The mock stores `{ ar, en }` and resolves on the way out. | §13, §20, Phase 3      |
-| **D10** | **The order total includes the delivery-slot fee and the payment-method fee, and subtracts the coupon discount.**           | BR3 becomes `subtotal + VAT + slotFee + paymentFee − discount`, implemented once in the domain and used by both cart and checkout. The cart screen will therefore show a different number from the prototype, which omitted VAT there.                                                                            | BR3, §4 F8, Phase 8    |
-| **D11** | **Free delivery is a configurable threshold served as data, not a constant.**                                               | The API exposes a `deliveryPolicy` resource; the mock seeds it at **OMR 20.000**. The cart hint computes the remaining amount from it. Changing the threshold is a data change with no release. The initial value needs product confirmation (FA6).                                                               | BR13, §4 F7, Phase 8   |
-| **D12** | **Email and password ship in v1.** The phone + OTP screen is built against mock-only endpoints.                             | The onboarding screen is faithful to the reference, including the `+968` phone field and the Apple and Google buttons, but only the email path reaches a real backend. The OTP endpoints the backend would need are specified in `INVENTED_ENDPOINTS.md` (FA1).                                                   | §4 F1, Phase 5         |
-| **D13** | **The UI's address shape is the domain entity.**                                                                            | `Address` carries label, recipient name, phone, details and city. The mapper fills the API's `addressLine1`, `city`, `country` and leaves `state` and `postalCode` optional, defaulting `country` to Oman. Nothing the UI collects is lost, and nothing the API needs is missing.                                 | §11.1, Phase 9         |
-| **D14** | **`averageRating` and `reviewCount` belong on the product DTO.**                                                            | The mock serves both on every product, so cards and the PDP render ratings from a single request. The backend is asked to add them (FA2). There is no N+1 fetch and no fallback path that issues one.                                                                                                             | §13, Phase 6           |
-| **D15** | **Minimum platforms: iOS 15 and Android 8.0 (API 26).**                                                                     | Sets the library floor, the performance budget's reference device, and the CI simulator matrix.                                                                                                                                                                                                                   | §29, Phase 1           |
-| **D16** | **Noto Kufi Arabic is the shipped Arabic face.**                                                                            | It is what the prototype actually renders with, and GE Dinar One is neither present in the reference nor licensed. The theme exposes the Arabic face as one token, so a later swap is a one-line change (FA4).                                                                                                    | §3.2, Phase 2          |
-| **D17** | **Notifications are an in-app list only.**                                                                                  | No push infrastructure, no permission prompt, no device-token registration in v1. The list refreshes on open and on pull-to-refresh.                                                                                                                                                                              | §4 F13, Phase 11       |
+| ID                          | Decision                                                                                                                    | What it means in practice                                                                                                                                                                                                                                                                                         | Affects                |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| **D1**                      | **v1 is the customer app only.** The seller app is a separate later track.                                                  | `plan.md` Phases 1–13 cover the customer app. Phase 14 holds the seller app and is not scheduled. The domain and design system are built so a second presentation layer can reuse them.                                                                                                                           | Whole plan             |
+| **D2**                      | **JSON Server runs behind an Express contract adapter.**                                                                    | The mock serves the real API's routes, Spring `Page` envelopes, bearer auth with refresh, and real status codes. The app's DTOs are written against the real contract and do not change at migration.                                                                                                             | §18, Phase 3           |
+| **D3**                      | **Browsing is public; the cart is fully usable as a guest; checkout and every identity-bound screen require a session.**    | A guest can add, change quantity and remove cart lines. The sign-in prompt appears once, at checkout, and returns the user to checkout with the cart intact. Wishlist, orders, addresses, wallet, gifts, support, notifications and profile are gated.                                                            | §5, §15.4, Phase 5     |
+| **D4**                      | **Per-tab navigation stacks are preserved.** Re-tapping the active tab resets that tab to its root.                         | Standard platform behaviour, and a deliberate deviation from the prototype, which cleared the stack on every tab switch.                                                                                                                                                                                          | §15.2, Phase 5         |
+| **D5**                      | **The `BRANDHUB App.dc.html` home is canonical for v1.**                                                                    | The richer `app-home-live.jsx` home — stories rail, auto-rotating hero, live countdown, shoppable feed, trust strip — is recorded as a v1.1 backlog item and is not built now.                                                                                                                                    | §4 F2, Phase 6         |
+| **D6**                      | **`_ds/modernist-…/` is ignored.**                                                                                          | It is an unrelated design system that contradicts every BRANDHUB token. It is not referenced anywhere in the build.                                                                                                                                                                                               | §3.1, Phase 2          |
+| **D7**                      | **Missing AR/EN copy is drafted now and reviewed by a native Arabic speaker before release.**                               | Loading, error and empty-state copy for the screens the prototype never covered — orders, notifications, tickets, addresses, wallet transactions — is drafted in both languages during Phase 2. The native review is a release gate in Phase 13 (FA5).                                                            | §22.3, Phases 2 and 13 |
+| **D8**                      | **The PDP gains a variant selector.** A product with exactly one variant resolves automatically and the selector is hidden. | This closes GAP-9: `POST /cart/items` requires a `variantId`, and the prototype's decorative colour swatches could not supply one. Add-to-cart is blocked until a variant is resolved.                                                                                                                            | §4 F6, Phase 7         |
+| **D9**                      | **Catalogue content is resolved server-side from `Accept-Language`.**                                                       | The client sends the header, the server returns one already-resolved language, the DTO stays single-language and identical to the real API, and the mapper never branches on locale. **Query keys include the locale**, so changing language refetches. The mock stores `{ ar, en }` and resolves on the way out. | §13, §20, Phase 3      |
+| **D10**                     | **The order total includes delivery and payment-method fees, and subtracts the coupon discount.**                           | BR3 becomes `subtotal + VAT + shippingPrice + paymentFee − discount`, implemented once in the domain and used by both cart and checkout. The shipping price comes from the resolved area (D21). The cart screen will therefore show a different number from the prototype, which omitted VAT there.               | BR3, §4 F8, Phase 8    |
+| **D11** ⚠️ _amended by D21_ | **Free delivery is a threshold served as data, not a constant.**                                                            | The threshold is `area.minOrderAmount`, supplied per shipping area by `GET /areas`. The cart hint computes the remaining amount from the resolved area. Changing it is a data change with no release, and no value had to be invented.                                                                            | BR13, §4 F7, Phase 8   |
+| **D12**                     | **Email and password ship in v1.** The phone + OTP screen is built against mock-only endpoints.                             | The onboarding screen is faithful to the reference, including the `+968` phone field and the Apple and Google buttons, but only the email path reaches a real backend. The OTP endpoints the backend would need are specified in `INVENTED_ENDPOINTS.md` (FA1).                                                   | §4 F1, Phase 5         |
+| **D13**                     | **The UI's address shape is the domain entity.**                                                                            | `Address` carries label, recipient name, phone, details and city. The mapper fills the API's `addressLine1`, `city`, `country` and leaves `state` and `postalCode` optional, defaulting `country` to Oman. Nothing the UI collects is lost, and nothing the API needs is missing.                                 | §11.1, Phase 9         |
+| **D14**                     | **`averageRating` and `reviewCount` belong on the product DTO.**                                                            | The mock serves both on every product, so cards and the PDP render ratings from a single request. The backend is asked to add them (FA2). There is no N+1 fetch and no fallback path that issues one.                                                                                                             | §13, Phase 6           |
+| **D15**                     | **Minimum platforms: iOS 15 and Android 8.0 (API 26).**                                                                     | Sets the library floor, the performance budget's reference device, and the CI simulator matrix.                                                                                                                                                                                                                   | §29, Phase 1           |
+| **D16**                     | **Noto Kufi Arabic is the shipped Arabic face.**                                                                            | It is what the prototype actually renders with, and GE Dinar One is neither present in the reference nor licensed. The theme exposes the Arabic face as one token, so a later swap is a one-line change (FA4).                                                                                                    | §3.2, Phase 2          |
+| **D17**                     | **Notifications are an in-app list only.**                                                                                  | No push infrastructure, no permission prompt, no device-token registration in v1. The list refreshes on open and on pull-to-refresh.                                                                                                                                                                              | §4 F13, Phase 11       |
 
 ### 34.2 Follow-up actions owned outside this project
 
 Each has an interim behaviour, so none of them blocks Phase 1.
 
-| ID      | Action                                                                                                                                                                                                         | Owner         | Interim behaviour                                                                                              | Consequence if it never lands                                                                                       |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| **FA1** | Specify and implement the endpoints in `mock-server/INVENTED_ENDPOINTS.md`: influencers and posts, support tickets, returns, gift money, delivery OTP, delivery slots, stock and express flags, and phone OTP. | Backend team  | Mock-only repository implementations behind real domain ports, named to make their provisional status obvious. | Those features stop working at migration. The rest of the app is unaffected, because each sits behind its own port. |
-| **FA2** | Add `averageRating` and `reviewCount` to product list and detail responses.                                                                                                                                    | Backend team  | The mock serves both.                                                                                          | Ratings disappear from cards, or an N+1 fetch has to be added.                                                      |
-| **FA3** | Honour `Accept-Language` for catalogue content.                                                                                                                                                                | Backend team  | The mock resolves from a stored `{ ar, en }` pair.                                                             | Arabic product titles fall back to whatever single language the API stores.                                         |
-| **FA4** | Obtain the GE Dinar One licence, if the brand face is required.                                                                                                                                                | Brand / legal | Noto Kufi Arabic ships.                                                                                        | The app ships in the fallback face, which is what the prototype shows anyway.                                       |
-| **FA5** | Native Arabic review of the new loading, error and empty-state copy.                                                                                                                                           | Content       | Drafted placeholders in both languages.                                                                        | Release gate in Phase 13 does not clear.                                                                            |
-| **FA6** | Confirm the free-delivery threshold value.                                                                                                                                                                     | Product       | OMR 20.000, served as data.                                                                                    | A wrong threshold ships, correctable without a release.                                                             |
+| ID          | Action                                                                                                                                                                                                                                                                                            | Owner         | Interim behaviour                                                                                              | Consequence if it never lands                                                                       |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **FA1**     | Support tickets, returns, gift money, the delivery OTP and stock are **delivered** in the expanded collection. What remains: **influencers and shoppable posts**, **delivery time slots and the express flag**, **phone OTP sign-in**, and confirming how an address resolves to a shipping area. | Backend team  | Mock-only repository implementations behind real domain ports, named to make their provisional status obvious. | Only the social-commerce feature stops at migration. Everything else now runs on the real contract. |
+| **FA2**     | Add `averageRating` and `reviewCount` to product list and detail responses.                                                                                                                                                                                                                       | Backend team  | The mock serves both.                                                                                          | Ratings disappear from cards, or an N+1 fetch has to be added.                                      |
+| **FA3**     | Honour `Accept-Language` for catalogue content.                                                                                                                                                                                                                                                   | Backend team  | The mock resolves from a stored `{ ar, en }` pair.                                                             | Arabic product titles fall back to whatever single language the API stores.                         |
+| **FA4**     | Obtain the GE Dinar One licence, if the brand face is required.                                                                                                                                                                                                                                   | Brand / legal | Noto Kufi Arabic ships.                                                                                        | The app ships in the fallback face, which is what the prototype shows anyway.                       |
+| **FA5**     | Native Arabic review of the new loading, error and empty-state copy.                                                                                                                                                                                                                              | Content       | Drafted placeholders in both languages.                                                                        | Release gate in Phase 13 does not clear.                                                            |
+| ~~**FA6**~~ | ~~Confirm the free-delivery threshold value.~~ **Closed:** the API supplies it as `area.minOrderAmount`.                                                                                                                                                                                          | Closed        | Closed                                                                                                         | Closed                                                                                              |
 
 ### 34.3 Recorded as v1.1 backlog
 
@@ -1569,6 +1657,33 @@ Not decisions to make, but scope deliberately deferred and worth keeping visible
 | Phone + OTP sign-in against a real backend.                                                                                       | D12                     |
 | The seller mobile app.                                                                                                            | D1, `plan.md` Phase 14  |
 | Offline write queue.                                                                                                              | §33 item 11             |
+
+### 34.4 Amendments from the expanded API contract
+
+Added 2026-09-02, after `docs/ECommerce_API_Postman_Collection.json` superseded the earlier export.
+These follow from the contract rather than from taste, so they are recorded as decisions rather than
+re-opened as questions.
+
+| ID      | Decision                                                                                                | What it means in practice                                                                                                                                                                                                                                                                                                                                                             | Affects                               |
+| ------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| **D18** | **`docs/ECommerce_API_Postman_Collection.json` is the authoritative contract.**                         | The copy under `design-reference/uploads/` is superseded and is not used for DTO work. Where the two disagree, the newer one wins.                                                                                                                                                                                                                                                    | §3.4, Phase 3                         |
+| **D19** | **Support tickets, returns, gift money and the delivery OTP move from mock-only to the real contract.** | Their repositories are HTTP implementations from the start rather than provisional ones. Two small mismatches are absorbed in mappers: the API takes a free-text return `reason` where the UI offers five fixed choices, and ticket category and priority are server enums the domain maps onto.                                                                                      | §4 F16, F19, F20; Phases 3, 9, 10, 12 |
+| **D20** | **Every money-moving mutation sends an `Idempotency-Key`.**                                             | Applies to placing an order, charging the wallet and transferring to another wallet. The key is minted in the use case at the start of an attempt and reused across retries, so a retry after a lost connection cannot create a second order.                                                                                                                                         | §17.5, §21.3; Phases 4, 8, 10         |
+| **D21** | **Delivery cost and the free-delivery threshold come from `/areas`. Time slots are deferred.**          | `area.shippingPrice` feeds BR3 and `area.minOrderAmount` feeds BR13, both as live server data. The prototype's two-hour and next-morning slots have no contract, so checkout shows the area's cost and `estimatedDeliveryDays` in their place for v1, and the "Hub Express" badge and its filter are held back with them. This is a visible, deliberate deviation from the reference. | BR3, BR13, §4 F7, F8; Phase 8         |
+| **D22** | **The data layer normalises mixed response envelopes.**                                                 | Newer endpoints answer `{ success, data }`, older ones answer bare. One unwrapping helper runs before Zod validation, so DTO schemas describe payloads only and a future server-side clean-up costs one edit.                                                                                                                                                                         | §17.4, §20.2; Phases 3, 4             |
+
+**Amendments to earlier decisions**
+
+| ID      | Was                                                                                                               | Now                                                                                                                                                                               |
+| ------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **D11** | A configurable `deliveryPolicy` threshold seeded at OMR 20.000, value to be confirmed by product.                 | The threshold is `area.minOrderAmount`, supplied per area by the API. No invented value, and FA6 closes.                                                                          |
+| **D13** | The UI's address shape is the domain entity, mapped onto the API's fields with `state` and `postalCode` optional. | Unchanged in shape, but an address must now resolve to a **shipping area**, because that is what carries the delivery price. How it resolves is not in the collection. See below. |
+
+**One residual question, narrow enough not to block anything.** The collection exposes `/areas` and
+it exposes addresses, but nothing links them: there is no `areaId` on the address payload and no
+lookup from a city to an area. Until that is settled the app resolves the area by matching the
+address `city` against `area.name` and `area.governorate`, which works for the seeded Omani data and
+is contained in a single mapper. Confirming the real linkage is folded into FA1.
 
 ---
 

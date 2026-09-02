@@ -31,17 +31,25 @@ criteria status item by item, known issues, remaining risks, and anything needin
 Every question this plan once deferred is decided. The full record, with rationale, is
 `architecture.md` §34. The seven that change day-to-day implementation work:
 
-| Decision | Effect on the build                                                                                          |
-| -------- | ------------------------------------------------------------------------------------------------------------ |
-| **D2**   | The mock serves the real API's routes, envelopes and auth, so DTOs never change at migration.                |
-| **D3**   | The cart is fully usable by a guest. The only sign-in gate on the purchase path is at checkout.              |
-| **D8**   | The PDP has a variant selector the prototype does not show. It auto-resolves when a product has one variant. |
-| **D9**   | Catalogue language is resolved by the server from `Accept-Language`; query keys are locale-scoped.           |
-| **D10**  | One totals rule, BR3, used by cart and checkout: subtotal + VAT + slot fee + payment fee − discount.         |
-| **D11**  | Free delivery is a `deliveryPolicy` threshold served as data, seeded at OMR 20.000.                          |
-| **D16**  | Noto Kufi Arabic ships, behind a single theme token.                                                         |
+| Decision | Effect on the build                                                                                                                       |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **D2**   | The mock serves the real API's routes, envelopes and auth, so DTOs never change at migration.                                             |
+| **D3**   | The cart is fully usable by a guest. The only sign-in gate on the purchase path is at checkout.                                           |
+| **D8**   | The PDP has a variant selector the prototype does not show. It auto-resolves when a product has one variant.                              |
+| **D9**   | Catalogue language is resolved by the server from `Accept-Language`; query keys are locale-scoped.                                        |
+| **D10**  | One totals rule, BR3, used by cart and checkout: subtotal + VAT + area shipping price + payment fee − discount.                           |
+| **D11**  | Free delivery is the shipping area's `minOrderAmount`, supplied by the API (amended by D21).                                              |
+| **D16**  | Noto Kufi Arabic ships, behind a single theme token.                                                                                      |
+| **D19**  | Support tickets, returns, gift money and the delivery OTP have a real contract. Their repositories are HTTP from the start, not mocks.    |
+| **D20**  | Placing an order, charging the wallet and transferring funds all send an `Idempotency-Key`, minted per attempt and reused across retries. |
+| **D21**  | Delivery cost and the free-delivery minimum come from `/areas`. The prototype's time slots have no contract and are deferred.             |
+| **D22**  | Responses arrive in two envelope shapes. One unwrapping helper normalises them before validation.                                         |
 
-Six follow-up actions (FA1–FA6) sit with other teams. None blocks a phase; each has an interim
+**Amended 2026-09-02** after an expanded API collection replaced the earlier export. It closes four
+of the six previously uncontracted features, which shrinks Phase 3 and moves support, returns, gifts
+and the delivery OTP onto real endpoints. The full record is `architecture.md` §34.4.
+
+Follow-up actions FA1 to FA5 sit with other teams. None blocks a phase; each has an interim
 behaviour. They are collected at the end of this document under
 [Follow-up actions](#follow-up-actions-tracked-across-phases).
 
@@ -290,20 +298,22 @@ Phase 1 done. The mock runs behind an Express contract adapter (D2); catalogue l
 ### Tasks
 
 1. Create `mock-server/` as an Express host that mounts `json-server` under `/api/v1`.
-2. Write seed generators that build `db.json` from the reference data: 12 products with variants and images, 8 categories as a tree, 6 influencers with tagged products, 4 orders, 3 addresses, 3 tickets with threads, 5 wallet transactions, 3 reviews, 5 specs, 5 notifications, coupons, one customer user.
-3. Expand the seed to a realistic volume (200+ products across the 8 categories) so pagination, search and list performance are exercised.
+2. Write seed generators that build `db.json` from the reference data: 12 products with variants and images, 8 categories as a tree, 6 influencers with tagged products, 4 orders, 3 addresses, 3 tickets with threads, 5 wallet transactions, 3 reviews, 5 specs, 5 notifications, coupons, shipping areas, and one customer user.
+3. Expand the seed to a realistic volume, 200 products or more across the 8 categories, so pagination, search and list performance are exercised.
 4. Implement the auth middleware: `POST /auth/login`, `/auth/register`, `/auth/refresh`, `/auth/logout`; fake JWTs with a short access-token lifetime; bearer enforcement on protected routes; correct 401 shapes.
-5. Implement the envelope and pagination middleware: `page`/`size` in, Spring `Page` out, with `content`, `totalElements`, `totalPages`, `number`, `size`, `first`, `last`.
+5. Implement the envelope and pagination middleware: `page` and `size` in, Spring `Page` out, with `content`, `totalElements`, `totalPages`, `number`, `size`, `first` and `last`.
 6. Implement the route rewrites for every endpoint in `architecture.md` §3.4.
-7. Implement custom handlers where JSON Server cannot express the behaviour: `/categories/tree`, `/cart` (joins items to products), `POST /orders` (creates, computes totals, clears the cart), `/coupons/validate`, `/wallet/charge`.
-8. Implement the invented endpoints for GAP-1 to GAP-6 — influencers, posts, follows, support tickets, returns, gifts, delivery slots — and document every one in `mock-server/INVENTED_ENDPOINTS.md` with the request and response shapes the backend would need to provide.
-9. Implement latency injection (`x-mock-latency`, plus a global default so loading states are always visible) and fault injection (`x-mock-fail=401|404|409|500|timeout|network`, `x-mock-empty=true`).
-10. Add `npm run mock` and `npm run mock:reset`, and document LAN access for physical devices.
-11. Implement **D9 content localisation**: store `{ ar, en }` per product and category, read `Accept-Language`, and return one already-resolved language. The response shape stays single-language and identical to the real API.
-12. Serve `averageRating` and `reviewCount` on every product list and detail response (D14), so cards never need a second request.
-13. Serve a `deliveryPolicy` resource carrying the free-delivery threshold, seeded at **OMR 20.000**, plus the delivery-slot fees and the payment-method fees that BR3 consumes (D10, D11).
-14. Implement the mock-only phone OTP endpoints behind the onboarding screen (D12) and record them in `INVENTED_ENDPOINTS.md`.
-15. Write the mock's own test suite: every route returns the documented shape and status.
+7. Implement custom handlers where JSON Server cannot express the behaviour: `/categories/tree`, `/cart` which joins items to products, `POST /orders` which creates, computes totals and clears the cart, `/coupons/validate`, and `/wallet/charge`.
+8. Implement the endpoints the expanded collection now contracts, so the app talks to real shapes from day one (D19): `/support/tickets` with messages and attachments, `/returns`, `/gifts` with sent, received, claim and cancel, `/wallet/transfers` with its recipient preview, `/areas` and `/shipping-rates`, `/sellers` with products and profile image, `GET /payments/PAYMOB/status`, and `deliveryOtp` on the order.
+9. Implement only the endpoints that remain invented — influencers, posts and follows, delivery time slots and the express flag, and phone OTP — and document each in `mock-server/INVENTED_ENDPOINTS.md` with the request and response shapes the backend would need (FA1).
+10. Honour the `Idempotency-Key` header on `POST /orders`, `POST /wallet/charge` and `POST /wallet/transfers`: a repeated key returns the original result instead of creating a second record (D20).
+11. Serve **both** envelope shapes deliberately, `{ success, data }` on the newer routes and bare payloads on the older ones, so the client's unwrapping helper is exercised rather than assumed (D22).
+12. Implement **D9 content localisation**: store `{ ar, en }` per product and category, read `Accept-Language`, and return one already-resolved language in a single-language field.
+13. Serve `averageRating` and `reviewCount` on every product list and detail response (D14), so cards never need a second request.
+14. Seed `/areas` with real Omani governorates carrying `shippingPrice`, `minOrderAmount` and `estimatedDeliveryDays`, which is where BR3 and BR13 now get their numbers (D21).
+15. Implement latency injection (`x-mock-latency`, plus a global default so loading states are always visible) and fault injection (`x-mock-fail=401|404|409|500|timeout|network`, `x-mock-empty=true`).
+16. Add `npm run mock` and `npm run mock:reset`, and document LAN access for physical devices. **Bind the mock to a port other than 8081**, which Metro's dev server already occupies.
+17. Write the mock's own test suite: every route returns the documented shape and status.
 
 ### Expected artifacts
 
@@ -334,13 +344,19 @@ Phase 1 done. The mock runs behind an Express contract adapter (D2); catalogue l
 - AC3.8 The category tree is nested and every product's `categoryId` resolves into it.
 - AC3.9 Fault headers produce the requested status or condition on any route.
 - AC3.10 The default latency is non-zero, so loading states are observable by hand.
-- AC3.11 `INVENTED_ENDPOINTS.md` lists every route with no real-API counterpart, with request and response shapes.
+- AC3.11 `INVENTED_ENDPOINTS.md` lists only the three areas that remain uncontracted — influencers and posts, delivery time slots and the express flag, and phone OTP — each with request and response shapes (FA1).
 - AC3.12 The seed contains at least 200 products spread across all 8 categories.
 - AC3.13 The mock test suite passes.
 - AC3.14 A request with `Accept-Language: ar` returns Arabic product titles and one with `en` returns English, in the same single-language field (D9).
 - AC3.15 Every product response carries `averageRating` and `reviewCount` (D14).
-- AC3.16 `GET /delivery-policy` returns the free-delivery threshold and the slot and payment fees, and changing `db.json` changes them with no code edit (D10, D11).
+- AC3.16 `GET /areas` returns Omani areas carrying `shippingPrice`, `minOrderAmount` and `estimatedDeliveryDays`, and changing `db.json` changes them with no code edit (D21).
 - AC3.17 The phone OTP endpoints respond, and are listed in `INVENTED_ENDPOINTS.md` (D12).
+- AC3.18 `POST /support/tickets`, `GET /support/tickets`, `GET /support/tickets/{id}` and `POST /support/tickets/{id}/messages` answer with the collection's shapes, including `ticketNumber` (D19).
+- AC3.19 `POST /returns` accepts `{ orderId, reason }` and the order's `deliveryOtp` is present on `GET /orders/{id}` (D19).
+- AC3.20 `POST /gifts` accepts the full payload including `currency: "OMR"`, and sent, received, claim and cancel all respond (D19).
+- AC3.21 Repeating a request with the same `Idempotency-Key` on `POST /orders`, `POST /wallet/charge` or `POST /wallet/transfers` returns the original result and creates no second record (D20).
+- AC3.22 At least one route answers `{ success, data }` and at least one answers a bare payload, so the client's unwrapping helper is exercised against both (D22).
+- AC3.23 The mock binds to a port other than 8081, and `npm run mock` and `npm start` run at the same time without a conflict.
 
 ### Review checklist
 
@@ -348,7 +364,9 @@ Phase 1 done. The mock runs behind an Express contract adapter (D2); catalogue l
 - [ ] Is the invented-endpoint list complete and precise enough to hand to the backend team?
 - [ ] Is the seed data realistic — Arabic titles, OMR prices at 3 decimals, plausible ratings?
 - [ ] Is content localisation implemented per D9, returning one resolved language rather than a pair?
-- [ ] Is `deliveryPolicy` genuinely data, changeable without touching code?
+- [ ] Does `INVENTED_ENDPOINTS.md` now contain only the three genuinely uncontracted areas, with everything the expanded collection covers moved to real routes?
+- [ ] Do the idempotency semantics match what the real API promises, rather than a convenient approximation?
+- [ ] Are the shipping areas genuinely data, changeable without touching code?
 - [ ] Does the fault switch cover every state the UI must handle?
 
 ### Definition of done
@@ -382,6 +400,8 @@ Phases 1 and 3 done.
 8. Configure the TanStack Query client: retry policy per error type, stale times, and the global error handler.
 9. Implement `src/app/di/container.ts` and a typed `useContainer()` accessor, with every binding declared in one place.
 10. Implement the shared DTO validation helper that runs a Zod schema and converts a failure to `ContractError`.
+    10b. Implement the response-envelope unwrapper: strip `{ success, data }` when present, pass a bare payload through unchanged, and run it before every schema so DTOs describe payloads only (D22).
+    10c. Implement idempotency-key minting: a use case that moves money or creates an order generates one key per attempt and reuses it across retries, and the HTTP client sends it as `Idempotency-Key` (D20).
 11. Build one thin end-to-end slice to prove the spine — `GET /categories/tree` → `CategoryDto` → `Category` → `CategoryRepository` → a temporary debug screen listing category names.
 12. Set up MSW handlers mirroring the mock host for integration tests.
 13. Write the contract test harness that runs the Zod schemas against the live mock host.
@@ -416,6 +436,8 @@ Phases 1 and 3 done.
 - AC4.10 No file in `src/presentation` imports from `src/data` or `src/infrastructure`; lint proves it.
 - AC4.11 The container is the only file constructing repository implementations; a grep confirms it.
 - AC4.12 The contract test suite passes against the running mock.
+- AC4.13 The unwrapper returns the same DTO for `{ success, data: X }` and for a bare `X`, and a schema never sees the envelope (D22).
+- AC4.14 Two retries of one logical attempt send the same `Idempotency-Key`, and a fresh attempt sends a different one (D20).
 
 ### Review checklist
 
@@ -656,14 +678,14 @@ totals rules implemented consistently.
 
 ### Prerequisites
 
-Phase 7 done. Slot and payment fees are part of the order total (D10); free delivery is a configurable `deliveryPolicy` threshold (D11, FA6).
+Phase 7 done. Shipping and payment fees are part of the order total (D10, D21); free delivery is the shipping area's `minOrderAmount`, supplied by the API (D11 as amended, D21).
 
 ### Tasks
 
-1. Domain: `Cart`, `CartLine`, `Quantity`, `CheckoutDraft`, `PaymentMethod`, `DeliverySlot`, `Coupon`; `CartRepository`, `CouponRepository`, `OrderRepository` ports; `AddToCartUseCase`, `UpdateCartLineUseCase` (BR4), `RemoveCartLineUseCase`, `CalculateCartTotalsUseCase` (BR1–BR3, BR13, D10, D11), `ApplyCouponUseCase`, `PlaceOrderUseCase` (BR5, BR12).
+1. Domain: `Cart`, `CartLine`, `Quantity`, `CheckoutDraft`, `PaymentMethod`, `ShippingArea`, `Coupon`; `CartRepository`, `CouponRepository`, `OrderRepository`, `ShippingAreaRepository` ports; `AddToCartUseCase`, `UpdateCartLineUseCase` (BR4), `RemoveCartLineUseCase`, `CalculateCartTotalsUseCase` (BR1–BR3, BR13, D10, D21), `ApplyCouponUseCase`, `PlaceOrderUseCase` (BR5, BR12, D20).
 2. Data: cart, coupon and order DTOs, schemas, mappers, data sources, repositories.
 3. Build the cart screen: free-shipping hint driven by the real threshold, line rows with the quantity stepper, promo-code row with apply, the totals block, the empty state, and the checkout button.
-4. Build the checkout screen: the three-step indicator, the address card with a change action into address selection, the two delivery slots with their fees, the four payment methods, the order summary with VAT and fees, and place-order.
+4. Build the checkout screen: the three-step indicator, the address card with a change action into address selection, the **shipping area's cost and estimated delivery days in place of the prototype's two time slots** (D21), the four payment methods, the order summary with VAT and shipping, and place-order.
 5. Build the confirmation screen: success mark, order number, the four-step tracking timeline, the courier card, and continue-shopping.
 6. Implement optimistic quantity changes with rollback.
 7. Implement the cart badge on the tab bar, driven by the live cart.
@@ -690,17 +712,17 @@ Phase 7 done. Slot and payment fees are part of the order total (D10); free deli
 - AC8.5 The empty cart shows the reference's copy and a working shop-now action.
 - AC8.6 Subtotal equals the sum of line totals, to the baisa, across a randomised test set.
 - AC8.7 VAT equals exactly 5% of the subtotal, rounded half-up at the baisa.
-- AC8.8 The order total matches BR3 exactly: subtotal + VAT + slot fee + payment-method fee − coupon discount (D10).
-- AC8.9 The free-shipping hint appears only below the `deliveryPolicy` threshold and shows the correct remaining amount; changing the threshold in the mock changes the hint with no rebuild (D11).
+- AC8.8 The order total matches BR3 exactly: subtotal + VAT + the shipping area's price + payment-method fee − coupon discount (D10, D21).
+- AC8.9 The free-shipping hint appears only below the shipping area's `minOrderAmount` and shows the correct remaining amount; changing that value in the mock changes the hint with no rebuild (D11, D21).
 - AC8.10 A valid promo code applies the discount and shows it as a summary line; an invalid code shows an inline error and changes no total.
 - AC8.11 Checkout as a guest routes to Login and returns to Checkout after signing in.
 - AC8.12 Checkout with no address prompts for one and returns to Checkout after saving.
-- AC8.13 Selecting a delivery slot updates the total by that slot's fee.
+- AC8.13 Checkout shows the resolved shipping area with its price and estimated delivery days, and the total includes that price (D21).
 - AC8.14 Selecting a payment method updates the total by that method's fee and marks the selection.
 - AC8.15 Place-order shows a loading state, disables the button, and cannot be double-submitted.
 - AC8.16 A successful order navigates to Confirmation with the real order number and clears the cart and the badge.
 - AC8.17 An out-of-stock failure shows an actionable message naming the affected item and does not clear the cart.
-- AC8.18 A network failure during submit shows a retry, and retrying does not create a duplicate order.
+- AC8.18 A network failure during submit shows a retry, and retrying reuses the attempt's `Idempotency-Key` so no duplicate order is created. Verified by asserting the mock received two requests and created one order (D20).
 - AC8.19 The confirmation timeline shows four steps with the first two complete, matching the reference.
 - AC8.20 Continue-shopping returns to Home with an empty cart.
 - AC8.21 The whole flow works in Arabic RTL and English LTR.
@@ -735,7 +757,8 @@ Phases 5 and 8 done. The UI's address shape is the domain entity (D13).
 ### Tasks
 
 1. Domain: `Order`, `OrderLine`, `OrderStatus`, `OrderTimeline`, `DeliveryOtp`, `ReturnRequest`, `Address`, `AddressLabel`, `City`; `AddressRepository` port; `GetOrdersUseCase`, `GetOrderDetailUseCase`, `RequestReturnUseCase` (BR8), `SaveAddressUseCase`, `SetDefaultAddressUseCase` (BR7), `DeleteAddressUseCase`, `UpdateProfileUseCase`.
-2. Data: order, return, address and user DTOs, schemas, mappers, data sources, repositories, with the D13 address mapping.
+2. Data: order, return, address and user DTOs, schemas, mappers, data sources, repositories, with the D13 address mapping. Returns and the delivery OTP run on the **real contract** now: `POST /returns` takes `{ orderId, reason }` and `deliveryOtp` arrives on the order (D19). The five fixed UI reasons map to the API's free-text `reason` in the mapper.
+   2b. Data: `ShippingAreaRepository` over `/areas`, plus the mapper that resolves an address to an area by matching city against area name and governorate. This is the contained workaround for the missing link described in `architecture.md` §34.4.
 3. Build the account screen: profile header, the three order stats, the nine navigation rows with live counts, the language switch with the restart flow, and sign-out.
 4. Build the orders screen: order cards with thumbnail, number, status pill, date, item count and total; pagination; the empty state.
 5. Build the order detail screen: the four-step timeline, the delivery OTP panel when present, item rows, shipping address, the totals block, payment status, and the request-return and contact-support actions.
@@ -765,11 +788,11 @@ Phases 5 and 8 done. The UI's address shape is the domain entity (D13).
 - AC9.4 The orders list shows every order with the correct status pill, and delivered orders use the success tint.
 - AC9.5 An account with no orders shows the empty state.
 - AC9.6 Order detail shows the timeline with steps completed up to the order's status.
-- AC9.7 The OTP panel appears only for orders that carry one and shows the code with its hint.
+- AC9.7 The OTP panel appears only for orders whose `deliveryOtp` is present, and shows the code with its hint (D19).
 - AC9.8 Order totals show subtotal, tax, payment status and paid total, matching the order.
 - AC9.9 Request-return appears only for delivered orders (BR8).
 - AC9.10 Submitting a return without a reason is blocked with a message.
-- AC9.11 Submitting a valid return shows the confirmation toast and returns to orders.
+- AC9.11 Submitting a valid return posts to `/returns` with the selected reason as text, shows the confirmation toast, and returns to orders (D19).
 - AC9.12 Contact-support opens Support with the order pre-selected.
 - AC9.13 The addresses list marks exactly one default; setting a new default clears the previous (BR7).
 - AC9.14 Adding an address appends it to the list and it is available at checkout.
@@ -784,6 +807,7 @@ Phases 5 and 8 done. The UI's address shape is the domain entity (D13).
 ### Review checklist
 
 - [ ] Are addresses mapped per D13, with no UI field lost and no required API field missing?
+- [ ] Is the address-to-area resolution isolated in one mapper, so replacing it when the backend adds an explicit link is a single edit?
 - [ ] Is the timeline visually and semantically faithful to the reference?
 - [ ] Is the OTP handled securely — not logged, not auto-copied?
 - [ ] Is the restart prompt clear and non-destructive?
@@ -809,9 +833,10 @@ Phase 9 done.
 ### Tasks
 
 1. Domain: `Wallet`, `WalletTransaction`, `TransactionType`, `Gift`; `WalletRepository` port; `GetWalletUseCase`, `TopUpWalletUseCase`, `GetTransactionsUseCase`, `SendGiftUseCase`.
-2. Data: wallet, transaction and gift DTOs, schemas, mappers, data sources, repository.
+2. Data: wallet, transaction and gift DTOs, schemas, mappers, data sources, repository, all on the **real contract** (D19). `POST /gifts` takes `{ recipient, amount, currency, occasion, message, deliveryMethod, senderMode, scheduledAt }` with `currency` fixed to `OMR`, and sent, received, claim and cancel all exist.
+   2b. Wire `GET /payments/PAYMOB/status?orderId=` so the payment-result screen can resolve a pending charge rather than guessing.
 3. Build the wallet screen: gradient balance card, the wallet-active pill, quick amounts, custom amount, the top-up action, and the paginated transaction history with signed amounts and their tints.
-4. Implement the top-up flow: create a charge, open the hosted payment page in a browser session, and handle the deep-link return.
+4. Implement the top-up flow: create a charge carrying an `Idempotency-Key` (D20), open the hosted payment page in a browser session, and handle the deep-link return.
 5. Build the payment-result screen with success, failed and pending variants, the amount, back-to-wallet, and retry on failure only.
 6. Build the gifts screen: recipient, amount, occasion chips, message, send, and gift history.
 7. Refresh the wallet balance after a successful top-up.
@@ -839,15 +864,18 @@ Phase 9 done.
 - AC10.7 A failed return shows the failure result with a working retry, and the balance is unchanged.
 - AC10.8 A pending return shows the pending result with the explanatory copy and no retry.
 - AC10.9 Back-to-wallet returns to a wallet showing the refreshed balance.
-- AC10.10 Sending a gift validates the recipient, amount and occasion, shows the toast, and appends to gift history.
+- AC10.10 Sending a gift posts the full contracted payload including `currency: "OMR"`, shows the toast, and appears in `GET /gifts/sent` (D19).
 - AC10.11 A gift larger than the balance is blocked with an insufficient-balance message.
 - AC10.12 Both screens render correctly in Arabic RTL and English LTR.
+- AC10.13 A pending payment resolves by polling `GET /payments/PAYMOB/status`, and the screen moves from pending to success or failure without a manual refresh.
+- AC10.14 Repeating a top-up after a lost connection reuses the attempt's `Idempotency-Key` and charges once (D20).
 
 ### Review checklist
 
 - [ ] Does the deep-link return work when the app was backgrounded, and when it was killed?
 - [ ] Are wallet screens excluded from screenshots on Android per §28 S10?
-- [ ] Is the gift feature's lack of a real API contract clearly recorded?
+- [ ] Do the gift payloads match the contract exactly, including `deliveryMethod` and `senderMode`?
+- [ ] Is `/wallet/transfers` deliberately left unbuilt, and is that recorded as a product question rather than an oversight?
 - [ ] Wallet, gifts and result screens compared against the prototype.
 
 ### Definition of done
@@ -1003,7 +1031,7 @@ Phases 1–12 done.
 11. Verify security: no token in any log, secure store in use, HTTPS enforced in non-development builds, `FLAG_SECURE` on wallet and OTP screens.
 12. Produce release builds for both platforms and smoke-test them on physical devices.
 13. Complete the **native Arabic copy review** of every string drafted in Phase 2 and every string added since, and apply the corrections (D7, FA5).
-14. Review the follow-up actions FA1–FA6: record which have landed, which have not, and what each unlanded one means for the release.
+14. Review the follow-up actions FA1–FA5: record which have landed, which have not, and what each unlanded one means for the release. FA6 closed when the API supplied the free-delivery minimum.
 15. Write the handover documentation: how to run, how to test, how to switch environments, the migration runbook from §19.3, and the final invented-endpoint list for the backend team.
 
 ### Expected artifacts
@@ -1040,7 +1068,7 @@ Everything, on both platforms, on physical devices as well as simulators.
 - AC13.19 Zero boundary violations and zero dependency cycles.
 - AC13.20 Handover documentation is complete and a fresh checkout can be run from it alone.
 - AC13.21 Every Arabic string in the app has passed native review, with corrections applied (D7, FA5).
-- AC13.22 The status of FA1–FA6 is recorded, and every unlanded action has a stated release impact.
+- AC13.22 The status of FA1–FA5 is recorded, and every unlanded action has a stated release impact.
 
 ### Review checklist
 
@@ -1051,7 +1079,6 @@ Everything, on both platforms, on physical devices as well as simulators.
 - [ ] Confirm the migration runbook is followable by someone who did not build this.
 - [ ] Confirm the invented-endpoint list is complete and ready for the backend team (FA1).
 - [ ] Confirm the native Arabic copy review is signed off (FA5).
-- [ ] Confirm the free-delivery threshold value before release (FA6).
 - [ ] Confirm no secret or endpoint is exposed in the shipped bundle.
 
 ### Definition of done
@@ -1107,20 +1134,20 @@ domain, data and design-system layers are reusable either way.
 Six actions sit with people outside this project. **None blocks a phase.** Each has an interim
 behaviour that lets the work proceed, and a checkpoint where its absence starts to cost something.
 
-| ID      | Action                                                                                                                                                                       | Owner         | Interim behaviour                                                      | Checkpoint                            | If it never lands                                                                        |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------- |
-| **FA1** | Specify and implement the invented endpoints: influencers and posts, support tickets, returns, gift money, delivery OTP, delivery slots, stock and express flags, phone OTP. | Backend       | Mock-only repositories behind real domain ports, named as provisional. | Phase 13 review; then at migration.   | Those features stop at migration. Each sits behind its own port, so nothing else breaks. |
-| **FA2** | Add `averageRating` and `reviewCount` to product responses.                                                                                                                  | Backend       | The mock serves both.                                                  | Phase 6 acceptance.                   | Ratings vanish from cards, or an N+1 fetch has to be introduced.                         |
-| **FA3** | Honour `Accept-Language` for catalogue content.                                                                                                                              | Backend       | The mock resolves from a stored `{ ar, en }` pair.                     | Phase 6 acceptance.                   | Arabic titles fall back to whatever single language the API stores.                      |
-| **FA4** | Obtain the GE Dinar One licence.                                                                                                                                             | Brand / legal | Noto Kufi Arabic ships behind a single theme token.                    | Phase 2 review.                       | The app ships in the face the prototype already renders with.                            |
-| **FA5** | Native Arabic review of all drafted copy.                                                                                                                                    | Content       | Placeholders drafted in both languages in Phase 2.                     | **Release gate, Phase 13.**           | Phase 13 does not clear.                                                                 |
-| **FA6** | Confirm the free-delivery threshold.                                                                                                                                         | Product       | OMR 20.000, served as data.                                            | Phase 8 review; final before release. | A wrong threshold ships, correctable without a release.                                  |
+| ID          | Action                                                                                                                                                                                                                                                                        | Owner         | Interim behaviour                                                      | Checkpoint                          | If it never lands                                                                   |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------- |
+| **FA1**     | Support tickets, returns, gift money, the delivery OTP and stock are **delivered** in the expanded collection. What remains: influencers and shoppable posts, delivery time slots and the express flag, phone OTP, and confirming how an address resolves to a shipping area. | Backend       | Mock-only repositories behind real domain ports, named as provisional. | Phase 13 review, then at migration. | Only social commerce stops at migration. Everything else runs on the real contract. |
+| **FA2**     | Add `averageRating` and `reviewCount` to product responses.                                                                                                                                                                                                                   | Backend       | The mock serves both.                                                  | Phase 6 acceptance.                 | Ratings vanish from cards, or an N+1 fetch has to be introduced.                    |
+| **FA3**     | Honour `Accept-Language` for catalogue content.                                                                                                                                                                                                                               | Backend       | The mock resolves from a stored `{ ar, en }` pair.                     | Phase 6 acceptance.                 | Arabic titles fall back to whatever single language the API stores.                 |
+| **FA4**     | Obtain the GE Dinar One licence.                                                                                                                                                                                                                                              | Brand / legal | Noto Kufi Arabic ships behind a single theme token.                    | Phase 2 review.                     | The app ships in the face the prototype already renders with.                       |
+| **FA5**     | Native Arabic review of all drafted copy.                                                                                                                                                                                                                                     | Content       | Placeholders drafted in both languages in Phase 2.                     | **Release gate, Phase 13.**         | Phase 13 does not clear.                                                            |
+| ~~**FA6**~~ | ~~Confirm the free-delivery threshold.~~ **Closed:** the API supplies it as `area.minOrderAmount`.                                                                                                                                                                            | Closed        | Closed                                                                 | Closed                              | Closed                                                                              |
 
 ---
 
 ## Cross-phase working rules
 
-1. **No phase starts before its prerequisites are met.** All 17 Phase 0 questions are decided (D1–D17), so no phase is blocked on a decision. A follow-up action FA1–FA6 is never a reason to stop; it has an interim behaviour.
+1. **No phase starts before its prerequisites are met.** All 17 Phase 0 questions are decided (D1–D17), and the expanded API contract added D18–D22, so no phase is blocked on a decision. A follow-up action FA1–FA5 is never a reason to stop; each has an interim behaviour.
 2. **Every phase produces a completion report** in the structure given at the top of this document.
 3. **Smallest safe step.** Within a phase, implement, test and verify one slice before starting the next.
 4. **Never leave a failing test silently.** A failure is fixed or reported explicitly as a known issue with a reason.
@@ -1131,7 +1158,7 @@ behaviour that lets the work proceed, and a checkpoint where its absence starts 
 9. **The reference is the UI authority.** A deviation is deliberate, recorded and reviewed, never accidental.
 10. **Arabic is the primary language.** Every screen is reviewed in Arabic RTL before it is considered done.
 11. **Compiling is not completion.** Only the acceptance criteria and the definition of done decide.
-12. **A decision is changed in `architecture.md` §34 first, then in the code.** If implementation shows that a decision D1–D17 was wrong, that is reported with the evidence and re-decided, not quietly worked around.
+12. **A decision is changed in `architecture.md` §34 first, then in the code.** If implementation shows that a decision D1–D22 was wrong, that is reported with the evidence and re-decided, not quietly worked around.
 
 ---
 

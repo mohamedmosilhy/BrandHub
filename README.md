@@ -10,13 +10,30 @@ and never modified.
 
 ## Requirements
 
-| Tool           | Version                  |
-| -------------- | ------------------------ |
-| Node           | 22 or newer              |
-| Xcode          | For the iOS simulator    |
-| Android Studio | For the Android emulator |
+| Tool           | Version                                         |
+| -------------- | ----------------------------------------------- |
+| Node           | 22 or newer                                     |
+| Expo Go        | An SDK 54 build, to run on a physical phone     |
+| Xcode          | Only for the iOS simulator or a local iOS build |
+| Android Studio | Only for the Android emulator or a local build  |
 
-Minimum supported platforms are iOS 15 and Android 8.0 (API 26).
+The project targets **Expo SDK 54**, held there deliberately so it runs in Expo Go on the review
+device. The reasoning is in `docs/reports/phase-1-report.md`. Minimum supported platforms are
+iOS 15.1 and Android 8.0 (API 26), set by the `expo-build-properties` plugin.
+
+## Running on a physical phone
+
+Put the phone and this machine on the same Wi-Fi, then:
+
+```bash
+npx expo start --go
+```
+
+Scan the QR code with the Camera app on iOS, or from inside Expo Go on Android. If the network
+isolates clients from each other, add `--tunnel`.
+
+`npm start` is different: it runs `--dev-client` and expects a custom development build, which is
+the path from Phase 13 onward.
 
 ## Getting started
 

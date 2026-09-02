@@ -63,8 +63,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: BUNDLE_IDS[appEnv],
-    // D15: minimum supported platform.
-    deploymentTarget: '15.1',
   },
   android: {
     package: BUNDLE_IDS[appEnv],
@@ -76,7 +74,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     predictiveBackGestureEnabled: false,
   },
-  plugins: ['expo-dev-client'],
+  plugins: [
+    'expo-dev-client',
+    [
+      // D15: minimum supported platforms. On SDK 54 these are set through the
+      // build-properties plugin rather than on the ios/android config objects.
+      'expo-build-properties',
+      {
+        ios: { deploymentTarget: '15.1' },
+        android: { minSdkVersion: 26 },
+      },
+    ],
+  ],
   experiments: {
     tsconfigPaths: true,
   },

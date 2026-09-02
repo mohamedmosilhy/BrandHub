@@ -4,3 +4,6 @@ coverage
 .expo
 dist
 package-lock.json
+
+# API contract exports are reference data, not source
+docs/*.json
