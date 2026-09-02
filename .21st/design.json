@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "project": {
+    "name": "brandhub-mobile",
+    "productType": "Arabic-first multi-vendor marketplace mobile app",
+    "stack": ["react-native", "expo", "typescript", "stylesheet"]
+  },
+  "sources": {
+    "tokens": [
+      "design-reference/uploads/BRAND HUB (6)/tokens.css",
+      "src/presentation/theme/tokens.ts"
+    ],
+    "components": ["src/presentation/components"],
+    "assets": ["assets", "design-reference/assets"],
+    "instructions": ["docs/architecture.md", "docs/plan.md"]
+  },
+  "design": {
+    "colorMode": "light",
+    "colors": {
+      "accent": "#7F77DD",
+      "accentHover": "#6860CC",
+      "pink": "#D4537E",
+      "ink": "#1A1A2E",
+      "background": "#F5F5F7",
+      "surface": "#FFFFFF",
+      "border": "#E8E8EC"
+    },
+    "typography": {
+      "arabic": "Noto Kufi Arabic",
+      "latin": "Plus Jakarta Sans",
+      "arabicBodyLineHeight": 1.75
+    },
+    "spacing": { "scale": [4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80] },
+    "radius": { "scale": [6, 10, 16, 24, 9999] },
+    "shadows": { "levels": ["sm", "md", "lg", "card"] },
+    "motion": { "durationsMs": [150, 250, 400] },
+    "density": "comfortable-mobile"
+  },
+  "components": {
+    "installed": ["primitives", "controls", "surfaces", "feedback", "layout"],
+    "preferredPrimitives": ["Text", "Box", "Pressable", "Icon", "Image"],
+    "patterns": [
+      "Arabic-first RTL",
+      "44pt minimum targets",
+      "explicit async states"
+    ]
+  },
+  "constraints": {
+    "must": [
+      "Use theme tokens for color, spacing, radius, typography and shadow",
+      "Use logical start/end layout properties",
+      "Keep Arabic as default and fallback",
+      "Keep OMR at three fractional digits",
+      "Expose accessible roles, labels and states on interactive controls"
+    ],
+    "avoid": [
+      "The unrelated design-reference/_ds/modernist design system",
+      "Gold outside the logo",
+      "Pink outside badges and the brand gradient",
+      "Decorative gradients, glass effects and oversized headlines",
+      "Feature-specific data fetching in shared components"
+    ]
+  },
+  "decisions": [
+    {
+      "decision": "Preserve the approved BRANDHUB reference direction and implement it as native React Native primitives.",
+      "reason": "The project architecture and prototype already fix the visual direction; no redesign was requested."
+    }
+  ],
+  "evidence": [
+    { "fact": "stack:expo-react-native", "source": "package.json" },
+    {
+      "fact": "tokens:brandhub",
+      "source": "design-reference/uploads/BRAND HUB (6)/tokens.css"
+    },
+    { "fact": "direction:arabic-first-rtl", "source": "docs/architecture.md" },
+    { "fact": "phase2:component-inventory", "source": "docs/plan.md" }
+  ],
+  "generatedAt": "2026-09-02T20:05:17.709Z"
+}

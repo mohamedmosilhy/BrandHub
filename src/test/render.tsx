@@ -10,12 +10,34 @@
  * call site must await it.
  */
 import { render, type RenderOptions } from '@testing-library/react-native';
+import { createInstance } from 'i18next';
 import type { ReactElement, ReactNode } from 'react';
+import { initReactI18next, I18nextProvider } from 'react-i18next';
+
+import { resources } from '@infrastructure/i18n/resources';
+
+import { ToastProvider } from '@presentation/components/feedback';
+import { ThemeProvider } from '@presentation/theme';
+
+const testI18n = createInstance();
+void testI18n.use(initReactI18next).init({
+  resources,
+  lng: 'ar',
+  fallbackLng: 'ar',
+  defaultNS: 'common',
+  ns: ['common', 'states'],
+  initAsync: false,
+  interpolation: { escapeValue: false },
+});
 
 function AllProviders({ children }: { children: ReactNode }) {
-  // Phase 1: no providers yet. Theme, i18n, query and session arrive in later
-  // phases and are added here, once.
-  return <>{children}</>;
+  return (
+    <I18nextProvider i18n={testI18n}>
+      <ThemeProvider>
+        <ToastProvider>{children}</ToastProvider>
+      </ThemeProvider>
+    </I18nextProvider>
+  );
 }
 
 export async function renderWithProviders(

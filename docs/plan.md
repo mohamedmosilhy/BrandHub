@@ -1,10 +1,10 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Approved — Phase 1 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
+**Status:** **Implemented through Phase 2 — Phase 3 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
 **Date:** 2026-09-02 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
-> **No implementation has started.** Phase 0 produced this document and `architecture.md`.
+> Phases 1 and 2 are implemented. Their completion reports are in `docs/reports/`.
 > All 17 open questions were approved as recommended on 2026-09-02 and are recorded as decisions
 > **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 1.**
 
@@ -192,14 +192,14 @@ Phase 0 approved. Scope is the customer app only (D1); platform floor is iOS 15 
 - AC1.11 CI passes on a pull request.
 - AC1.12 Every folder in `src/` contains a README stating its rules.
 
-### Review checklist
+### Review checklist — audited 2026-09-02
 
-- [ ] Expo vs bare RN confirmed (AD-2).
-- [ ] Boundary rules match `architecture.md` §9 exactly.
-- [ ] Folder structure matches §10; no extra `utils/` or `common/`.
-- [ ] `.env` files are git-ignored and `.env.example` is committed.
-- [ ] Minimum OS versions are iOS 15 and Android 8.0 / API 26 (D15).
-- [ ] CI runs on every pull request and blocks merge on failure.
+- [x] Expo vs bare RN confirmed (AD-2).
+- [x] Boundary rules match `architecture.md` §9 exactly.
+- [x] Folder structure matches §10; no extra `utils/` or `common/`.
+- [x] `.env` files are git-ignored and `.env.example` is committed.
+- [x] Minimum OS versions are iOS 15 and Android 8.0 / API 26 (D15).
+- [ ] CI workflow exists and passes locally; a pull-request run was not inspected.
 
 ### Definition of done
 
@@ -267,15 +267,15 @@ feedback, layout), `src/presentation/formatting/**`, `src/infrastructure/i18n/**
 - AC2.13 The Arabic face resolves to Noto Kufi Arabic, and changing one theme token changes it everywhere (D16).
 - AC2.14 Every new loading, error and empty-state string exists in both AR and EN and is flagged for native review (D7).
 
-### Review checklist
+### Review checklist — implementation audit 2026-09-02
 
-- [ ] Visual comparison of the gallery against the prototype screenshots — colour, radius, weight, spacing.
-- [ ] Arabic typography reads correctly; diacritics and descenders are not clipped.
-- [ ] RTL mirroring is right, including badge and chevron placement.
-- [ ] Component set is neither missing anything nor speculatively over-built.
-- [ ] Contrast remedies are acceptable, given they deviate visually from the prototype.
-- [ ] Arabic renders in Noto Kufi Arabic and the swap token is in place (D16).
-- [ ] Drafted Arabic copy is queued for native review (FA5).
+- [ ] Physical-device side-by-side comparison remains for Phase 13; automated token and gallery checks pass.
+- [ ] Physical Arabic clipping review remains for Phase 13; 1.75 line height and 130% cap are tested.
+- [x] RTL mirroring is implemented, including directional SVG flipping and logical properties.
+- [x] The component set matches the Phase 2 inventory without feature-specific additions.
+- [x] Contrast remedies are recorded in `reports/phase-2-contrast-audit.md` and applied to shared text controls.
+- [x] Arabic renders in Noto Kufi Arabic and the swap token is in place (D16).
+- [x] Drafted Arabic copy is tracked in `nativeReviewKeys` for native review (FA5).
 
 ### Definition of done
 

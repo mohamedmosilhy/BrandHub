@@ -182,6 +182,21 @@ const HEX_COLOUR_RULE = {
   message: HEX_COLOUR_MESSAGE,
 };
 
+const THEME_PIXEL_VALUES = [
+  4, 6, 8, 10, 12, 16, 20, 24, 32, 40, 44, 48, 64, 80, 9999,
+];
+const THEME_PIXEL_PROP_RULES = THEME_PIXEL_VALUES.map((value) => ({
+  selector:
+    `Property[key.name=/^(gap|rowGap|columnGap|width|height|minWidth|minHeight|maxWidth|maxHeight|` +
+    `padding|paddingHorizontal|paddingVertical|paddingStart|paddingEnd|paddingTop|paddingBottom|` +
+    `margin|marginHorizontal|marginVertical|marginStart|marginEnd|marginTop|marginBottom|` +
+    `borderRadius|borderTopStartRadius|borderTopEndRadius|borderBottomStartRadius|borderBottomEndRadius)$/] ` +
+    `> Literal[value=${value}]`,
+  message:
+    `The ${value}px value already exists in the theme. Import and use the spacing, radius, or layout token. ` +
+    'See architecture.md §23.2.',
+}));
+
 const PHYSICAL_PROP_RULE = {
   selector: `Property[key.name=/^(${PHYSICAL_STYLE_PROPS.join('|')})$/]`,
   message: RTL_MESSAGE,
@@ -351,6 +366,18 @@ module.exports = [
         'error',
         PHYSICAL_PROP_RULE,
         PHYSICAL_TEXT_ALIGN_RULE,
+      ],
+    },
+  },
+  {
+    files: ['src/presentation/components/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        HEX_COLOUR_RULE,
+        PHYSICAL_PROP_RULE,
+        PHYSICAL_TEXT_ALIGN_RULE,
+        ...THEME_PIXEL_PROP_RULES,
       ],
     },
   },

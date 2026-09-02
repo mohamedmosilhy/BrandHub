@@ -5,9 +5,10 @@
  * boundary at the same time: this file imports nothing from `infrastructure` or
  * `data`. Everything it renders arrives as props from the composition root.
  */
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { colors, radius, spacing } from '@presentation/theme';
+import { Text } from '@presentation/components/primitives';
+import { colors, fontSizes, radius, spacing } from '@presentation/theme';
 
 export type EnvironmentRow = {
   readonly label: string;
@@ -28,10 +29,14 @@ export function EnvironmentScreen({
   return (
     <View style={styles.screen}>
       <View style={styles.card}>
-        <Text style={styles.eyebrow} accessibilityRole="header">
-          {title}
+        <View accessible accessibilityLabel={title} accessibilityRole="header">
+          <Text style={styles.eyebrow} variant="xs" weight="bold">
+            {title}
+          </Text>
+        </View>
+        <Text style={styles.environment} variant="h2" weight="bold">
+          {environmentName}
         </Text>
-        <Text style={styles.environment}>{environmentName}</Text>
 
         <View style={styles.divider} />
 
@@ -42,8 +47,10 @@ export function EnvironmentScreen({
             accessible
             accessibilityLabel={`${row.label}: ${row.value}`}
           >
-            <Text style={styles.rowLabel}>{row.label}</Text>
-            <Text style={styles.rowValue} selectable>
+            <Text style={styles.rowLabel} variant="sm">
+              {row.label}
+            </Text>
+            <Text style={styles.rowValue} variant="sm" weight="semibold">
               {row.value}
             </Text>
           </View>
@@ -71,16 +78,13 @@ const styles = StyleSheet.create({
     padding: spacing.x5,
   },
   eyebrow: {
-    fontSize: 11,
     letterSpacing: 1,
-    fontWeight: '700',
     color: colors.accent,
     textTransform: 'uppercase',
   },
   environment: {
     marginTop: spacing.x2,
-    fontSize: 24,
-    fontWeight: '800',
+    fontSize: fontSizes.h2,
     color: colors.ink,
   },
   divider: {
@@ -96,13 +100,10 @@ const styles = StyleSheet.create({
     gap: spacing.x4,
   },
   rowLabel: {
-    fontSize: 13,
     color: colors.textSecondary,
     flexShrink: 0,
   },
   rowValue: {
-    fontSize: 13,
-    fontWeight: '600',
     color: colors.ink,
     flexShrink: 1,
     // No textAlign: flexbox already places this at the row's end, and a physical

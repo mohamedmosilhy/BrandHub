@@ -77,6 +77,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     'expo-dev-client',
     [
+      'expo-splash-screen',
+      {
+        backgroundColor: '#F5F5F7',
+        image: './assets/splash-icon.png',
+        imageWidth: 200,
+      },
+    ],
+    [
       // D15: minimum supported platforms. On SDK 54 these are set through the
       // build-properties plugin rather than on the ios/android config objects.
       'expo-build-properties',

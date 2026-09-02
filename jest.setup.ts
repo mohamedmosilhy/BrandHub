@@ -18,3 +18,9 @@ jest.mock(
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   () => require('react-native-safe-area-context/jest/mock').default,
 );
+
+jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
+jest.mock('expo-splash-screen', () => ({
+  hideAsync: jest.fn(async () => undefined),
+  preventAutoHideAsync: jest.fn(async () => undefined),
+}));

@@ -7,14 +7,14 @@
  * follows once view-models arrive in Phase 5.
  */
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { appConfig } from '@infrastructure/config';
 
+import { ComponentGallery } from '@presentation/devtools';
 import type { EnvironmentRow } from '@presentation/features/diagnostics';
 import { EnvironmentScreen } from '@presentation/features/diagnostics';
-import { colors } from '@presentation/theme';
+
+import { AppProviders } from '@app/providers';
 
 function buildRows(): readonly EnvironmentRow[] {
   return [
@@ -30,22 +30,17 @@ function buildRows(): readonly EnvironmentRow[] {
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.root}>
-        <StatusBar style="dark" />
+    <AppProviders>
+      <StatusBar style="dark" />
+      {appConfig.enableDevMenu ? (
+        <ComponentGallery />
+      ) : (
         <EnvironmentScreen
-          title="BRANDHUB · Phase 1"
+          title="BRANDHUB · Phase 2"
           environmentName={appConfig.env}
           rows={buildRows()}
         />
-      </SafeAreaView>
-    </SafeAreaProvider>
+      )}
+    </AppProviders>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-});

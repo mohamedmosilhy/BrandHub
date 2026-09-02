@@ -6,7 +6,9 @@ Design and planning live in [`docs/architecture.md`](docs/architecture.md) and
 [`docs/plan.md`](docs/plan.md). The UI/UX source of truth is `design-reference/`, which is read-only
 and never modified.
 
-**Current state: Phase 1 (technical foundation) complete.** No feature code exists yet.
+**Current state: Phase 2 (design system and UI foundation) implemented.** No feature screens exist
+yet. Development builds open the bilingual RTL/LTR component gallery; production configuration
+keeps the environment diagnostic until the navigation shell arrives in Phase 5.
 
 ## Requirements
 

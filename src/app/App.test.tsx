@@ -19,7 +19,7 @@ jest.mock('expo-constants', () => ({
         apiBaseUrl: 'https://staging-api.brandhub.om/api/v1',
         defaultLocale: 'ar',
         requestTimeoutMs: '15000',
-        enableDevMenu: 'true',
+        enableDevMenu: 'false',
       },
     },
   },
@@ -45,6 +45,6 @@ describe('App', () => {
 
     expect(screen.getByText('ar')).toBeOnTheScreen();
     expect(screen.getByText('15000 ms')).toBeOnTheScreen();
-    expect(screen.getByText('enabled')).toBeOnTheScreen();
+    expect(screen.getByText('disabled')).toBeOnTheScreen();
   });
 });

@@ -1,7 +1,10 @@
 # Phase 1 — Technical foundation · Completion report
 
-**Date:** 2026-09-02 · **Status:** Complete, with one criterion unverifiable on this machine
+**Date:** 2026-09-02 · **Status:** Complete locally, with two environment-dependent criteria unverified
 **Amended:** 2026-09-02, retargeted from Expo SDK 57 to SDK 54 so the project runs in Expo Go on the review device. See _SDK change_ at the end.
+**Re-audited before Phase 2:** 2026-09-02. `npm run verify` passed all 35 Phase 1 tests and every
+local executable gate. The repository now has commits and an `origin` remote; no pull-request CI
+run was inspected during this audit, so AC1.11 remains unverified rather than being failed.
 **Plan:** [`../plan.md`](../plan.md) Phase 1 · **Architecture:** [`../architecture.md`](../architecture.md)
 
 ---
@@ -98,7 +101,7 @@ in `core` were each reported by dependency-cruiser.
 | AC1.8  | dependency-cruiser reports zero cycles                                                             | **Pass**       | `no dependency violations found`, and a deliberate cycle was reported before removal                                     |
 | AC1.9  | App launches on an iOS simulator and an Android emulator and displays the environment and base URL | **Partial**    | Both platforms bundle; `App.test.tsx` asserts the values render. The launch itself is **unverified** — see Known issues  |
 | AC1.10 | Switching `.env` changes the base URL with no code edit                                            | **Pass**       | `APP_ENV=…` resolves three distinct base URLs                                                                            |
-| AC1.11 | CI passes on a pull request                                                                        | **Unverified** | Workflow written; every step it runs passes locally. No git remote and no commits exist yet                              |
+| AC1.11 | CI passes on a pull request                                                                        | **Unverified** | Workflow written; every step passes locally. A remote now exists, but no pull-request run was inspected in this audit.   |
 | AC1.12 | Every folder in `src/` has a README stating its rules                                              | **Pass**       | 57 directories, 57 READMEs, 0 missing                                                                                    |
 
 **10 of 12 pass. AC1.9 is partial and AC1.11 is unverified**, both for environment reasons rather
@@ -112,13 +115,14 @@ than defects.
    test asserts the app renders the resolved environment name and API base URL. To finish the
    criterion, run `npx expo prebuild` then `npx expo run:ios` and `npx expo run:android` on a
    machine with both toolchains.
-2. **AC1.11 cannot be completed either.** The repository has no commits and no remote, so no pull
-   request can run the workflow. Every command the workflow invokes passes locally.
+2. **AC1.11 remains unverified.** The repository now has commits and an `origin` remote, correcting
+   the report's original environment note, but this audit did not inspect a pull-request workflow
+   run. Every command the workflow invokes passes locally.
 3. **Coverage thresholds are currently vacuous.** `collectCoverageFrom` targets `src/domain` and
    `src/data/**/mappers`, which hold no code yet, so `npm run test:coverage` reports 0% and exits 0.
    The thresholds begin enforcing with the first domain module in Phase 4. Noted in `jest.config.js`.
 4. **`npm audit` reports advisories in the transitive dependency tree**, inherited from the Expo
-   SDK 57 toolchain. None is in a runtime path of the app. Worth a look before release, not now.
+   SDK 54 toolchain. None is introduced by application code. Review them again before release.
 
 ## Remaining risks
 
@@ -127,7 +131,7 @@ than defects.
 | `src/app` collides with the Expo Router convention, and the bundler says so on every export. | Low. `expo-router` is not a dependency and AD-7 chose React Navigation. The entry point remains `index.ts`. Documented in `src/app/README.md`; revisit only if a future phase ever wants Expo Router. |
 | The architecture test writes real files into `src/` while it runs.                           | Low. It cleans up in `afterEach`, sweeps stale folders in `beforeAll`, and the folder names are git-ignored. A crashed run leaves a file that makes `npm run lint` fail loudly rather than silently.  |
 | `--experimental-vm-modules` is an unstable Node flag.                                        | Low, but real. If it changes, the architecture suite can move to a standalone Node script. Nothing else depends on it.                                                                                |
-| The theme in `src/presentation/theme/tokens.ts` is a stub.                                   | None, by design. Phase 2 replaces it with the full token set.                                                                                                                                         |
+| The theme in `src/presentation/theme/tokens.ts` was a stub.                                  | Closed by Phase 2: it is now the complete typed token set.                                                                                                                                            |
 
 ## What needs human review
 
