@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Type-check, lint, boundaries, tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create the environment file
+        # CI never holds real configuration. The example file is enough to
+        # type-check and test, and it proves .env.example stays valid.
+        run: cp .env.example .env.development
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Architecture boundaries and cycles
+        run: npm run boundaries
+
+      - name: Unit, component and architecture tests
+        run: npm test -- --ci
+
+      - name: Expo config resolves for every environment
+        run: |
+          cp .env.example .env.staging
+          cp .env.example .env.production
+          for env in development staging production; do
+            APP_ENV="$env" npx expo config --type public > /dev/null
+          done

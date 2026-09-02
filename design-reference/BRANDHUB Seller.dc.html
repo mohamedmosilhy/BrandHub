@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #F6F7F9; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #d8d9e0; border: 3px solid transparent; background-clip: padding-box; border-radius: 99px; }
+  ::selection { background: #EEEDF9; }
+</style>
+</helmet>
+
+<div style="display: grid; grid-template-columns: 256px 1fr; height: 100vh; overflow: hidden; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #1A1A2E; font-size: 14px; background: #F6F7F9;">
+
+  <aside style="background: #fff; border-right: 1px solid #ECEDF1; display: flex; flex-direction: column; min-height: 0;">
+    <div style="display: flex; align-items: center; gap: 11px; height: 64px; padding: 0 20px; border-bottom: 1px solid #ECEDF1; flex-shrink: 0;">
+      <span style="width: 34px; height: 34px; border-radius: 9px; background: #1A1A2E; display: grid; place-items: center; color: #fff;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8.5 12 4l9 4.5v7L12 20l-9-4.5z"></path><path d="M3 8.5 12 13l9-4.5"></path><path d="M12 13v7"></path></svg>
+      </span>
+      <span style="font-weight: 800; font-size: 17px; letter-spacing: -.02em;">BRAND<span style="font-weight: 500; color: #9A9AAF;">HUB</span></span>
+    </div>
+
+    <div style="margin: 14px 16px 6px; padding: 11px 13px; border-radius: 11px; background: #FCF2DC; display: flex; align-items: center; gap: 10px;">
+      <span style="width: 30px; height: 30px; border-radius: 8px; background: #C98A12; color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 800;">A2</span>
+      <span style="display: flex; flex-direction: column;">
+        <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .08em; color: #C98A12;">SELLER</span>
+        <span style="font-size: 13px; font-weight: 700;">A2 Official Store</span>
+      </span>
+    </div>
+
+    <div style="padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;">
+      <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; padding: 12px 10px 6px;">CATALOG</span>
+      <sc-for list="{{ navCatalog }}" as="n" hint-placeholder-count="2">
+        <button onClick="{{ n.go }}" style="display: flex; align-items: center; gap: 11px; padding: 10px 11px; border: 0; border-radius: 9px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: start; background: {{ n.bg }}; color: {{ n.fg }};" style-hover="background: #F3F3F7;">
+          <span style="width: 18px; display: grid; place-items: center;">{{ n.mark }}</span>
+          <span style="flex: 1;">{{ n.label }}</span>
+          <sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; background: #FCF2DC; color: #C98A12; border-radius: 99px; padding: 2px 7px;">{{ n.count }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+      <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; padding: 16px 10px 6px;">BUSINESS</span>
+      <sc-for list="{{ navBusiness }}" as="n" hint-placeholder-count="2">
+        <button onClick="{{ n.go }}" style="display: flex; align-items: center; gap: 11px; padding: 10px 11px; border: 0; border-radius: 9px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: start; background: {{ n.bg }}; color: {{ n.fg }};" style-hover="background: #F3F3F7;">
+          <span style="width: 18px; display: grid; place-items: center;">{{ n.mark }}</span>
+          <span style="flex: 1;">{{ n.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: auto; padding: 14px; border-top: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+      <span style="width: 34px; height: 34px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 12px; font-weight: 800;">AH</span>
+      <span style="display: flex; flex-direction: column; min-width: 0;">
+        <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap;">Ahmed Al Habsi</span>
+        <span style="font-size: 10.5px; color: #9A9AAF; white-space: nowrap;">Store owner</span>
+      </span>
+    </div>
+  </aside>
+
+  <div style="display: flex; flex-direction: column; min-width: 0; min-height: 0;">
+    <header style="height: 64px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 14px; padding: 0 22px;">
+      <span style="font-size: 15px; font-weight: 800;">{{ viewTitle }}</span>
+      <span style="font-size: 12px; color: #9A9AAF;">{{ viewSub }}</span>
+      <button onClick="{{ goSubmit }}" style="margin-left: auto; border: 0; border-radius: 9px; padding: 10px 16px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; white-space: nowrap;" style-hover="background: #6860CC;">Submit new product</button>
+    </header>
+
+    <main style="flex: 1; overflow-y: auto; padding: 24px; min-height: 0;">
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 1200px;">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+            <sc-for list="{{ sellerKpis }}" as="k" hint-placeholder-count="4">
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 9px;">
+                  <span style="width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; background: {{ k.tint }}; color: {{ k.fg }};">{{ k.mark }}</span>
+                  <span style="font-size: 12px; font-weight: 600; color: #5A5A72;">{{ k.label }}</span>
+                </div>
+                <span style="font-size: 24px; font-weight: 800; letter-spacing: -.02em;">{{ k.value }}</span>
+                <span style="font-size: 11px; color: #9A9AAF;">{{ k.delta }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+              <span style="font-size: 13.5px; font-weight: 800;">Sales by week · August</span>
+              <sc-for list="{{ salesTrend }}" as="w" hint-placeholder-count="4">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <div style="display: flex; align-items: baseline; font-size: 12px;">
+                    <span style="color: #5A5A72;">{{ w.label }}</span>
+                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-weight: 600;">{{ w.value }}</span>
+                  </div>
+                  <span style="height: 6px; border-radius: 99px; background: #F1F1F5; display: block; overflow: hidden;">
+                    <span style="display: block; height: 100%; border-radius: 99px; background: #7F77DD; width: {{ w.width }};"></span>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+              <span style="font-size: 13.5px; font-weight: 800;">To do</span>
+              <sc-for list="{{ sellerTodo }}" as="q" hint-placeholder-count="3">
+                <button onClick="{{ q.go }}" style="display: flex; align-items: center; gap: 12px; background: #FAFAFB; border: 1px solid #ECEDF1; border-radius: 12px; padding: 13px; cursor: pointer; font-family: inherit; text-align: left; width: 100%;" style-hover="border-color: #C9C6EE;">
+                  <span style="flex: 1; font-size: 12.5px; font-weight: 700;">{{ q.label }}</span>
+                  <span style="font-size: 10.5px; font-weight: 700; color: #7F77DD; background: #EEEDF9; border-radius: 99px; padding: 4px 10px;">{{ q.meta }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+            <span style="font-size: 13.5px; font-weight: 800;">Best performing products</span>
+            <sc-for list="{{ topProducts }}" as="p">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="{{ p.img }}" alt="" style="width: 40px; height: 40px; border-radius: 9px; object-fit: contain; background: #F5F5F7; flex-shrink: 0;">
+                <span style="flex: 1; font-size: 12.5px; font-weight: 600;">{{ p.title }}</span>
+                <span style="font-size: 11.5px; color: #9A9AAF;">{{ p.units }}</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 700; min-width: 92px; text-align: right;">{{ p.revenue }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSalesOrders }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden; max-width: 1200px;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center;">
+            <span style="font-size: 13.5px; font-weight: 800;">Orders containing your products</span>
+            <span style="margin-left: auto; font-size: 11.5px; color: #9A9AAF;">Your earning is the line total minus the 15% platform commission</span>
+          </div>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #FAFAFB;">
+                <th style="text-align: left; padding: 11px 18px; font-size: 10.5px; font-weight: 700; letter-spacing: .05em; color: #9A9AAF;">ORDER</th>
+                <th style="text-align: left; padding: 11px 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .05em; color: #9A9AAF;">PRODUCT</th>
+                <th style="text-align: left; padding: 11px 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .05em; color: #9A9AAF;">CUSTOMER</th>
+                <th style="text-align: left; padding: 11px 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .05em; color: #9A9AAF;">PAYMENT</th>
+                <th style="text-align: left; padding: 11px 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .05em; color: #9A9AAF;">TOTAL</th>
+                <th style="text-align: left; padding: 11px 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .05em; color: #9A9AAF;">YOUR EARNING</th>
+                <th style="text-align: left; padding: 11px 18px; font-size: 10.5px; font-weight: 700; letter-spacing: .05em; color: #9A9AAF;">STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ sellerOrders }}" as="o" hint-placeholder-count="5">
+                <tr style="border-top: 1px solid #ECEDF1;">
+                  <td style="padding: 12px 18px;">
+                    <span style="display: flex; flex-direction: column; gap: 2px;">
+                      <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ o.code }}</span>
+                      <span style="font-size: 10.5px; color: #9A9AAF;">{{ o.date }}</span>
+                    </span>
+                  </td>
+                  <td style="padding: 12px;">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                      <img src="{{ o.img }}" alt="" style="width: 36px; height: 36px; border-radius: 8px; object-fit: contain; background: #F5F5F7;">
+                      <span style="display: flex; flex-direction: column; gap: 2px; max-width: 210px;">
+                        <span style="font-size: 12px; font-weight: 600; line-height: 1.45;">{{ o.product }}</span>
+                        <span style="font-size: 10.5px; color: #9A9AAF;">Qty {{ o.qty }}</span>
+                      </span>
+                    </span>
+                  </td>
+                  <td style="padding: 12px; font-size: 12px; color: #5A5A72;">{{ o.customer }}</td>
+                  <td style="padding: 12px; font-size: 12px; color: #5A5A72;">{{ o.pay }}</td>
+                  <td style="padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ o.total }}</td>
+                  <td style="padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #1F9D62;">{{ o.earn }}</td>
+                  <td style="padding: 12px 18px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ o.sBg }}; color: {{ o.sFg }};">
+                      <span style="width: 6px; height: 6px; border-radius: 99px; background: currentColor;"></span>{{ o.status }}
+                    </span>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isProducts }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 1200px;">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+            <sc-for list="{{ productKpis }}" as="k" hint-placeholder-count="4">
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 12px; font-weight: 600; color: #5A5A72;">{{ k.label }}</span>
+                <span style="font-size: 24px; font-weight: 800; letter-spacing: -.02em;">{{ k.value }}</span>
+                <span style="font-size: 11px; color: #9A9AAF;">{{ k.sub }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+            <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 13.5px; font-weight: 800;">My product requests</span>
+              <div style="margin-left: auto; display: flex; gap: 7px;">
+                <sc-for list="{{ productFilters }}" as="f" hint-placeholder-count="4">
+                  <button onClick="{{ f.pick }}" style="border: 1px solid {{ f.border }}; border-radius: 99px; padding: 6px 13px; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #FAFAFB;">
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">PRODUCT</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">PRICE</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">STOCK</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">SUBMITTED</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">STATUS</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
+                  <tr style="border-top: 1px solid #ECEDF1;">
+                    <td style="padding: 12px 18px;">
+                      <span style="display: flex; align-items: center; gap: 11px;">
+                        <img src="{{ p.img }}" alt="" style="width: 42px; height: 42px; border-radius: 9px; object-fit: contain; background: #F5F5F7;">
+                        <span style="display: flex; flex-direction: column; gap: 2px; max-width: 280px;">
+                          <span style="font-size: 12.5px; font-weight: 600; line-height: 1.45;">{{ p.title }}</span>
+                          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #9A9AAF;">{{ p.sku }}</span>
+                        </span>
+                      </span>
+                    </td>
+                    <td style="padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 700;">{{ p.price }}</td>
+                    <td style="padding: 12px; font-size: 12px; color: #5A5A72;">{{ p.stock }}</td>
+                    <td style="padding: 12px; font-size: 12px; color: #5A5A72;">{{ p.submitted }}</td>
+                    <td style="padding: 12px;">
+                      <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ p.statusBg }}; color: {{ p.statusFg }};">
+                        <span style="width: 6px; height: 6px; border-radius: 99px; background: currentColor;"></span>{{ p.status }}
+                      </span>
+                      <sc-if value="{{ p.reason }}" hint-placeholder-val="{{ false }}">
+                        <span style="display: block; font-size: 10.5px; color: #D64545; margin-top: 5px; max-width: 220px; line-height: 1.6;">{{ p.reason }}</span>
+                      </sc-if>
+                    </td>
+                    <td style="padding: 12px 18px;">
+                      <span style="display: flex; gap: 6px;">
+                        <button onClick="{{ p.edit }}" style="border: 1px solid #ECEDF1; border-radius: 8px; padding: 6px 11px; background: #fff; font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">Edit</button>
+                        <button onClick="{{ p.remove }}" style="border: 1px solid #ECEDF1; border-radius: 8px; padding: 6px 11px; background: #fff; font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer; color: #D64545;" style-hover="border-color: #D64545;">Delete</button>
+                      </span>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSubmit }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 1fr 320px; gap: 16px; max-width: 1200px;">
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+              <span style="font-size: 13.5px; font-weight: 800;">Product details</span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <label style="display: flex; flex-direction: column; gap: 6px;">
+                  <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Product name (English)</span>
+                  <input placeholder="A2 Series wireless headphones" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: inherit; font-size: 12.5px; outline: none;">
+                </label>
+                <label style="display: flex; flex-direction: column; gap: 6px;">
+                  <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Product name (Arabic)</span>
+                  <input placeholder="سماعة رأس لاسلكية" dir="rtl" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: inherit; font-size: 12.5px; outline: none;">
+                </label>
+                <label style="display: flex; flex-direction: column; gap: 6px;">
+                  <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Category</span>
+                  <select style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 11px; font-family: inherit; font-size: 12.5px; background: #fff; outline: none;">
+                    <option>Electronics</option><option>Gaming</option><option>Home &amp; kitchen</option><option>Beauty</option><option>Sport</option>
+                  </select>
+                </label>
+                <label style="display: flex; flex-direction: column; gap: 6px;">
+                  <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">SKU</span>
+                  <input placeholder="A2-HP-2201" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; outline: none;">
+                </label>
+              </div>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Short description</span>
+                <input placeholder="One line shown under the product title" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: inherit; font-size: 12.5px; outline: none;">
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Full description</span>
+                <textarea placeholder="Materials, dimensions, what is in the box, warranty…" style="min-height: 96px; resize: none; border: 1px solid #ECEDF1; border-radius: 10px; padding: 11px 13px; font-family: inherit; font-size: 12.5px; line-height: 1.7; outline: none;"></textarea>
+              </label>
+            </div>
+
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+              <span style="font-size: 13.5px; font-weight: 800;">Pricing and tax</span>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+                <sc-for list="{{ priceFields }}" as="f" hint-placeholder-count="4">
+                  <label style="display: flex; flex-direction: column; gap: 6px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">{{ f.label }}</span>
+                    <input placeholder="{{ f.placeholder }}" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; outline: none;">
+                  </label>
+                </sc-for>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; background: #FAFAFB; border-radius: 12px; padding: 13px 15px;">
+                <span style="font-size: 12px; font-weight: 600;">Taxable product</span>
+                <button onClick="{{ toggleTax }}" style="width: 42px; height: 24px; border-radius: 99px; border: 0; cursor: pointer; padding: 3px; display: flex; justify-content: {{ taxJustify }}; background: {{ taxTrack }};">
+                  <span style="width: 18px; height: 18px; border-radius: 99px; background: #fff; display: block;"></span>
+                </button>
+                <span style="margin-left: auto; font-size: 11.5px; color: #9A9AAF;">{{ taxNote }}</span>
+              </div>
+            </div>
+
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+              <span style="font-size: 13.5px; font-weight: 800;">Variants and stock</span>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Colours</span>
+                <div style="display: flex; gap: 9px; flex-wrap: wrap;">
+                  <sc-for list="{{ colours }}" as="col" hint-placeholder-count="5">
+                    <button onClick="{{ col.toggle }}" style="display: flex; align-items: center; gap: 8px; border: 1.5px solid {{ col.border }}; border-radius: 99px; padding: 6px 13px 6px 7px; background: #fff; font-family: inherit; font-size: 11.5px; font-weight: 600; cursor: pointer; white-space: nowrap;">
+                      <span style="width: 18px; height: 18px; border-radius: 99px; background: {{ col.swatch }};"></span>{{ col.label }}
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Sizes</span>
+                <div style="display: flex; gap: 9px; flex-wrap: wrap;">
+                  <sc-for list="{{ sizes }}" as="sz" hint-placeholder-count="5">
+                    <button onClick="{{ sz.toggle }}" style="min-width: 46px; border: 1.5px solid {{ sz.border }}; border-radius: 10px; padding: 9px 12px; background: {{ sz.bg }}; color: {{ sz.fg }}; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;">{{ sz.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="border: 1px solid #ECEDF1; border-radius: 12px; overflow: hidden;">
+                <div style="display: flex; background: #FAFAFB; padding: 9px 14px; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF;">
+                  <span style="flex: 1;">VARIANT</span><span style="width: 120px;">STOCK</span><span style="width: 120px;">PRICE DELTA</span>
+                </div>
+                <sc-for list="{{ variantRows }}" as="vr" hint-placeholder-count="3">
+                  <div style="display: flex; align-items: center; padding: 10px 14px; border-top: 1px solid #F1F1F5; font-size: 12.5px;">
+                    <span style="flex: 1; font-weight: 600;">{{ vr.label }}</span>
+                    <span style="width: 120px;">
+                      <input value="{{ vr.stock }}" readonly style="width: 84px; height: 34px; border: 1px solid #ECEDF1; border-radius: 8px; padding: 0 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none;">
+                    </span>
+                    <span style="width: 120px;">
+                      <input value="{{ vr.delta }}" readonly style="width: 84px; height: 34px; border: 1px solid #ECEDF1; border-radius: 8px; padding: 0 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none;">
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 16px; align-self: flex-start;">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+              <span style="font-size: 13px; font-weight: 800;">Images</span>
+              <span style="font-size: 11px; color: #9A9AAF; line-height: 1.6;">Up to 10 images. The first one becomes the cover.</span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 9px;">
+                <sc-for list="{{ uploadSlots }}" as="u" hint-placeholder-count="6">
+                  <span style="aspect-ratio: 1; border: 1.5px dashed {{ u.border }}; border-radius: 11px; display: grid; place-items: center; background: {{ u.bg }}; overflow: hidden;">
+                    <sc-if value="{{ u.filled }}" hint-placeholder-val="{{ false }}">
+                      <img src="{{ u.src }}" alt="" style="width: 100%; height: 100%; object-fit: contain;">
+                    </sc-if>
+                    <sc-if value="{{ u.empty }}" hint-placeholder-val="{{ true }}">
+                      <span style="font-size: 17px; color: #C9C6EE;">＋</span>
+                    </sc-if>
+                  </span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+              <span style="font-size: 13px; font-weight: 800;">Before you submit</span>
+              <sc-for list="{{ checklist }}" as="ck" hint-placeholder-count="4">
+                <span style="display: flex; gap: 9px; font-size: 11.5px; color: #5A5A72; line-height: 1.6;">
+                  <span style="color: #1F9D62; font-weight: 800;">✓</span>{{ ck.label }}
+                </span>
+              </sc-for>
+              <button onClick="{{ submitProduct }}" style="height: 46px; border: 0; border-radius: 11px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; text-align: left; padding: 0 16px;" style-hover="background: #6860CC;">Submit for approval</button>
+              <button style="height: 42px; border: 1px solid #ECEDF1; border-radius: 11px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; text-align: left; padding: 0 16px;" style-hover="border-color: #7F77DD;">Save draft</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isEarnings }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 1150px;">
+          <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 14px;">
+            <div style="background: #1A1A2E; color: #fff; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+              <span style="font-size: 12px; color: #A9A5E6; font-weight: 600;">Available balance</span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700; letter-spacing: -.02em;">OMR 10,608.000</span>
+              <span style="font-size: 11.5px; color: rgba(255,255,255,.6); line-height: 1.7;">Next payout runs 31 August to Bank Muscat ••••4402.</span>
+              <button onClick="{{ requestPayout }}" style="align-self: flex-start; margin-top: 6px; border: 0; border-radius: 9px; padding: 10px 16px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Request early transfer</button>
+            </div>
+            <sc-for list="{{ earnKpis }}" as="k" hint-placeholder-count="2">
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 12px; font-weight: 600; color: #5A5A72;">{{ k.label }}</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700;">{{ k.value }}</span>
+                <span style="font-size: 11px; color: #9A9AAF;">{{ k.sub }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+            <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; font-size: 13.5px; font-weight: 800;">Transactions</div>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #FAFAFB;">
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">DATE</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">DESCRIPTION</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">REFERENCE</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">AMOUNT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ transactions }}" as="tx" hint-placeholder-count="6">
+                  <tr style="border-top: 1px solid #ECEDF1;">
+                    <td style="padding: 12px 18px; font-size: 12px; color: #5A5A72;">{{ tx.date }}</td>
+                    <td style="padding: 12px; font-size: 12.5px; font-weight: 600;">{{ tx.label }}</td>
+                    <td style="padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #9A9AAF;">{{ tx.ref }}</td>
+                    <td style="padding: 12px 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: {{ tx.fg }};">{{ tx.amount }}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 320px 1fr; gap: 16px; max-width: 1150px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; align-self: flex-start;">
+            <span style="width: 92px; height: 92px; border-radius: 22px; background: #FCF2DC; color: #C98A12; display: grid; place-items: center; font-size: 28px; font-weight: 800;">A2</span>
+            <button style="border: 1px solid #ECEDF1; border-radius: 9px; padding: 8px 14px; background: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">Change store logo</button>
+            <span style="font-size: 15px; font-weight: 800;">A2 Official Store</span>
+            <span style="font-size: 11.5px; color: #9A9AAF;">Verified seller · joined Feb 2024</span>
+            <div style="width: 100%; height: 1px; background: #ECEDF1; margin: 4px 0;"></div>
+            <div style="display: flex; width: 100%; gap: 10px;">
+              <sc-for list="{{ storeStats }}" as="st" hint-placeholder-count="3">
+                <span style="flex: 1; background: #FAFAFB; border-radius: 11px; padding: 11px 8px; display: flex; flex-direction: column; gap: 3px;">
+                  <span style="font-size: 15px; font-weight: 800;">{{ st.value }}</span>
+                  <span style="font-size: 9.5px; color: #9A9AAF;">{{ st.label }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+              <span style="font-size: 13.5px; font-weight: 800;">Owner details</span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <sc-for list="{{ ownerFields }}" as="f" hint-placeholder-count="4">
+                  <label style="display: flex; flex-direction: column; gap: 6px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">{{ f.label }}</span>
+                    <input value="{{ f.value }}" readonly style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: inherit; font-size: 12.5px; background: #FAFAFB; outline: none;">
+                  </label>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+              <span style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 13.5px; font-weight: 800;">Bank details</span>
+                <span style="font-size: 10.5px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: #E6F6EE; color: #1F9D62;">Verified</span>
+                <span style="margin-left: auto; font-size: 11px; color: #9A9AAF;">Used by finance for your payouts</span>
+              </span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <sc-for list="{{ bankFields }}" as="f" hint-placeholder-count="4">
+                  <label style="display: flex; flex-direction: column; gap: 6px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">{{ f.label }}</span>
+                    <input value="{{ f.value }}" readonly style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; background: #FAFAFB; outline: none;">
+                  </label>
+                </sc-for>
+              </div>
+              <button onClick="{{ saveBank }}" style="align-self: flex-start; height: 42px; border: 0; border-radius: 10px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; padding: 0 18px;" style-hover="background: #6860CC;">Save bank details</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; right: 24px; bottom: 24px; background: #1A1A2E; color: #fff; border-radius: 12px; padding: 13px 18px; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 9px; z-index: 70;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FE3B8" stroke-width="2.4"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>
+      {{ toast }}
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:940}}">
+const PRODUCTS = [
+  { title: 'A2 Series wireless noise-cancelling headphones', sku: 'A2-HP-2201', img: 'assets/p1.jpg', price: 'OMR 38.900', stock: '240', submitted: '2 h ago', status: 'Pending', reason: null },
+  { title: 'AMOLED sports smartwatch', sku: 'A2-SW-1180', img: 'assets/p2.jpg', price: 'OMR 24.500', stock: '160', submitted: 'Yesterday', status: 'Approved', reason: null },
+  { title: 'Lightweight running shoe', sku: 'A2-RS-7712', img: 'assets/p9.jpg', price: 'OMR 19.900', stock: '180', submitted: '2 days ago', status: 'Pending', reason: null },
+  { title: 'Portable waterproof Bluetooth speaker', sku: 'A2-SP-3390', img: 'assets/p7.jpg', price: 'OMR 21.300', stock: '95', submitted: '4 days ago', status: 'Approved', reason: null },
+  { title: '2K smart security camera', sku: 'A2-CM-0042', img: 'assets/p8.jpg', price: 'OMR 16.800', stock: '60', submitted: '6 days ago', status: 'Rejected', reason: 'Images below 1000px and missing the conformity certificate.' },
+  { title: 'Water-resistant backpack with laptop sleeve', sku: 'A2-BP-5521', img: 'assets/p5.jpg', price: 'OMR 12.900', stock: '310', submitted: 'Last week', status: 'Approved', reason: null },
+];
+
+const STATUS = {
+  Pending: { bg: '#FCF2DC', fg: '#C98A12' },
+  Approved: { bg: '#E6F6EE', fg: '#1F9D62' },
+  Rejected: { bg: '#FCEAEA', fg: '#D64545' },
+};
+
+const COLOURS = [
+  { label: 'Midnight', swatch: '#1A1A2E' }, { label: 'Violet', swatch: '#7F77DD' },
+  { label: 'Sand', swatch: '#D4C9BD' }, { label: 'Ivory', swatch: '#F1F1F5' },
+  { label: 'Rose', swatch: '#D4537E' },
+];
+const SIZES = ['One size', 'S', 'M', 'L', 'XL'];
+
+class Component extends DCLogic {
+  state = {
+    view: 'overview', filter: 'All', taxable: true,
+    colours: ['Midnight', 'Violet'], sizes: ['One size'], toast: null,
+  };
+
+  flash(msg) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg });
+    this._t = setTimeout(() => this.setState({ toast: null }), 2200);
+  }
+
+  renderVals() {
+    const s = this.state, on = '#7F77DD';
+    const meta = {
+      overview: ['Overview', 'Your store at a glance'],
+      salesorders: ['Sales orders', 'Orders containing your products'],
+      products: ['My products', 'Requests and their approval state'],
+      submit: ['Submit product', 'Sent to admin for review before publishing'],
+      earnings: ['Earnings and transfers', 'Balance, payouts and transactions'],
+      profile: ['Profile and bank', 'Store identity and payout account'],
+    };
+    const m = meta[s.view];
+
+    const list = PRODUCTS.filter(p => s.filter === 'All' || p.status === s.filter);
+    const pickedColours = s.colours.length ? s.colours : ['Midnight'];
+    const pickedSizes = s.sizes.length ? s.sizes : ['One size'];
+    const variantRows = [];
+    pickedColours.forEach(c => pickedSizes.forEach(z => {
+      variantRows.push({ label: c + ' · ' + z, stock: '40', delta: '0.000' });
+    }));
+
+    return {
+      viewTitle: m[0], viewSub: m[1],
+      isProducts: s.view === 'products', isSubmit: s.view === 'submit',
+      isEarnings: s.view === 'earnings', isProfile: s.view === 'profile',
+      isOverview: s.view === 'overview', isSalesOrders: s.view === 'salesorders',
+      goSubmit: () => this.setState({ view: 'submit' }),
+
+      sellerKpis: [
+        { label: 'Sales this month', value: 'OMR 3,842', delta: '+18% vs July', tint: '#E6F6EE', fg: '#1F9D62', mark: '⌃' },
+        { label: 'Orders this month', value: '96', delta: '14 awaiting dispatch', tint: '#EEEDF9', fg: '#7F77DD', mark: '☰' },
+        { label: 'Live products', value: '3', delta: '2 pending approval', tint: '#FCF2DC', fg: '#C98A12', mark: '▤' },
+        { label: 'Available balance', value: 'OMR 1,204', delta: 'Next payout 1 September', tint: '#E7F0FC', fg: '#2A6FDB', mark: '﷼' },
+      ],
+      salesTrend: [
+        { label: 'Week 1', value: 'OMR 742', width: '38%' },
+        { label: 'Week 2', value: 'OMR 986', width: '52%' },
+        { label: 'Week 3', value: 'OMR 1,180', width: '62%' },
+        { label: 'Week 4', value: 'OMR 934', width: '49%' },
+      ],
+      topProducts: [
+        { title: 'A2 Series wireless headphones', img: 'assets/p1.jpg', units: '42 units', revenue: 'OMR 1,634' },
+        { title: 'Lightweight running shoe', img: 'assets/p9.jpg', units: '31 units', revenue: 'OMR 617' },
+        { title: 'AMOLED sports smartwatch', img: 'assets/p2.jpg', units: '18 units', revenue: 'OMR 441' },
+      ],
+      sellerTodo: [
+        { label: '2 product requests awaiting admin review', meta: 'Products', go: () => this.setState({ view: 'products' }) },
+        { label: '14 orders ready to hand to the courier', meta: 'Orders', go: () => this.setState({ view: 'salesorders' }) },
+        { label: 'Add your IBAN to receive the next payout', meta: 'Bank', go: () => this.setState({ view: 'profile' }) },
+      ],
+
+      sellerOrders: [
+        { code: '#BH-284193', date: '15 Aug 2026', customer: 'Amal Al Balushi', product: 'A2 Series wireless headphones', img: 'assets/p1.jpg', qty: '1', total: 'OMR 38.900', earn: 'OMR 33.065', pay: 'Cash on delivery', status: 'Out for delivery', sBg: '#EEEDF9', sFg: '#7F77DD' },
+        { code: '#BH-284171', date: '14 Aug 2026', customer: 'Reem Al Shehhi', product: 'Lightweight running shoe', img: 'assets/p9.jpg', qty: '2', total: 'OMR 39.800', earn: 'OMR 33.830', pay: 'Card', status: 'Processing', sBg: '#FCF2DC', sFg: '#C98A12' },
+        { code: '#BH-284150', date: '13 Aug 2026', customer: 'Dana Al Kindi', product: 'AMOLED sports smartwatch', img: 'assets/p2.jpg', qty: '1', total: 'OMR 24.500', earn: 'OMR 20.825', pay: 'Thawani', status: 'Delivered', sBg: '#E6F6EE', sFg: '#1F9D62' },
+        { code: '#BH-284130', date: '12 Aug 2026', customer: 'Noura Al Siyabi', product: 'A2 Series wireless headphones', img: 'assets/p1.jpg', qty: '1', total: 'OMR 38.900', earn: 'OMR 33.065', pay: 'Cash on delivery', status: 'Delivered', sBg: '#E6F6EE', sFg: '#1F9D62' },
+        { code: '#BH-284102', date: '11 Aug 2026', customer: 'Talal Al Hinai', product: 'Lightweight running shoe', img: 'assets/p9.jpg', qty: '1', total: 'OMR 19.900', earn: 'OMR 16.915', pay: 'Card', status: 'Returned', sBg: '#FCEAEA', sFg: '#D64545' },
+      ],
+
+      navCatalog: [
+        ['overview', 'Overview', '▦', null],
+        ['products', 'My products', '▤', '2'],
+        ['submit', 'Submit product', '＋', null],
+      ].map(n => ({
+        label: n[1], mark: n[2], count: n[3],
+        bg: s.view === n[0] ? '#EEEDF9' : 'transparent', fg: s.view === n[0] ? on : '#3A3A52',
+        go: () => this.setState({ view: n[0] }),
+      })),
+      navBusiness: [
+        ['salesorders', 'Sales orders', '☰'],
+        ['earnings', 'Earnings and transfers', '﷼'],
+        ['profile', 'Profile and bank', '☺'],
+      ].map(n => ({
+        label: n[1], mark: n[2],
+        bg: s.view === n[0] ? '#EEEDF9' : 'transparent', fg: s.view === n[0] ? on : '#3A3A52',
+        go: () => this.setState({ view: n[0] }),
+      })),
+
+      productKpis: [
+        { label: 'Live products', value: '46', sub: '3 low on stock' },
+        { label: 'Pending review', value: '2', sub: 'Average wait 6 h' },
+        { label: 'Orders this month', value: '184', sub: '+12.9% vs July' },
+        { label: 'Rejected', value: '1', sub: 'Fix and resubmit' },
+      ],
+      productFilters: ['All', 'Pending', 'Approved', 'Rejected'].map(f => ({
+        label: f, pick: () => this.setState({ filter: f }),
+        bg: s.filter === f ? '#EEEDF9' : '#fff',
+        fg: s.filter === f ? on : '#5A5A72',
+        border: s.filter === f ? '#C9C6EE' : '#ECEDF1',
+      })),
+      products: list.map(p => ({
+        title: p.title, sku: p.sku, img: p.img, price: p.price, stock: p.stock,
+        submitted: p.submitted, status: p.status, reason: p.reason,
+        statusBg: STATUS[p.status].bg, statusFg: STATUS[p.status].fg,
+        edit: () => this.setState({ view: 'submit' }),
+        remove: () => this.flash(p.sku + ' request deleted'),
+      })),
+
+      priceFields: [
+        { label: 'Base price (OMR)', placeholder: '54.000' },
+        { label: 'Sale price (OMR)', placeholder: '38.900' },
+        { label: 'Seller percentage', placeholder: '15' },
+        { label: 'Tax rate (%)', placeholder: '5' },
+      ],
+      toggleTax: () => this.setState(st => ({ taxable: !st.taxable })),
+      taxTrack: s.taxable ? '#7F77DD' : '#DEDFE6',
+      taxJustify: s.taxable ? 'flex-end' : 'flex-start',
+      taxNote: s.taxable ? 'Standard rate · category Electronics' : 'Zero rated — proof required',
+      colours: COLOURS.map(c => ({
+        label: c.label, swatch: c.swatch,
+        border: s.colours.indexOf(c.label) >= 0 ? '#7F77DD' : '#ECEDF1',
+        toggle: () => this.setState(st => ({
+          colours: st.colours.indexOf(c.label) >= 0 ? st.colours.filter(x => x !== c.label) : st.colours.concat(c.label),
+        })),
+      })),
+      sizes: SIZES.map(z => {
+        const picked = s.sizes.indexOf(z) >= 0;
+        return {
+          label: z, border: picked ? '#7F77DD' : '#ECEDF1',
+          bg: picked ? '#EEEDF9' : '#fff', fg: picked ? '#7F77DD' : '#5A5A72',
+          toggle: () => this.setState(st => ({
+            sizes: picked ? st.sizes.filter(x => x !== z) : st.sizes.concat(z),
+          })),
+        };
+      }),
+      variantRows: variantRows.slice(0, 6),
+      uploadSlots: [0, 1, 2, 3, 4, 5].map(i => {
+        const src = ['assets/p1.jpg', 'assets/p7.jpg', 'assets/p2.jpg'][i];
+        return {
+          src: src, filled: !!src, empty: !src,
+          border: src ? '#ECEDF1' : '#C9C6EE', bg: src ? '#F5F5F7' : '#FAFAFE',
+        };
+      }),
+      checklist: [
+        { label: 'Images are at least 1000px on the long edge.' },
+        { label: 'Arabic and English names both filled in.' },
+        { label: 'Stock set for every variant you listed.' },
+        { label: 'Conformity certificate attached for electronics.' },
+      ],
+      submitProduct: () => { this.setState({ view: 'products' }); this.flash('Product submitted for admin approval'); },
+
+      earnKpis: [
+        { label: 'Paid out this year', value: 'OMR 84,220', sub: '11 transfers' },
+        { label: 'Commission paid', value: 'OMR 14,860', sub: '15% of gross' },
+      ],
+      requestPayout: () => this.flash('Early transfer requested — finance notified'),
+      transactions: [
+        { date: '15 Aug 2026', label: 'Order settlement · week 33', ref: 'STL-33-A2', amount: '+2,480.000', fg: '#1F9D62' },
+        { date: '12 Aug 2026', label: 'Platform commission', ref: 'COM-0812', amount: '−372.000', fg: '#D64545' },
+        { date: '08 Aug 2026', label: 'Order settlement · week 32', ref: 'STL-32-A2', amount: '+3,110.500', fg: '#1F9D62' },
+        { date: '05 Aug 2026', label: 'Return refund · RT-0231', ref: 'RT-0231', amount: '−38.900', fg: '#D64545' },
+        { date: '31 Jul 2026', label: 'Payout to Bank Muscat', ref: 'BM-TRF-98110', amount: '−9,240.000', fg: '#D64545' },
+        { date: '28 Jul 2026', label: 'Order settlement · week 30', ref: 'STL-30-A2', amount: '+2,905.000', fg: '#1F9D62' },
+      ],
+
+      storeStats: [
+        { value: '4.8', label: 'Rating' }, { value: '46', label: 'Products' }, { value: '12.4K', label: 'Sales' },
+      ],
+      ownerFields: [
+        { label: 'First name', value: 'Ahmed' }, { label: 'Last name', value: 'Al Habsi' },
+        { label: 'Phone', value: '+968 9445 1120' }, { label: 'Email', value: 'ops@a2store.om' },
+      ],
+      bankFields: [
+        { label: 'Bank name', value: 'Bank Muscat' }, { label: 'Account holder', value: 'A2 Official Store LLC' },
+        { label: 'Account number', value: '0324 1188 4402' }, { label: 'IBAN', value: 'OM12 0018 0324 1188 4402' },
+      ],
+      saveBank: () => this.flash('Bank details saved — pending finance verification'),
+
+      toast: s.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>

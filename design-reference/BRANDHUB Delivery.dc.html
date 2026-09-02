@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #F6F7F9; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #d8d9e0; border: 3px solid transparent; background-clip: padding-box; border-radius: 99px; }
+  ::selection { background: #EEEDF9; }
+</style>
+</helmet>
+
+<div style="display: grid; grid-template-columns: 256px 1fr; height: 100vh; overflow: hidden; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #1A1A2E; font-size: 14px; background: #F6F7F9;">
+
+  <aside style="background: #fff; border-right: 1px solid #ECEDF1; display: flex; flex-direction: column; min-height: 0;">
+    <div style="display: flex; align-items: center; gap: 11px; height: 64px; padding: 0 20px; border-bottom: 1px solid #ECEDF1; flex-shrink: 0;">
+      <span style="width: 34px; height: 34px; border-radius: 9px; background: #1A1A2E; display: grid; place-items: center; color: #fff;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8.5 12 4l9 4.5v7L12 20l-9-4.5z"></path><path d="M3 8.5 12 13l9-4.5"></path><path d="M12 13v7"></path></svg>
+      </span>
+      <span style="font-weight: 800; font-size: 17px; letter-spacing: -.02em;">BRAND<span style="font-weight: 500; color: #9A9AAF;">HUB</span></span>
+    </div>
+
+    <div style="margin: 14px 16px 6px; padding: 11px 13px; border-radius: 11px; background: #EEEDF9; display: flex; align-items: center; gap: 10px;">
+      <span style="width: 30px; height: 30px; border-radius: 8px; background: #7F77DD; color: #fff; display: grid; place-items: center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="7" width="12" height="9" rx="1.6"></rect><path d="M14 10h4l3 3v3h-7z"></path><circle cx="6.5" cy="18" r="1.6"></circle><circle cx="17" cy="18" r="1.6"></circle></svg>
+      </span>
+      <span style="display: flex; flex-direction: column;">
+        <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .08em; color: #7F77DD;">WORKSPACE</span>
+        <span style="font-size: 13px; font-weight: 700;">Delivery</span>
+      </span>
+    </div>
+
+    <div style="padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;">
+      <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; padding: 12px 10px 6px;">MAIN</span>
+      <sc-for list="{{ navMain }}" as="n" hint-placeholder-count="3">
+        <button onClick="{{ n.go }}" style="display: flex; align-items: center; gap: 11px; padding: 10px 11px; border: 0; border-radius: 9px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: start; background: {{ n.bg }}; color: {{ n.fg }};" style-hover="background: #F3F3F7;">
+          <span style="width: 18px; display: grid; place-items: center;">{{ n.mark }}</span>
+          <span style="flex: 1;">{{ n.label }}</span>
+          <sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; background: #FCF2DC; color: #C98A12; border-radius: 99px; padding: 2px 7px;">{{ n.count }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: auto; padding: 14px; border-top: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+      <span style="width: 34px; height: 34px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 12px; font-weight: 800;">SH</span>
+      <span style="display: flex; flex-direction: column; min-width: 0;">
+        <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap;">Said Al Harthy</span>
+        <span style="font-size: 10.5px; color: #9A9AAF; white-space: nowrap;">Courier · Muscat</span>
+      </span>
+    </div>
+  </aside>
+
+  <div style="display: flex; flex-direction: column; min-width: 0; min-height: 0;">
+    <header style="height: 64px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 14px; padding: 0 22px;">
+      <span style="font-size: 15px; font-weight: 800;">{{ viewTitle }}</span>
+      <span style="margin-left: auto; display: flex; align-items: center; gap: 3px; background: #F3F3F7; border-radius: 9px; padding: 3px;">
+        <button onClick="{{ setDesktop }}" style="border: 0; border-radius: 7px; padding: 7px 14px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; background: {{ c.deskBg }}; color: {{ c.deskFg }};">Desktop console</button>
+        <button onClick="{{ setMobile }}" style="border: 0; border-radius: 7px; padding: 7px 14px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; background: {{ c.mobBg }}; color: {{ c.mobFg }};">Courier app</button>
+      </span>
+      <button style="width: 36px; height: 36px; border: 1px solid #ECEDF1; border-radius: 9px; background: #fff; display: grid; place-items: center; cursor: pointer; color: #1A1A2E; position: relative;" style-hover="border-color: #7F77DD;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8.5a6 6 0 1 0-12 0c0 6.5-2.5 7-2.5 8.5h17c0-1.5-2.5-2-2.5-8.5z"></path><path d="M10.3 20.5a1.8 1.8 0 0 0 3.4 0"></path></svg>
+        <span style="position: absolute; top: 7px; right: 8px; width: 7px; height: 7px; border-radius: 99px; background: #D4537E;"></span>
+      </button>
+    </header>
+
+    <main style="flex: 1; overflow-y: auto; padding: 24px; min-height: 0;">
+
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 20px; max-width: 1180px;">
+
+          <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+                <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+                  <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 9px;">
+                      <span style="width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; background: {{ k.tint }}; color: {{ k.fg }};">{{ k.mark }}</span>
+                      <span style="font-size: 12px; font-weight: 600; color: #5A5A72;">{{ k.label }}</span>
+                    </div>
+                    <span style="font-size: 25px; font-weight: 800; letter-spacing: -.02em;">{{ k.value }}</span>
+                    <span style="font-size: 11px; color: #9A9AAF;">{{ k.sub }}</span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px;">
+                <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+                  <div style="padding: 15px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center;">
+                    <span style="font-size: 13.5px; font-weight: 800;">Today’s route</span>
+                    <span style="margin-left: auto; font-size: 11.5px; color: #9A9AAF;">Muscat · 6 stops</span>
+                  </div>
+                  <div style="padding: 6px 18px 16px;">
+                    <sc-for list="{{ route }}" as="r" hint-placeholder-count="5">
+                      <div style="display: flex; gap: 14px; padding-top: 14px;">
+                        <div style="display: flex; flex-direction: column; align-items: center; width: 16px;">
+                          <span style="width: 13px; height: 13px; border-radius: 99px; border: 3px solid {{ r.dot }}; background: #fff; flex-shrink: 0;"></span>
+                          <span style="flex: 1; width: 2px; background: {{ r.line }};"></span>
+                        </div>
+                        <div style="flex: 1; padding-bottom: 4px; display: flex; align-items: baseline; gap: 10px;">
+                          <span style="font-size: 12.5px; font-weight: 700; color: {{ r.fg }};">{{ r.area }}</span>
+                          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9A9AAF;">{{ r.code }}</span>
+                          <span style="margin-left: auto; font-size: 11px; color: #9A9AAF;">{{ r.time }}</span>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+                  <span style="font-size: 13.5px; font-weight: 800;">Cash on delivery</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700; letter-spacing: -.02em;">OMR 214.500</span>
+                  <span style="font-size: 11.5px; color: #5A5A72; line-height: 1.7;">Collected today across 9 orders. Hand over at the Al Khoud hub before 8:00 pm.</span>
+                  <div style="height: 1px; background: #ECEDF1;"></div>
+                  <sc-for list="{{ cashRows }}" as="cr" hint-placeholder-count="3">
+                    <div style="display: flex; align-items: center; font-size: 12px;">
+                      <span style="color: #5A5A72;">{{ cr.label }}</span>
+                      <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-weight: 600;">{{ cr.value }}</span>
+                    </div>
+                  </sc-for>
+                  <button style="margin-top: 4px; height: 40px; border: 0; border-radius: 10px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; text-align: left; padding: 0 14px;" style-hover="background: #6860CC;">Request hub handover</button>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ false }}">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+              <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 13.5px; font-weight: 800;">My delivery orders</span>
+                <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                  <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+                    <button onClick="{{ f.pick }}" style="border: 1px solid {{ f.border }}; border-radius: 99px; padding: 6px 13px; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+                  </sc-for>
+                  <button onClick="{{ refresh }}" style="border: 1px solid #ECEDF1; border-radius: 9px; padding: 7px 13px; background: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">Refresh</button>
+                </div>
+              </div>
+              <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: #FAFAFB;">
+                    <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">ORDER</th>
+                    <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">CUSTOMER</th>
+                    <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">AREA</th>
+                    <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">COD</th>
+                    <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">STATUS</th>
+                    <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">ACTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <sc-for list="{{ orders }}" as="o" hint-placeholder-count="6">
+                    <tr style="border-top: 1px solid #ECEDF1;">
+                      <td style="padding: 13px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ o.code }}</td>
+                      <td style="padding: 13px 12px;">
+                        <span style="display: flex; flex-direction: column; gap: 2px;">
+                          <span style="font-size: 12.5px; font-weight: 600;">{{ o.customer }}</span>
+                          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #9A9AAF;">{{ o.phone }}</span>
+                        </span>
+                      </td>
+                      <td style="padding: 13px 12px; font-size: 12.5px; color: #5A5A72;">{{ o.area }}</td>
+                      <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 600;">{{ o.cod }}</td>
+                      <td style="padding: 13px 12px;">
+                        <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ o.statusBg }}; color: {{ o.statusFg }};">
+                          <span style="width: 6px; height: 6px; border-radius: 99px; background: currentColor;"></span>{{ o.status }}
+                        </span>
+                      </td>
+                      <td style="padding: 13px 18px;">
+                        <button onClick="{{ o.deliver }}" style="border: 1px solid {{ o.btnBorder }}; border-radius: 8px; padding: 7px 13px; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap; background: {{ o.btnBg }}; color: {{ o.btnFg }};">{{ o.btnLabel }}</button>
+                      </td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+            <div style="display: grid; grid-template-columns: 320px 1fr; gap: 16px;">
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;">
+                <span style="width: 92px; height: 92px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 30px; font-weight: 800;">SH</span>
+                <button style="border: 1px solid #ECEDF1; border-radius: 9px; padding: 8px 14px; background: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">Change photo</button>
+                <span style="font-size: 15px; font-weight: 800;">Said Al Harthy</span>
+                <span style="font-size: 11.5px; color: #9A9AAF;">Courier ID DLV-0142 · Muscat zone</span>
+                <div style="width: 100%; height: 1px; background: #ECEDF1; margin: 4px 0;"></div>
+                <div style="display: flex; width: 100%; gap: 10px;">
+                  <sc-for list="{{ profileStats }}" as="st" hint-placeholder-count="3">
+                    <span style="flex: 1; background: #FAFAFB; border-radius: 11px; padding: 11px 8px; display: flex; flex-direction: column; gap: 3px;">
+                      <span style="font-size: 15px; font-weight: 800;">{{ st.value }}</span>
+                      <span style="font-size: 9.5px; color: #9A9AAF;">{{ st.label }}</span>
+                    </span>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 16px;">
+                <span style="font-size: 13.5px; font-weight: 800;">Personal information</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                  <sc-for list="{{ profileFields }}" as="f" hint-placeholder-count="6">
+                    <label style="display: flex; flex-direction: column; gap: 6px;">
+                      <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">{{ f.label }}</span>
+                      <input value="{{ f.value }}" readonly style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: inherit; font-size: 13px; background: #FAFAFB; color: #1A1A2E; outline: none;">
+                    </label>
+                  </sc-for>
+                </div>
+                <div style="height: 1px; background: #ECEDF1;"></div>
+                <span style="font-size: 13.5px; font-weight: 800;">Shift and vehicle</span>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <sc-for list="{{ shiftTags }}" as="tag" hint-placeholder-count="4">
+                    <span style="font-size: 11.5px; font-weight: 600; color: #5A5A72; background: #FAFAFB; border: 1px solid #ECEDF1; border-radius: 99px; padding: 7px 13px; white-space: nowrap;">{{ tag.label }}</span>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; justify-content: center; gap: 28px; padding: 4px 0 20px;">
+          <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; padding-top: 12px;">
+            <span style="font-size: 13.5px; font-weight: 800;">Courier app</span>
+            <span style="font-size: 12px; color: #5A5A72; line-height: 1.7;">The field view a courier actually uses: today’s jobs, one-tap navigation, and delivery confirmed with the customer’s OTP. Tap a job in the phone to open it.</span>
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+              <span style="font-size: 11px; font-weight: 700; letter-spacing: .08em; color: #9A9AAF;">HANDOFF RULES</span>
+              <sc-for list="{{ rules }}" as="r" hint-placeholder-count="3">
+                <span style="font-size: 11.5px; color: #5A5A72; line-height: 1.7;">{{ r.label }}</span>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="position: relative; width: 404px; padding: 11px; border-radius: 52px; background: #17171F; box-shadow: 0 24px 60px rgba(26,26,46,.26); flex-shrink: 0;">
+            <div style="position: relative; width: 382px; height: 812px; border-radius: 42px; overflow: hidden; background: #F6F7F9; display: flex; flex-direction: column;">
+              <div style="position: relative; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: #1A1A2E; color: #fff; font-size: 12.5px; font-weight: 700;">
+                <span>10:08</span>
+                <span style="position: absolute; left: 50%; transform: translateX(-50%); top: 8px; width: 96px; height: 28px; border-radius: 99px; background: #17171F;"></span>
+                <span style="font-size: 11px; opacity: .8;">On shift</span>
+              </div>
+
+              <sc-if value="{{ jobOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="flex: 1; display: flex; flex-direction: column; overflow-y: auto;">
+                  <div style="background: #1A1A2E; color: #fff; padding: 16px 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+                    <button onClick="{{ closeJob }}" style="align-self: flex-start; background: rgba(255,255,255,.12); border: 0; border-radius: 99px; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: #fff;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"></path></svg>
+                    </button>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: .7;">{{ job.code }}</span>
+                    <span style="font-size: 18px; font-weight: 800;">{{ job.customer }}</span>
+                    <span style="font-size: 12px; opacity: .78; line-height: 1.7;">{{ job.address }}</span>
+                  </div>
+                  <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; gap: 10px;">
+                      <button style="flex: 1; height: 46px; border: 0; border-radius: 12px; background: #EEEDF9; color: #7F77DD; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;">Call customer</button>
+                      <button style="flex: 1; height: 46px; border: 0; border-radius: 12px; background: #EEEDF9; color: #7F77DD; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;">Navigate</button>
+                    </div>
+                    <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+                      <sc-for list="{{ jobRows }}" as="row" hint-placeholder-count="4">
+                        <div style="display: flex; align-items: center; font-size: 12px;">
+                          <span style="color: #5A5A72;">{{ row.label }}</span>
+                          <span style="margin-left: auto; font-weight: 700;">{{ row.value }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                      <span style="font-size: 12.5px; font-weight: 800;">Delivery OTP</span>
+                      <span style="font-size: 11.5px; color: #5A5A72; line-height: 1.7;">Ask the customer for the 4-digit code sent to their phone.</span>
+                      <div style="display: flex; gap: 10px;">
+                        <sc-for list="{{ otpBoxes }}" as="box" hint-placeholder-count="4">
+                          <span style="flex: 1; height: 56px; border: 1.5px solid {{ box.border }}; border-radius: 12px; display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; background: {{ box.bg }};">{{ box.char }}</span>
+                        </sc-for>
+                      </div>
+                      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                        <sc-for list="{{ keypad }}" as="key" hint-placeholder-count="12">
+                          <button onClick="{{ key.press }}" style="height: 46px; border: 1px solid #ECEDF1; border-radius: 11px; background: #fff; font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 600; cursor: pointer;" style-hover="background: #F3F3F7;">{{ key.label }}</button>
+                        </sc-for>
+                      </div>
+                      <button onClick="{{ confirmDelivery }}" style="height: 50px; border: 0; border-radius: 12px; background: {{ confirmBg }}; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;">{{ confirmLabel }}</button>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ jobListOpen }}" hint-placeholder-val="{{ true }}">
+                <div style="flex: 1; display: flex; flex-direction: column; overflow-y: auto;">
+                  <div style="padding: 18px 18px 12px; display: flex; flex-direction: column; gap: 4px;">
+                    <span style="font-size: 19px; font-weight: 800;">Today’s jobs</span>
+                    <span style="font-size: 12px; color: #9A9AAF;">{{ jobsSummary }}</span>
+                  </div>
+                  <div style="display: flex; gap: 10px; padding: 0 18px 12px;">
+                    <sc-for list="{{ mobileStats }}" as="st" hint-placeholder-count="3">
+                      <span style="flex: 1; background: #fff; border: 1px solid #ECEDF1; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 3px;">
+                        <span style="font-size: 17px; font-weight: 800;">{{ st.value }}</span>
+                        <span style="font-size: 9.5px; color: #9A9AAF;">{{ st.label }}</span>
+                      </span>
+                    </sc-for>
+                  </div>
+                  <div style="padding: 0 18px 24px; display: flex; flex-direction: column; gap: 11px;">
+                    <sc-for list="{{ orders }}" as="o" hint-placeholder-count="5">
+                      <button onClick="{{ o.openJob }}" style="text-align: start; background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; font-family: inherit;" style-hover="border-color: #C9C6EE;">
+                        <span style="display: flex; align-items: center; gap: 8px;">
+                          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 600; color: #5A5A72;">{{ o.code }}</span>
+                          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ o.statusBg }}; color: {{ o.statusFg }};">{{ o.status }}</span>
+                        </span>
+                        <span style="font-size: 14px; font-weight: 700;">{{ o.customer }}</span>
+                        <span style="font-size: 11.5px; color: #5A5A72; line-height: 1.6;">{{ o.address }}</span>
+                        <span style="display: flex; align-items: center; gap: 8px; padding-top: 4px; border-top: 1px solid #F1F1F5; width: 100%;">
+                          <span style="font-size: 11px; color: #9A9AAF;">{{ o.payLabel }}</span>
+                          <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; font-weight: 700;">{{ o.cod }}</span>
+                        </span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <div style="flex-shrink: 0; display: flex; background: #fff; border-top: 1px solid #ECEDF1; padding: 9px 6px 8px;">
+                <sc-for list="{{ mobileTabs }}" as="tb" hint-placeholder-count="3">
+                  <button onClick="{{ tb.go }}" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; background: none; border: 0; cursor: pointer; font-family: inherit; font-size: 10px; font-weight: 600; color: {{ tb.fg }};">
+                    <span style="font-size: 17px;">{{ tb.mark }}</span>{{ tb.label }}
+                  </button>
+                </sc-for>
+              </div>
+              <div style="flex-shrink: 0; height: 20px; background: #fff; display: grid; place-items: center;">
+                <span style="width: 124px; height: 5px; border-radius: 99px; background: #1A1A2E;"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position: fixed; inset: 0; background: rgba(26,26,46,.45); display: grid; place-items: center; z-index: 60;">
+      <div style="width: 420px; background: #fff; border-radius: 18px; box-shadow: 0 14px 40px rgba(26,26,46,.24); overflow: hidden;">
+        <div style="padding: 18px 20px; border-bottom: 1px solid #ECEDF1; display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 15px; font-weight: 800;">Mark as delivered</span>
+          <span style="font-size: 12px; color: #9A9AAF;">{{ modalSub }}</span>
+        </div>
+        <div style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+          <span style="font-size: 12px; color: #5A5A72; line-height: 1.7;">Enter the 4-digit OTP the customer received. Cash collected is recorded against your shift.</span>
+          <div style="display: flex; gap: 10px;">
+            <sc-for list="{{ otpBoxes }}" as="box" hint-placeholder-count="4">
+              <span style="flex: 1; height: 54px; border: 1.5px solid {{ box.border }}; border-radius: 12px; display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-size: 21px; font-weight: 700; background: {{ box.bg }};">{{ box.char }}</span>
+            </sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+            <sc-for list="{{ keypad }}" as="key" hint-placeholder-count="12">
+              <button onClick="{{ key.press }}" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; background: #fff; font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600; cursor: pointer;" style-hover="background: #F3F3F7;">{{ key.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 16px 20px; border-top: 1px solid #ECEDF1; display: flex; gap: 10px;">
+          <button onClick="{{ closeModal }}" style="flex: 1; height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;">Cancel</button>
+          <button onClick="{{ confirmDelivery }}" style="flex: 1; height: 42px; border: 0; border-radius: 10px; background: {{ confirmBg }}; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;">{{ confirmLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; right: 24px; bottom: 24px; background: #1A1A2E; color: #fff; border-radius: 12px; padding: 13px 18px; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 9px; z-index: 70;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FE3B8" stroke-width="2.4"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>
+      {{ toast }}
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:940}}">
+const ORDERS = [
+  { code: '#BH-284193', customer: 'Amal Al Balushi', phone: '+968 9123 4477', area: 'Al Khoud', address: 'Al Khoud 7, Building 24, Flat 3 — Muscat', cod: 'OMR 38.900', pay: 'Cash on delivery', status: 'Out for delivery' },
+  { code: '#BH-284188', customer: 'Hamad Al Maqbali', phone: '+968 9440 2216', area: 'Ghubrah', address: 'North Ghubrah, Villa 12, Way 3402 — Muscat', cod: 'Paid online', pay: 'Thawani · paid', status: 'Out for delivery' },
+  { code: '#BH-284171', customer: 'Reem Al Shehhi', phone: '+968 9902 8814', area: 'Azaiba', address: 'Azaiba South, Building 8, Flat 21 — Muscat', cod: 'OMR 15.200', pay: 'Cash on delivery', status: 'Assigned' },
+  { code: '#BH-284166', customer: 'Talal Al Hinai', phone: '+968 9711 3390', area: 'Qurum', address: 'Qurum Heights, Villa 4 — Muscat', cod: 'OMR 58.500', pay: 'Cash on delivery', status: 'Assigned' },
+  { code: '#BH-284150', customer: 'Dana Al Kindi', phone: '+968 9288 6001', area: 'Seeb', address: 'Seeb, Al Hail North, Building 3 — Muscat', cod: 'Paid online', pay: 'Card · paid', status: 'Delivered' },
+  { code: '#BH-284142', customer: 'Khalid Al Amri', phone: '+968 9566 7712', area: 'Bausher', address: 'Bausher, Way 5210, Villa 19 — Muscat', cod: 'OMR 21.300', pay: 'Cash on delivery', status: 'Failed attempt' },
+];
+
+const STATUS = {
+  'Out for delivery': { bg: '#E7F0FC', fg: '#2A6FDB' },
+  'Assigned': { bg: '#FCF2DC', fg: '#C98A12' },
+  'Delivered': { bg: '#E6F6EE', fg: '#1F9D62' },
+  'Failed attempt': { bg: '#FCEAEA', fg: '#D64545' },
+};
+
+class Component extends DCLogic {
+  state = {
+    mode: 'desktop', view: 'overview', filter: 'All', mobileTab: 'jobs',
+    jobIndex: null, modalIndex: null, otp: '', delivered: ['#BH-284150'], toast: null,
+  };
+
+  flash(msg) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg });
+    this._t = setTimeout(() => this.setState({ toast: null }), 2200);
+  }
+
+  confirm() {
+    const s = this.state;
+    const code = s.jobIndex != null ? ORDERS[s.jobIndex].code : (s.modalIndex != null ? ORDERS[s.modalIndex].code : null);
+    if (s.otp.length < 4 || !code) return;
+    this.setState({ delivered: s.delivered.concat(code), otp: '', jobIndex: null, modalIndex: null });
+    this.flash(code + ' marked delivered');
+  }
+
+  renderVals() {
+    const s = this.state;
+    const on = '#7F77DD';
+    const desktop = s.mode === 'desktop';
+    const titles = { overview: 'Overview', orders: 'My delivery orders', profile: 'Profile' };
+
+    const nav = [
+      ['overview', 'Overview', '▦', null],
+      ['orders', 'My delivery orders', '☰', '4'],
+      ['profile', 'Profile', '☺', null],
+    ];
+
+    const filters = ['All', 'Assigned', 'Out for delivery', 'Delivered'];
+
+    const rows = ORDERS.map((o, i) => {
+      const done = s.delivered.indexOf(o.code) >= 0;
+      const status = done ? 'Delivered' : o.status;
+      const st = STATUS[status];
+      return {
+        code: o.code, customer: o.customer, phone: o.phone, area: o.area, address: o.address,
+        cod: o.cod, payLabel: o.pay, status: status, statusBg: st.bg, statusFg: st.fg,
+        btnLabel: done ? 'View proof' : 'Mark delivered',
+        btnBg: done ? '#fff' : '#7F77DD', btnFg: done ? '#5A5A72' : '#fff',
+        btnBorder: done ? '#ECEDF1' : '#7F77DD',
+        deliver: () => { if (!done) this.setState({ modalIndex: i, otp: '' }); },
+        openJob: () => this.setState({ jobIndex: i, otp: '' }),
+        _i: i, _done: done,
+      };
+    });
+
+    const shown = s.filter === 'All' ? rows : rows.filter(r => r.status === s.filter);
+    const activeIndex = s.jobIndex != null ? s.jobIndex : s.modalIndex;
+    const job = activeIndex != null ? rows[activeIndex] : rows[0];
+    const otpFilled = s.otp.length === 4;
+
+    const routeDefs = [
+      { area: 'Al Khoud 7', code: '#BH-284193', time: '11:20', done: true },
+      { area: 'North Ghubrah', code: '#BH-284188', time: '12:05', done: true },
+      { area: 'Azaiba South', code: '#BH-284171', time: '13:40', done: false },
+      { area: 'Qurum Heights', code: '#BH-284166', time: '15:10', done: false },
+      { area: 'Bausher', code: '#BH-284142', time: '16:30', done: false },
+    ];
+
+    return {
+      isDesktop: desktop, isMobile: !desktop,
+      isOverview: desktop && s.view === 'overview',
+      isOrders: desktop && s.view === 'orders',
+      isProfile: desktop && s.view === 'profile',
+      viewTitle: desktop ? titles[s.view] : 'Courier app',
+      setDesktop: () => this.setState({ mode: 'desktop' }),
+      setMobile: () => this.setState({ mode: 'mobile' }),
+      c: {
+        deskBg: desktop ? '#fff' : 'transparent', deskFg: desktop ? on : '#5A5A72',
+        mobBg: desktop ? 'transparent' : '#fff', mobFg: desktop ? '#5A5A72' : on,
+      },
+      navMain: nav.map(n => ({
+        label: n[1], mark: n[2], count: n[3],
+        bg: s.view === n[0] && desktop ? '#EEEDF9' : 'transparent',
+        fg: s.view === n[0] && desktop ? on : '#3A3A52',
+        go: () => this.setState({ view: n[0], mode: 'desktop' }),
+      })),
+
+      kpis: [
+        { mark: '☰', tint: '#EEEDF9', fg: on, label: 'Assigned today', value: '12', sub: '4 still open' },
+        { mark: '✓', tint: '#E6F6EE', fg: '#1F9D62', label: 'Delivered', value: '8', sub: 'On-time 94%' },
+        { mark: '↺', tint: '#FCEAEA', fg: '#D64545', label: 'Failed attempts', value: '1', sub: 'Reschedule by 6 pm' },
+        { mark: '﷼', tint: '#FCF2DC', fg: '#C98A12', label: 'Cash held', value: '214.500', sub: 'OMR · hand over today' },
+      ],
+      route: routeDefs.map((r, i) => ({
+        area: r.area, code: r.code, time: r.time,
+        dot: r.done ? on : '#DEDFE6',
+        line: i === routeDefs.length - 1 ? 'transparent' : (r.done ? on : '#ECEDF1'),
+        fg: r.done ? '#1A1A2E' : '#5A5A72',
+      })),
+      cashRows: [
+        { label: 'Cash orders', value: '9' },
+        { label: 'Collected', value: 'OMR 214.500' },
+        { label: 'Last handover', value: 'Yesterday 19:40' },
+      ],
+
+      filters: filters.map(f => ({
+        label: f, pick: () => this.setState({ filter: f }),
+        bg: s.filter === f ? '#EEEDF9' : '#fff',
+        fg: s.filter === f ? on : '#5A5A72',
+        border: s.filter === f ? '#C9C6EE' : '#ECEDF1',
+      })),
+      refresh: () => this.flash('Assigned orders refreshed'),
+      orders: shown,
+
+      profileStats: [
+        { value: '1,284', label: 'Deliveries' }, { value: '4.9', label: 'Rating' }, { value: '96%', label: 'On time' },
+      ],
+      profileFields: [
+        { label: 'First name', value: 'Said' }, { label: 'Last name', value: 'Al Harthy' },
+        { label: 'Phone', value: '+968 9812 4402' }, { label: 'Email', value: 'said.h@brandhub.om' },
+        { label: 'Courier ID', value: 'DLV-0142' }, { label: 'Zone', value: 'Muscat — North' },
+      ],
+      shiftTags: [
+        { label: 'Shift 09:00 — 18:00' }, { label: 'Van · 4821 MB' }, { label: 'Max 20 stops' }, { label: 'COD enabled' },
+      ],
+
+      rules: [
+        { label: 'Cash must be handed over at the hub the same day before 8:00 pm.' },
+        { label: 'A delivery only closes once the customer’s OTP is entered.' },
+        { label: 'Two failed attempts return the parcel to the Al Khoud hub.' },
+      ],
+      mobileStats: [
+        { value: '12', label: 'Assigned' }, { value: '8', label: 'Delivered' }, { value: '214.5', label: 'OMR cash' },
+      ],
+      mobileTabs: [
+        { label: 'Jobs', mark: '☰', fg: on, go: () => this.setState({ jobIndex: null }) },
+        { label: 'Route', mark: '◎', fg: '#9A9AAF', go: () => this.setState({ jobIndex: null }) },
+        { label: 'Profile', mark: '☺', fg: '#9A9AAF', go: () => this.setState({ mode: 'desktop', view: 'profile' }) },
+      ],
+      jobsSummary: shown.length + ' stops · Muscat north zone',
+      jobOpen: !desktop && s.jobIndex != null,
+      jobListOpen: !desktop && s.jobIndex == null,
+      job,
+      jobRows: [
+        { label: 'Payment', value: job.payLabel },
+        { label: 'Amount to collect', value: job.cod },
+        { label: 'Items', value: '3 parcels' },
+        { label: 'Window', value: 'Today 13:00 — 16:00' },
+      ],
+
+      modalOpen: s.modalIndex != null,
+      modalSub: job.code + ' · ' + job.customer,
+      closeModal: () => this.setState({ modalIndex: null, otp: '' }),
+      closeJob: () => this.setState({ jobIndex: null, otp: '' }),
+      otpBoxes: [0, 1, 2, 3].map(i => ({
+        char: s.otp[i] || '',
+        border: s.otp.length === i ? '#7F77DD' : '#ECEDF1',
+        bg: s.otp[i] ? '#FAFAFE' : '#fff',
+      })),
+      keypad: ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', '⌫'].map(k => ({
+        label: k,
+        press: () => this.setState(st => {
+          if (k === 'C') return { otp: '' };
+          if (k === '⌫') return { otp: st.otp.slice(0, -1) };
+          return { otp: st.otp.length < 4 ? st.otp + k : st.otp };
+        }),
+      })),
+      confirmLabel: otpFilled ? 'Confirm delivery' : 'Enter 4-digit OTP',
+      confirmBg: otpFilled ? '#7F77DD' : '#C6C4E4',
+      confirmDelivery: () => this.confirm(),
+      toast: s.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>

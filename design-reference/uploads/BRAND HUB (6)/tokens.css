@@ -1,0 +1,150 @@
+/*
+ * ─────────────────────────────────────────────
+ *  BRANDHUB — Design Tokens
+ *  Storefront only (not dashboard / not app)
+ *  Market: Sultanate of Oman  |  RTL Arabic-first
+ * ─────────────────────────────────────────────
+ */
+
+:root {
+
+  /* ── BRAND COLORS ─────────────────────────── */
+
+  /* Solid purple — workhorse accent
+     Active tabs, hyperlinks, influencer chips, key numbers */
+  --color-accent:          #7F77DD;
+  --color-accent-hover:    #6860CC;
+  --color-accent-light:    #EEEDF9;  /* tinted bg for chips/tags */
+
+  /* Pink — cart badge counts only, lives inside gradients */
+  --color-pink:            #D4537E;
+  --color-pink-light:      #FCEEF3;
+
+  /* Gold — basket handle on logo. NOWHERE else in UI */
+  --color-gold:            #C8A84B;
+
+  /* Ink deep — footers, sidebars, dark hero overlays */
+  --color-ink:             #1A1A2E;
+  --color-ink-80:          rgba(26, 26, 46, 0.80);
+  --color-ink-40:          rgba(26, 26, 46, 0.40);
+  --color-ink-10:          rgba(26, 26, 46, 0.06);
+
+  /* ── NEUTRALS (~80% of chrome) ───────────────
+     Do NOT pull brand colors for neutral chrome */
+  --color-white:           #FFFFFF;
+  --color-bg:              #F5F5F7;       /* page background */
+  --color-surface:         #FFFFFF;       /* card / panel surface */
+  --color-surface-raised:  #FAFAFA;       /* subtle raised surface */
+  --color-border:          #E8E8EC;       /* dividers, card borders */
+  --color-border-strong:   #D0D0D8;       /* stronger dividers */
+
+  /* Text scale */
+  --color-text-primary:    #1A1A2E;       /* headings, body */
+  --color-text-secondary:  #5A5A72;       /* labels, meta */
+  --color-text-muted:      #9A9AAF;       /* placeholder, disabled */
+  --color-text-inverse:    #FFFFFF;       /* on dark bg */
+
+  /* Semantic */
+  --color-success:         #22A06B;
+  --color-success-light:   #E3F5EF;
+  --color-warning:         #E6A817;
+  --color-warning-light:   #FEF7E0;
+  --color-danger:          #D94F4F;
+  --color-danger-light:    #FDEAEA;
+
+  /* ── GRADIENT ─────────────────────────────── */
+  /* Purple-to-pink — hero overlays, influencer section bg */
+  --gradient-brand:        linear-gradient(135deg, #7F77DD 0%, #D4537E 100%);
+  --gradient-brand-soft:   linear-gradient(135deg,
+                             rgba(127,119,221,0.12) 0%,
+                             rgba(212, 83,126,0.08) 100%);
+  --gradient-hero-overlay: linear-gradient(180deg,
+                             transparent 40%,
+                             rgba(26,26,46,0.75) 100%);
+
+  /* ── TYPOGRAPHY ───────────────────────────── */
+  /* GE Dinar One — primary for Arabic + brand headings */
+  --font-arabic:           'GE Dinar One', 'GE SS Two', 'Noto Kufi Arabic', sans-serif;
+  /* Fallback Latin — pairs with GE Dinar One character weight */
+  --font-latin:            'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif;
+
+  /* Fluid type scale (desktop) */
+  --text-display:          2.5rem;    /* 40px  hero titles */
+  --text-h1:               2rem;      /* 32px  page headings */
+  --text-h2:               1.5rem;    /* 24px  section headings */
+  --text-h3:               1.125rem;  /* 18px  card headings */
+  --text-body-lg:          1rem;      /* 16px  body */
+  --text-body:             0.9375rem; /* 15px  body Arabic */
+  --text-sm:               0.8125rem; /* 13px  labels, meta */
+  --text-xs:               0.75rem;   /* 12px  badges, legal */
+
+  /* Line heights — Arabic needs generosity */
+  --leading-tight:         1.2;
+  --leading-normal:        1.55;
+  --leading-arabic:        1.75;  /* always use for Arabic body */
+
+  /* Font weights */
+  --weight-regular:        400;
+  --weight-medium:         500;
+  --weight-semibold:       600;
+  --weight-bold:           700;
+
+  /* ── SPACING ──────────────────────────────── */
+  --space-1:    0.25rem;   /*  4px */
+  --space-2:    0.5rem;    /*  8px */
+  --space-3:    0.75rem;   /* 12px */
+  --space-4:    1rem;      /* 16px */
+  --space-5:    1.25rem;   /* 20px */
+  --space-6:    1.5rem;    /* 24px */
+  --space-8:    2rem;      /* 32px */
+  --space-10:   2.5rem;    /* 40px */
+  --space-12:   3rem;      /* 48px */
+  --space-16:   4rem;      /* 64px */
+  --space-20:   5rem;      /* 80px */
+
+  /* ── LAYOUT ───────────────────────────────── */
+  --container-max:         1280px;
+  --container-padding:     var(--space-6);   /* 24px gutter */
+  --header-height:         64px;             /* main header */
+  --subnav-height:         44px;             /* category nav */
+
+  /* ── RADIUS ───────────────────────────────── */
+  --radius-sm:             6px;
+  --radius-md:             10px;
+  --radius-lg:             16px;
+  --radius-xl:             24px;
+  --radius-full:           9999px;
+
+  /* ── SHADOWS ──────────────────────────────── */
+  --shadow-sm:   0 1px 3px rgba(26,26,46,0.08),
+                 0 1px 2px rgba(26,26,46,0.04);
+  --shadow-md:   0 4px 12px rgba(26,26,46,0.10),
+                 0 2px 4px  rgba(26,26,46,0.06);
+  --shadow-lg:   0 8px 24px rgba(26,26,46,0.12),
+                 0 4px 8px  rgba(26,26,46,0.06);
+  --shadow-card: 0 2px 8px  rgba(26,26,46,0.07);
+
+  /* ── TRANSITIONS ──────────────────────────── */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:    cubic-bezier(0.5, 0, 0.75, 0);
+  --duration-fast:   150ms;
+  --duration-base:   250ms;
+  --duration-slow:   400ms;
+
+  /* ── Z-INDEX SCALE ────────────────────────── */
+  --z-base:      0;
+  --z-raised:    10;
+  --z-dropdown:  100;
+  --z-sticky:    200;
+  --z-overlay:   300;
+  --z-modal:     400;
+  --z-toast:     500;
+}
+
+/* ── DARK SURFACE OVERRIDE (footer / ink sections) ─ */
+[data-theme="dark"] {
+  --color-surface:      var(--color-ink);
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: rgba(255,255,255,0.65);
+  --color-border:       rgba(255,255,255,0.10);
+}

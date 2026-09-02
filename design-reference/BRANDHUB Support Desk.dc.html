@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #F6F7F9; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #d8d9e0; border: 3px solid transparent; background-clip: padding-box; border-radius: 99px; }
+  ::selection { background: #EEEDF9; }
+</style>
+</helmet>
+
+<div style="display: grid; grid-template-columns: 256px 1fr; height: 100vh; overflow: hidden; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #1A1A2E; font-size: 14px; background: #F6F7F9;">
+
+  <aside style="background: #fff; border-right: 1px solid #ECEDF1; display: flex; flex-direction: column; min-height: 0;">
+    <div style="display: flex; align-items: center; gap: 11px; height: 64px; padding: 0 20px; border-bottom: 1px solid #ECEDF1; flex-shrink: 0;">
+      <span style="width: 34px; height: 34px; border-radius: 9px; background: #1A1A2E; display: grid; place-items: center; color: #fff;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8.5 12 4l9 4.5v7L12 20l-9-4.5z"></path><path d="M3 8.5 12 13l9-4.5"></path><path d="M12 13v7"></path></svg>
+      </span>
+      <span style="font-weight: 800; font-size: 17px; letter-spacing: -.02em;">BRAND<span style="font-weight: 500; color: #9A9AAF;">HUB</span></span>
+    </div>
+
+    <div style="margin: 14px 16px 6px; padding: 11px 13px; border-radius: 11px; background: #EEEDF9; display: flex; align-items: center; gap: 10px;">
+      <span style="width: 30px; height: 30px; border-radius: 8px; background: #7F77DD; color: #fff; display: grid; place-items: center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1L3 20l1-5.3a8.5 8.5 0 1 1 17-3.2z"></path></svg>
+      </span>
+      <span style="display: flex; flex-direction: column;">
+        <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .08em; color: #7F77DD;">WORKSPACE</span>
+        <span style="font-size: 13px; font-weight: 700;">Support</span>
+      </span>
+    </div>
+
+    <div style="padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;">
+      <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; padding: 12px 10px 6px;">DESK</span>
+      <sc-for list="{{ navMain }}" as="n" hint-placeholder-count="3">
+        <button onClick="{{ n.go }}" style="display: flex; align-items: center; gap: 11px; padding: 10px 11px; border: 0; border-radius: 9px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: start; background: {{ n.bg }}; color: {{ n.fg }};" style-hover="background: #F3F3F7;">
+          <span style="width: 18px; display: grid; place-items: center;">{{ n.mark }}</span>
+          <span style="flex: 1;">{{ n.label }}</span>
+          <sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; background: #FCF2DC; color: #C98A12; border-radius: 99px; padding: 2px 7px;">{{ n.count }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+      <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; padding: 16px 10px 6px;">QUEUES</span>
+      <sc-for list="{{ queues }}" as="q" hint-placeholder-count="5">
+        <button onClick="{{ q.go }}" style="display: flex; align-items: center; gap: 11px; padding: 9px 11px; border: 0; border-radius: 9px; font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; text-align: start; background: {{ q.bg }}; color: {{ q.fg }};" style-hover="background: #F3F3F7;">
+          <span style="width: 7px; height: 7px; border-radius: 99px; background: {{ q.dot }};"></span>
+          <span style="flex: 1;">{{ q.label }}</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #9A9AAF;">{{ q.count }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: auto; padding: 14px; border-top: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+      <span style="width: 34px; height: 34px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 12px; font-weight: 800;">MA</span>
+      <span style="display: flex; flex-direction: column; min-width: 0;">
+        <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap;">Mona Al Zadjali</span>
+        <span style="font-size: 10.5px; color: #9A9AAF; white-space: nowrap;">Support agent</span>
+      </span>
+    </div>
+  </aside>
+
+  <div style="display: flex; flex-direction: column; min-width: 0; min-height: 0;">
+    <header style="height: 64px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 14px; padding: 0 22px;">
+      <span style="font-size: 15px; font-weight: 800;">{{ viewTitle }}</span>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px; background: #F3F3F7; border-radius: 9px; height: 38px; padding: 0 13px; width: 320px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A9AAF" stroke-width="1.9"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <input value="{{ search }}" onChange="{{ onSearch }}" placeholder="Search tickets, customers, orders…" style="flex: 1; border: 0; outline: none; background: transparent; font-family: inherit; font-size: 12.5px; min-width: 0;">
+      </div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; color: #1F9D62; background: #E6F6EE; border-radius: 99px; padding: 7px 13px;">
+        <span style="width: 7px; height: 7px; border-radius: 99px; background: currentColor;"></span>Available
+      </span>
+    </header>
+
+    <main style="flex: 1; overflow-y: auto; padding: 24px; min-height: 0;">
+
+      <sc-if value="{{ isCustomerSearch }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 1150px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+            <span style="font-size: 13.5px; font-weight: 800;">Find a customer</span>
+            <div style="display: flex; gap: 10px;">
+              <div style="flex: 1; display: flex; align-items: center; gap: 9px; height: 44px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; background: #FAFAFB;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A9AAF" stroke-width="1.9"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                <input value="{{ custQuery }}" onChange="{{ onCustQuery }}" placeholder="Name, email, phone or customer ID" style="flex: 1; border: 0; outline: none; background: transparent; font-family: inherit; font-size: 12.5px; min-width: 0;">
+              </div>
+              <button onClick="{{ clearCustQuery }}" style="height: 44px; padding: 0 18px; border: 1px solid #ECEDF1; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #C9C6EE;">Clear</button>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <sc-for list="{{ custFilters }}" as="f" hint-placeholder-count="4">
+                <button onClick="{{ f.pick }}" style="height: 33px; padding: 0 13px; border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+              </sc-for>
+              <span style="margin-left: auto; align-self: center; font-size: 12px; color: #9A9AAF;">{{ custCount }}</span>
+            </div>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #FAFAFB;">
+                  <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">CUSTOMER</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">CONTACT</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">ORDERS</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">WALLET</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">TICKETS</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">STATUS</th>
+                  <th style="text-align: end; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ custRows }}" as="c" hint-placeholder-count="6">
+                  <tr style="border-top: 1px solid #ECEDF1;" style-hover="background: #FAFAFE;">
+                    <td style="padding: 13px 18px;">
+                      <span style="display: flex; align-items: center; gap: 11px;">
+                        <span style="width: 32px; height: 32px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 11.5px; font-weight: 800;">{{ c.initials }}</span>
+                        <span style="display: flex; flex-direction: column; gap: 2px;">
+                          <span style="font-size: 12.5px; font-weight: 700;">{{ c.name }}</span>
+                          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #9A9AAF;">{{ c.id }}</span>
+                        </span>
+                      </span>
+                    </td>
+                    <td style="padding: 13px 12px;">
+                      <span style="display: flex; flex-direction: column; gap: 2px;">
+                        <span style="font-size: 12px; color: #3A3A52;">{{ c.email }}</span>
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9A9AAF;">{{ c.phone }}</span>
+                      </span>
+                    </td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ c.orders }}</td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ c.wallet }}</td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ c.tickets }}</td>
+                    <td style="padding: 13px 12px;">
+                      <span style="display: inline-flex; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 5px 11px; background: {{ c.stBg }}; color: {{ c.stFg }};">{{ c.status }}</span>
+                    </td>
+                    <td style="padding: 13px 18px; text-align: end;">
+                      <button onClick="{{ c.view }}" style="border: 1px solid #ECEDF1; border-radius: 8px; padding: 7px 13px; background: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; color: #7F77DD; cursor: pointer;" style-hover="border-color: #C9C6EE;">Open profile</button>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+            <sc-if value="{{ custEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 34px; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                <span style="font-size: 13px; font-weight: 800;">No customer matches that search</span>
+                <span style="font-size: 12px; color: #9A9AAF;">Try a phone number or the BH customer ID.</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isOrderSearch }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 1250px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+            <span style="font-size: 13.5px; font-weight: 800;">Find an order</span>
+            <div style="display: flex; gap: 10px;">
+              <div style="flex: 1; display: flex; align-items: center; gap: 9px; height: 44px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; background: #FAFAFB;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A9AAF" stroke-width="1.9"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                <input value="{{ orderQuery }}" onChange="{{ onOrderQuery }}" placeholder="Order number, customer or seller" style="flex: 1; border: 0; outline: none; background: transparent; font-family: inherit; font-size: 12.5px; min-width: 0;">
+              </div>
+              <button onClick="{{ clearOrderQuery }}" style="height: 44px; padding: 0 18px; border: 1px solid #ECEDF1; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #C9C6EE;">Clear</button>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <sc-for list="{{ orderFilters }}" as="f" hint-placeholder-count="5">
+                <button onClick="{{ f.pick }}" style="height: 33px; padding: 0 13px; border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+              </sc-for>
+              <span style="margin-left: auto; align-self: center; font-size: 12px; color: #9A9AAF;">{{ orderCount }}</span>
+            </div>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #FAFAFB;">
+                  <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">ORDER</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">CUSTOMER</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">SELLER</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">PLACED</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">TOTAL</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">PAYMENT</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">STATUS</th>
+                  <th style="text-align: end; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ orderRows }}" as="o" hint-placeholder-count="7">
+                  <tr style="border-top: 1px solid #ECEDF1;" style-hover="background: #FAFAFE;">
+                    <td style="padding: 13px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ o.code }}</td>
+                    <td style="padding: 13px 12px; font-size: 12.5px;">{{ o.customer }}</td>
+                    <td style="padding: 13px 12px; font-size: 12.5px; color: #5A5A72;">{{ o.seller }}</td>
+                    <td style="padding: 13px 12px; font-size: 12px; color: #5A5A72;">{{ o.date }}</td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ o.total }}</td>
+                    <td style="padding: 13px 12px;">
+                      <span style="display: inline-flex; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 5px 11px; background: {{ o.payBg }}; color: {{ o.payFg }};">{{ o.payment }}</span>
+                    </td>
+                    <td style="padding: 13px 12px;">
+                      <span style="display: inline-flex; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 5px 11px; background: {{ o.stBg }}; color: {{ o.stFg }};">{{ o.status }}</span>
+                    </td>
+                    <td style="padding: 13px 18px; text-align: end;">
+                      <button onClick="{{ o.track }}" style="border: 1px solid #ECEDF1; border-radius: 8px; padding: 7px 13px; background: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; color: #7F77DD; cursor: pointer;" style-hover="border-color: #C9C6EE;">Track</button>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+            <sc-if value="{{ orderEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 34px; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                <span style="font-size: 13px; font-weight: 800;">No order matches that search</span>
+                <span style="font-size: 12px; color: #9A9AAF;">Order numbers look like BH-284193.</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 18px; max-width: 1200px;">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+            <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 9px;">
+                  <span style="width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; background: {{ k.tint }}; color: {{ k.fg }};">{{ k.mark }}</span>
+                  <span style="font-size: 12px; font-weight: 600; color: #5A5A72;">{{ k.label }}</span>
+                </div>
+                <span style="font-size: 25px; font-weight: 800; letter-spacing: -.02em;">{{ k.value }}</span>
+                <span style="font-size: 11px; color: #9A9AAF;">{{ k.sub }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+              <span style="font-size: 13.5px; font-weight: 800;">By category</span>
+              <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="6">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <div style="display: flex; align-items: baseline; font-size: 12px;">
+                    <span style="color: #5A5A72;">{{ cat.label }}</span>
+                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-weight: 600;">{{ cat.count }}</span>
+                  </div>
+                  <span style="height: 6px; border-radius: 99px; background: #F1F1F5; display: block; overflow: hidden;">
+                    <span style="display: block; height: 100%; border-radius: 99px; background: #7F77DD; width: {{ cat.width }};"></span>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+              <span style="font-size: 13.5px; font-weight: 800;">Escalations needing an answer</span>
+              <sc-for list="{{ escalations }}" as="e" hint-placeholder-count="4">
+                <button onClick="{{ e.open }}" style="display: flex; align-items: center; gap: 12px; background: #FAFAFB; border: 1px solid #ECEDF1; border-radius: 12px; padding: 12px; cursor: pointer; font-family: inherit; text-align: start;" style-hover="border-color: #C9C6EE;">
+                  <span style="width: 34px; height: 34px; border-radius: 9px; background: {{ e.tint }}; color: {{ e.fg }}; display: grid; place-items: center; font-size: 13px; font-weight: 800;">{{ e.mark }}</span>
+                  <span style="flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+                    <span style="font-size: 12.5px; font-weight: 700;">{{ e.subject }}</span>
+                    <span style="font-size: 10.5px; color: #9A9AAF;">{{ e.meta }}</span>
+                  </span>
+                  <span style="font-size: 10.5px; font-weight: 700; color: #D64545; white-space: nowrap;">{{ e.age }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTickets }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden; max-width: 1200px;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 13.5px; font-weight: 800;">{{ ticketsTitle }}</span>
+            <div style="margin-left: auto; display: flex; gap: 7px;">
+              <sc-for list="{{ statusFilters }}" as="f" hint-placeholder-count="4">
+                <button onClick="{{ f.pick }}" style="border: 1px solid {{ f.border }}; border-radius: 99px; padding: 6px 13px; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #FAFAFB;">
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">TICKET</th>
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">SUBJECT</th>
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">CATEGORY</th>
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">PRIORITY</th>
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">ASSIGNEE</th>
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ tickets }}" as="tk" hint-placeholder-count="7">
+                <tr onClick="{{ tk.open }}" style="border-top: 1px solid #ECEDF1; cursor: pointer;" style-hover="background: #FAFAFE;">
+                  <td style="padding: 13px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ tk.code }}</td>
+                  <td style="padding: 13px 12px;">
+                    <span style="display: flex; flex-direction: column; gap: 2px;">
+                      <span style="font-size: 12.5px; font-weight: 600;">{{ tk.subject }}</span>
+                      <span style="font-size: 10.5px; color: #9A9AAF;">{{ tk.customer }} · {{ tk.age }}</span>
+                    </span>
+                  </td>
+                  <td style="padding: 13px 12px; font-size: 12px; color: #5A5A72;">{{ tk.category }}</td>
+                  <td style="padding: 13px 12px;">
+                    <span style="font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ tk.prioBg }}; color: {{ tk.prioFg }};">{{ tk.priority }}</span>
+                  </td>
+                  <td style="padding: 13px 12px; font-size: 12px; color: #5A5A72;">{{ tk.assignee }}</td>
+                  <td style="padding: 13px 18px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ tk.statusBg }}; color: {{ tk.statusFg }};">
+                      <span style="width: 6px; height: 6px; border-radius: 99px; background: currentColor;"></span>{{ tk.status }}
+                    </span>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCustomer }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 340px 1fr; gap: 16px; max-width: 1200px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+            <button onClick="{{ goCustomerSearch }}" style="align-self: flex-start; border: 0; background: none; padding: 0; font-family: inherit; font-size: 11.5px; font-weight: 700; color: #7F77DD; cursor: pointer;">‹ Back to search</button>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="width: 52px; height: 52px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 18px; font-weight: 800;">{{ profile.initials }}</span>
+              <span style="display: flex; flex-direction: column; gap: 3px;">
+                <span style="font-size: 14.5px; font-weight: 800;">{{ profile.name }}</span>
+                <span style="font-size: 11px; color: #9A9AAF;">{{ profile.since }}</span>
+              </span>
+              <span style="margin-left: auto; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ profile.stBg }}; color: {{ profile.stFg }};">{{ profile.status }}</span>
+            </div>
+            <div style="height: 1px; background: #ECEDF1;"></div>
+            <sc-for list="{{ customerRows }}" as="row" hint-placeholder-count="6">
+              <div style="display: flex; align-items: center; font-size: 12px;">
+                <span style="color: #9A9AAF;">{{ row.label }}</span>
+                <span style="margin-left: auto; font-weight: 600;">{{ row.value }}</span>
+              </div>
+            </sc-for>
+            <div style="height: 1px; background: #ECEDF1;"></div>
+            <span style="font-size: 11px; font-weight: 700; letter-spacing: .08em; color: #9A9AAF;">DEFAULT ADDRESS</span>
+            <span style="font-size: 12px; color: #5A5A72; line-height: 1.7;">Al Khoud 7, Building 24, Flat 3 — Muscat</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+              <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; font-size: 13.5px; font-weight: 800;">Recent orders</div>
+              <sc-for list="{{ customerOrders }}" as="o" hint-placeholder-count="4">
+                <div style="display: flex; align-items: center; gap: 14px; padding: 13px 18px; border-bottom: 1px solid #F1F1F5;">
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ o.code }}</span>
+                  <span style="font-size: 12px; color: #5A5A72;">{{ o.date }}</span>
+                  <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 700;">{{ o.total }}</span>
+                  <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ o.bg }}; color: {{ o.fg }};">{{ o.status }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+                <span style="font-size: 13.5px; font-weight: 800;">Wallet</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700;">OMR 24.750</span>
+                <sc-for list="{{ walletRows }}" as="w" hint-placeholder-count="3">
+                  <div style="display: flex; align-items: center; font-size: 11.5px;">
+                    <span style="color: #5A5A72;">{{ w.label }}</span>
+                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: {{ w.fg }};">{{ w.value }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+                <span style="font-size: 13.5px; font-weight: 800;">Open tickets and returns</span>
+                <sc-for list="{{ customerTickets }}" as="ct" hint-placeholder-count="3">
+                  <div style="display: flex; align-items: center; gap: 10px; font-size: 11.5px;">
+                    <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">{{ ct.code }}</span>
+                    <span style="color: #5A5A72;">{{ ct.label }}</span>
+                    <span style="margin-left: auto; font-size: 10.5px; font-weight: 700; border-radius: 99px; padding: 3px 9px; background: {{ ct.bg }}; color: {{ ct.fg }};">{{ ct.status }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 60; display: flex; justify-content: flex-end;">
+      <div onClick="{{ closeDrawer }}" style="position: absolute; inset: 0; background: rgba(26,26,46,.42);"></div>
+      <div style="position: relative; width: 620px; height: 100%; background: #fff; box-shadow: -14px 0 40px rgba(26,26,46,.16); display: flex; flex-direction: column;">
+        <div style="padding: 18px 22px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: flex-start; gap: 12px;">
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+            <span style="display: flex; align-items: center; gap: 9px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: #5A5A72;">{{ ticket.code }}</span>
+              <span style="font-size: 10.5px; font-weight: 700; border-radius: 99px; padding: 3px 9px; background: {{ ticket.prioBg }}; color: {{ ticket.prioFg }};">{{ ticket.priority }}</span>
+              <span style="font-size: 10.5px; font-weight: 700; border-radius: 99px; padding: 3px 9px; background: {{ ticket.statusBg }}; color: {{ ticket.statusFg }};">{{ ticket.status }}</span>
+            </span>
+            <span style="font-size: 16px; font-weight: 800;">{{ ticket.subject }}</span>
+            <span style="font-size: 11.5px; color: #9A9AAF;">{{ ticket.customer }} · {{ ticket.category }} · opened {{ ticket.age }}</span>
+          </div>
+          <button onClick="{{ closeDrawer }}" style="width: 34px; height: 34px; border: 1px solid #ECEDF1; border-radius: 9px; background: #fff; display: grid; place-items: center; cursor: pointer; color: #5A5A72;" style-hover="border-color: #D64545; color: #D64545;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+          </button>
+        </div>
+
+        <div style="flex: 1; overflow-y: auto; padding: 18px 22px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <sc-for list="{{ ticketActions }}" as="a" hint-placeholder-count="5">
+              <button onClick="{{ a.run }}" style="border: 1px solid #ECEDF1; border-radius: 9px; padding: 8px 13px; background: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap; color: {{ a.fg }};" style-hover="border-color: #7F77DD;">{{ a.label }}</button>
+            </sc-for>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <sc-for list="{{ thread }}" as="m" hint-placeholder-count="4">
+              <div style="border: 1px solid {{ m.border }}; border-radius: 14px; padding: 13px 15px; background: {{ m.bg }}; display: flex; flex-direction: column; gap: 7px;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                  <span style="width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; font-size: 10px; font-weight: 800; background: {{ m.avBg }}; color: {{ m.avFg }};">{{ m.initials }}</span>
+                  <span style="font-size: 12px; font-weight: 700;">{{ m.author }}</span>
+                  <span style="font-size: 10.5px; color: #9A9AAF;">{{ m.role }}</span>
+                  <span style="margin-left: auto; font-size: 10.5px; color: #9A9AAF;">{{ m.time }}</span>
+                </span>
+                <span style="font-size: 12.5px; color: #3A3A52; line-height: 1.75;">{{ m.body }}</span>
+                <sc-if value="{{ m.attachment }}" hint-placeholder-val="{{ false }}">
+                  <span style="display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; border: 1px solid #ECEDF1; border-radius: 9px; padding: 7px 11px; background: #fff; font-size: 11px; font-weight: 600; color: #5A5A72;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7F77DD" stroke-width="1.9"><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7l8-8a3.5 3.5 0 0 1 5 5l-8 8a2 2 0 0 1-3-3l7.5-7.5"></path></svg>
+                    {{ m.attachment }}
+                  </span>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid #ECEDF1; padding: 14px 22px 18px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; gap: 4px; background: #F3F3F7; border-radius: 9px; padding: 3px; align-self: flex-start;">
+            <button onClick="{{ pickReply }}" style="border: 0; border-radius: 7px; padding: 7px 14px; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; background: {{ c.replyBg }}; color: {{ c.replyFg }};">Reply to customer</button>
+            <button onClick="{{ pickNote }}" style="border: 0; border-radius: 7px; padding: 7px 14px; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; background: {{ c.noteBg }}; color: {{ c.noteFg }};">Internal note</button>
+          </div>
+          <textarea value="{{ draft }}" onChange="{{ onDraft }}" placeholder="{{ draftPlaceholder }}" style="min-height: 88px; resize: none; border: 1px solid #ECEDF1; border-radius: 12px; padding: 12px 14px; font-family: inherit; font-size: 12.5px; line-height: 1.7; outline: none; background: {{ draftBg }};"></textarea>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button style="border: 1px solid #ECEDF1; border-radius: 9px; padding: 8px 13px; background: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">Attach file</button>
+            <button onClick="{{ assignSelf }}" style="border: 1px solid #ECEDF1; border-radius: 9px; padding: 8px 13px; background: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">Assign to me</button>
+            <button onClick="{{ resolve }}" style="margin-left: auto; border: 0; border-radius: 9px; padding: 10px 18px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">{{ sendLabel }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; right: 24px; bottom: 24px; background: #1A1A2E; color: #fff; border-radius: 12px; padding: 13px 18px; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 9px; z-index: 70;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FE3B8" stroke-width="2.4"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>
+      {{ toast }}
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:940}}">
+const TICKETS = [
+  { code: 'TK-4192', subject: 'Order arrived with a damaged box', customer: 'Amal Al Balushi', category: 'Delivery', priority: 'High', assignee: 'Mona A.', status: 'Open', age: '22 min ago' },
+  { code: 'TK-4190', subject: 'Wallet charge did not appear', customer: 'Hamad Al Maqbali', category: 'Wallet', priority: 'Urgent', assignee: 'Unassigned', status: 'Open', age: '48 min ago' },
+  { code: 'TK-4187', subject: 'Return request for running shoes', customer: 'Reem Al Shehhi', category: 'Return', priority: 'Normal', assignee: 'Mona A.', status: 'Pending', age: '3 h ago' },
+  { code: 'TK-4183', subject: 'Seller has not shipped after 4 days', customer: 'Talal Al Hinai', category: 'Seller', priority: 'High', assignee: 'Yaqoub S.', status: 'Escalated', age: '5 h ago' },
+  { code: 'TK-4179', subject: 'Card payment failed twice', customer: 'Dana Al Kindi', category: 'Payment', priority: 'Normal', assignee: 'Mona A.', status: 'Pending', age: 'Yesterday' },
+  { code: 'TK-4174', subject: 'Change delivery address after checkout', customer: 'Khalid Al Amri', category: 'Order', priority: 'Low', assignee: 'Yaqoub S.', status: 'Resolved', age: 'Yesterday' },
+  { code: 'TK-4168', subject: 'Account phone number cannot be updated', customer: 'Noura Al Siyabi', category: 'Account', priority: 'Low', assignee: 'Unassigned', status: 'Resolved', age: '2 days ago' },
+];
+
+const PRIO = {
+  Urgent: { bg: '#FCEAEA', fg: '#D64545' }, High: { bg: '#FCF2DC', fg: '#C98A12' },
+  Normal: { bg: '#E7F0FC', fg: '#2A6FDB' }, Low: { bg: '#F1F1F5', fg: '#5A5A72' },
+};
+const STATUS = {
+  Open: { bg: '#E7F0FC', fg: '#2A6FDB' }, Pending: { bg: '#FCF2DC', fg: '#C98A12' },
+  Escalated: { bg: '#FCEAEA', fg: '#D64545' }, Resolved: { bg: '#E6F6EE', fg: '#1F9D62' },
+};
+
+const CUSTOMERS = [
+  { name: 'Amal Al Balushi', id: 'BH-C-10241', initials: 'AB', email: 'amal.b@mail.om', phone: '+968 9123 4477', orders: 18, wallet: 'OMR 24.500', tickets: 4, status: 'Active' },
+  { name: 'Hamad Al Maqbali', id: 'BH-C-10188', initials: 'HM', email: 'hamad.m@mail.om', phone: '+968 9440 2210', orders: 7, wallet: 'OMR 0.000', tickets: 2, status: 'Active' },
+  { name: 'Reem Al Shehhi', id: 'BH-C-10402', initials: 'RS', email: 'reem.s@mail.om', phone: '+968 9812 6633', orders: 23, wallet: 'OMR 61.200', tickets: 5, status: 'VIP' },
+  { name: 'Talal Al Hinai', id: 'BH-C-10099', initials: 'TH', email: 'talal.h@mail.om', phone: '+968 9207 8890', orders: 3, wallet: 'OMR 5.000', tickets: 1, status: 'Active' },
+  { name: 'Dana Al Kindi', id: 'BH-C-10317', initials: 'DK', email: 'dana.k@mail.om', phone: '+968 9955 1204', orders: 11, wallet: 'OMR 12.750', tickets: 3, status: 'Active' },
+  { name: 'Khalid Al Amri', id: 'BH-C-10055', initials: 'KA', email: 'khalid.a@mail.om', phone: '+968 9331 7788', orders: 2, wallet: 'OMR 0.000', tickets: 1, status: 'Blocked' },
+  { name: 'Noura Al Siyabi', id: 'BH-C-10466', initials: 'NS', email: 'noura.s@mail.om', phone: '+968 9600 3312', orders: 9, wallet: 'OMR 3.400', tickets: 2, status: 'Active' },
+];
+
+const ORDERS = [
+  { code: 'BH-284193', customer: 'Amal Al Balushi', seller: 'A2 Official Store', date: '15 Aug 2026', total: 'OMR 38.900', payment: 'Paid', status: 'Out for delivery' },
+  { code: 'BH-283740', customer: 'Amal Al Balushi', seller: 'Layali Beauty', date: '11 Aug 2026', total: 'OMR 64.200', payment: 'Paid', status: 'Delivered' },
+  { code: 'BH-283012', customer: 'Reem Al Shehhi', seller: 'Gulf Tech Traders', date: '10 Aug 2026', total: 'OMR 19.750', payment: 'Failed', status: 'Cancelled' },
+  { code: 'BH-282011', customer: 'Dana Al Kindi', seller: 'Nizwa Crafts', date: '29 Jul 2026', total: 'OMR 15.200', payment: 'Refunded', status: 'Returned' },
+  { code: 'BH-281550', customer: 'Talal Al Hinai', seller: 'A2 Official Store', date: '18 Jul 2026', total: 'OMR 27.000', payment: 'Paid', status: 'Delivered' },
+  { code: 'BH-280774', customer: 'Hamad Al Maqbali', seller: 'Muscat Home Goods', date: '14 Jul 2026', total: 'OMR 16.900', payment: 'Pending', status: 'Processing' },
+  { code: 'BH-279902', customer: 'Noura Al Siyabi', seller: 'Salalah Fresh', date: '02 Jul 2026', total: 'OMR 9.200', payment: 'Paid', status: 'Delivered' },
+];
+
+const PAYTONE = {
+  Paid: { bg: '#E6F6EE', fg: '#1F9D62' }, Pending: { bg: '#FCF2DC', fg: '#C98A12' },
+  Failed: { bg: '#FCEAEA', fg: '#D64545' }, Refunded: { bg: '#EEEDF9', fg: '#7F77DD' },
+};
+const ORDTONE = {
+  'Out for delivery': { bg: '#E7F0FC', fg: '#2A6FDB' }, Delivered: { bg: '#E6F6EE', fg: '#1F9D62' },
+  Processing: { bg: '#FCF2DC', fg: '#C98A12' }, Returned: { bg: '#EEEDF9', fg: '#7F77DD' },
+  Cancelled: { bg: '#FCEAEA', fg: '#D64545' },
+};
+
+class Component extends DCLogic {
+  state = {
+    view: 'overview', filter: 'All', queue: null, open: null, tab: 'reply', draft: '', search: '', toast: null,
+    custQuery: '', custFilter: 'All', orderQuery: '', orderFilter: 'All', profile: 0,
+  };
+
+  flash(msg) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg });
+    this._t = setTimeout(() => this.setState({ toast: null }), 2200);
+  }
+
+  renderVals() {
+    const s = this.state, on = '#7F77DD';
+    const titles = {
+      overview: 'Support overview', tickets: 'Tickets', customer: 'Customer profile',
+      customerSearch: 'Customer search', orderSearch: 'Order search',
+    };
+    const stTone = st => st === 'VIP' ? { bg: '#FCF2DC', fg: '#C98A12' } : (st === 'Blocked' ? { bg: '#FCEAEA', fg: '#D64545' } : { bg: '#E6F6EE', fg: '#1F9D62' });
+    const cq = s.custQuery.trim().toLowerCase();
+    let custList = CUSTOMERS;
+    if (s.custFilter === 'Has open tickets') custList = custList.filter(c => c.tickets > 2);
+    if (s.custFilter === 'Wallet balance') custList = custList.filter(c => c.wallet !== 'OMR 0.000');
+    if (s.custFilter === 'Blocked') custList = custList.filter(c => c.status === 'Blocked');
+    if (cq) custList = custList.filter(c => (c.name + ' ' + c.email + ' ' + c.phone + ' ' + c.id).toLowerCase().indexOf(cq) >= 0);
+    const oq = s.orderQuery.trim().toLowerCase();
+    let ordList = ORDERS;
+    if (s.orderFilter !== 'All') ordList = ordList.filter(o => o.status === s.orderFilter || o.payment === s.orderFilter);
+    if (oq) ordList = ordList.filter(o => (o.code + ' ' + o.customer + ' ' + o.seller).toLowerCase().indexOf(oq) >= 0);
+    const prof = CUSTOMERS[s.profile] || CUSTOMERS[0];
+    const profTone = stTone(prof.status);
+
+    const decorate = (tk, i) => ({
+      code: tk.code, subject: tk.subject, customer: tk.customer, category: tk.category,
+      priority: tk.priority, assignee: tk.assignee, status: tk.status, age: tk.age,
+      prioBg: PRIO[tk.priority].bg, prioFg: PRIO[tk.priority].fg,
+      statusBg: STATUS[tk.status].bg, statusFg: STATUS[tk.status].fg,
+      open: () => this.setState({ open: i, tab: 'reply', draft: '' }),
+    });
+
+    let list = TICKETS.map(decorate);
+    if (s.queue) list = list.filter(t => t.category === s.queue);
+    if (s.filter !== 'All') list = list.filter(t => t.status === s.filter);
+    if (s.search.trim()) {
+      const q = s.search.trim().toLowerCase();
+      list = list.filter(t => (t.subject + ' ' + t.customer + ' ' + t.code).toLowerCase().indexOf(q) >= 0);
+    }
+
+    const ticket = s.open != null ? decorate(TICKETS[s.open], s.open) : decorate(TICKETS[0], 0);
+    const reply = s.tab === 'reply';
+
+    const queueDefs = [
+      ['Delivery', 3, '#2A6FDB'], ['Payment', 2, '#C98A12'], ['Return', 4, '#7F77DD'],
+      ['Wallet', 1, '#1F9D62'], ['Seller', 2, '#D64545'],
+    ];
+
+    return {
+      viewTitle: titles[s.view],
+      isOverview: s.view === 'overview', isTickets: s.view === 'tickets', isCustomer: s.view === 'customer',
+      isCustomerSearch: s.view === 'customerSearch', isOrderSearch: s.view === 'orderSearch',
+      goCustomerSearch: () => this.setState({ view: 'customerSearch' }),
+      custQuery: s.custQuery,
+      onCustQuery: e => this.setState({ custQuery: e.target.value }),
+      clearCustQuery: () => this.setState({ custQuery: '', custFilter: 'All' }),
+      custFilters: ['All', 'Has open tickets', 'Wallet balance', 'Blocked'].map(f => ({
+        label: f, pick: () => this.setState({ custFilter: f }),
+        bg: s.custFilter === f ? '#EEEDF9' : '#fff',
+        fg: s.custFilter === f ? on : '#5A5A72',
+        border: s.custFilter === f ? '#C9C6EE' : '#ECEDF1',
+      })),
+      custCount: custList.length + ' of ' + CUSTOMERS.length + ' customers',
+      custEmpty: custList.length === 0,
+      custRows: custList.map(c => {
+        const tone = stTone(c.status);
+        return {
+          name: c.name, id: c.id, initials: c.initials, email: c.email, phone: c.phone,
+          orders: String(c.orders), wallet: c.wallet, tickets: String(c.tickets),
+          status: c.status, stBg: tone.bg, stFg: tone.fg,
+          view: () => this.setState({ view: 'customer', profile: CUSTOMERS.indexOf(c) }),
+        };
+      }),
+      profile: {
+        name: prof.name, initials: prof.initials, status: prof.status,
+        stBg: profTone.bg, stFg: profTone.fg,
+        since: 'Customer since Mar 2024 · ' + prof.id,
+      },
+
+      orderQuery: s.orderQuery,
+      onOrderQuery: e => this.setState({ orderQuery: e.target.value }),
+      clearOrderQuery: () => this.setState({ orderQuery: '', orderFilter: 'All' }),
+      orderFilters: ['All', 'Out for delivery', 'Delivered', 'Processing', 'Returned', 'Failed'].map(f => ({
+        label: f, pick: () => this.setState({ orderFilter: f }),
+        bg: s.orderFilter === f ? '#EEEDF9' : '#fff',
+        fg: s.orderFilter === f ? on : '#5A5A72',
+        border: s.orderFilter === f ? '#C9C6EE' : '#ECEDF1',
+      })),
+      orderCount: ordList.length + ' of ' + ORDERS.length + ' orders',
+      orderEmpty: ordList.length === 0,
+      orderRows: ordList.map(o => ({
+        code: o.code, customer: o.customer, seller: o.seller, date: o.date, total: o.total,
+        payment: o.payment, payBg: PAYTONE[o.payment].bg, payFg: PAYTONE[o.payment].fg,
+        status: o.status, stBg: ORDTONE[o.status].bg, stFg: ORDTONE[o.status].fg,
+        track: () => this.flash(o.code + ' · ' + o.status + ' · courier DLV-0142'),
+      })),
+
+      navMain: [
+        ['overview', 'Overview', '▦', null],
+        ['tickets', 'Tickets', '☰', '7'],
+        ['customerSearch', 'Customer search', '⌕', null],
+        ['customer', 'Customer profile', '☺', null],
+        ['orderSearch', 'Order search', '▤', null],
+      ].map(n => ({
+        label: n[1], mark: n[2], count: n[3],
+        bg: s.view === n[0] ? '#EEEDF9' : 'transparent',
+        fg: s.view === n[0] ? on : '#3A3A52',
+        go: () => this.setState({ view: n[0], queue: null }),
+      })),
+      queues: queueDefs.map(q => ({
+        label: q[0], count: q[1], dot: q[2],
+        bg: s.queue === q[0] ? '#EEEDF9' : 'transparent',
+        fg: s.queue === q[0] ? on : '#3A3A52',
+        go: () => this.setState({ view: 'tickets', queue: q[0], filter: 'All' }),
+      })),
+
+      kpis: [
+        { mark: '☰', tint: '#EEEDF9', fg: on, label: 'Open tickets', value: '7', sub: '2 unassigned' },
+        { mark: '⏱', tint: '#E7F0FC', fg: '#2A6FDB', label: 'First response', value: '18m', sub: 'Target 30m' },
+        { mark: '!', tint: '#FCEAEA', fg: '#D64545', label: 'Escalated', value: '1', sub: 'Seller issue · 5h old' },
+        { mark: '✓', tint: '#E6F6EE', fg: '#1F9D62', label: 'Resolved today', value: '14', sub: 'CSAT 4.7' },
+      ],
+      categories: [
+        { label: 'Delivery', count: 3, width: '75%' }, { label: 'Return', count: 4, width: '100%' },
+        { label: 'Payment', count: 2, width: '50%' }, { label: 'Seller', count: 2, width: '50%' },
+        { label: 'Wallet', count: 1, width: '25%' }, { label: 'Account', count: 1, width: '25%' },
+      ],
+      escalations: [0, 1, 3].map(i => ({
+        subject: TICKETS[i].subject, meta: TICKETS[i].customer + ' · ' + TICKETS[i].category,
+        age: TICKETS[i].age, mark: TICKETS[i].priority[0],
+        tint: PRIO[TICKETS[i].priority].bg, fg: PRIO[TICKETS[i].priority].fg,
+        open: () => this.setState({ open: i, tab: 'reply', draft: '' }),
+      })),
+
+      ticketsTitle: s.queue ? (s.queue + ' queue') : 'All tickets',
+      statusFilters: ['All', 'Open', 'Pending', 'Resolved'].map(f => ({
+        label: f, pick: () => this.setState({ filter: f }),
+        bg: s.filter === f ? '#EEEDF9' : '#fff',
+        fg: s.filter === f ? on : '#5A5A72',
+        border: s.filter === f ? '#C9C6EE' : '#ECEDF1',
+      })),
+      tickets: list,
+      search: s.search,
+      onSearch: e => this.setState({ search: e.target.value, view: 'tickets' }),
+
+      customerRows: [
+        { label: 'Email', value: prof.email }, { label: 'Phone', value: prof.phone },
+        { label: 'Orders', value: String(prof.orders) }, { label: 'Wallet', value: prof.wallet },
+        { label: 'Returns', value: '2' }, { label: 'Tickets', value: String(prof.tickets) },
+      ],
+      customerOrders: [
+        { code: '#BH-284193', date: '15 Aug 2026', total: 'OMR 38.900', status: 'Out for delivery', bg: '#E7F0FC', fg: '#2A6FDB' },
+        { code: '#BH-283740', date: '11 Aug 2026', total: 'OMR 64.200', status: 'Delivered', bg: '#E6F6EE', fg: '#1F9D62' },
+        { code: '#BH-282011', date: '29 Jul 2026', total: 'OMR 15.200', status: 'Returned', bg: '#FCF2DC', fg: '#C98A12' },
+        { code: '#BH-281550', date: '18 Jul 2026', total: 'OMR 27.000', status: 'Delivered', bg: '#E6F6EE', fg: '#1F9D62' },
+      ],
+      walletRows: [
+        { label: 'Refund · TK-4187', value: '+15.200', fg: '#1F9D62' },
+        { label: 'Order #BH-283740', value: '−64.200', fg: '#D64545' },
+        { label: 'Top-up · Paymob', value: '+50.000', fg: '#1F9D62' },
+      ],
+      customerTickets: [
+        { code: 'TK-4192', label: 'Damaged box', status: 'Open', bg: '#E7F0FC', fg: '#2A6FDB' },
+        { code: 'RT-0231', label: 'Return · skincare set', status: 'Approved', bg: '#E6F6EE', fg: '#1F9D62' },
+        { code: 'TK-4102', label: 'Address change', status: 'Resolved', bg: '#F1F1F5', fg: '#5A5A72' },
+      ],
+
+      drawerOpen: s.open != null,
+      closeDrawer: () => this.setState({ open: null }),
+      ticket,
+      ticketActions: [
+        { label: 'Check payment', fg: '#3A3A52', run: () => this.flash('Payment verified · Thawani ref TH-99120') },
+        { label: 'Check delivery', fg: '#3A3A52', run: () => this.flash('Delivery status: out for delivery, courier DLV-0142') },
+        { label: 'Create return ticket', fg: '#3A3A52', run: () => this.flash('Return ticket RT-0244 created') },
+        { label: 'Refund to wallet', fg: '#3A3A52', run: () => this.flash('OMR 38.900 refunded to customer wallet') },
+        { label: 'Escalate to seller', fg: '#D64545', run: () => this.flash('Escalated to A2 Official Store') },
+      ],
+      thread: [
+        { author: ticket.customer, role: 'Customer', initials: 'AB', time: ticket.age, avBg: '#EEEDF9', avFg: '#7F77DD', bg: '#fff', border: '#ECEDF1', body: 'The parcel arrived this morning but the outer box was crushed on one side. The headphones case has a dent. I have attached a photo.', attachment: 'box-damage.jpg' },
+        { author: 'Mona Al Zadjali', role: 'Support', initials: 'MA', time: '18 min ago', avBg: '#E6F6EE', avFg: '#1F9D62', bg: '#FAFAFE', border: '#E4E2F6', body: 'Thank you for the photo. I have opened a return ticket and arranged a free pickup for tomorrow between 9 am and 2 pm.', attachment: null },
+        { author: 'Internal note', role: 'Mona Al Zadjali', initials: 'IN', time: '17 min ago', avBg: '#FCF2DC', avFg: '#C98A12', bg: '#FFFCF4', border: '#F3E6C6', body: 'Courier DLV-0142 reported two damaged parcels from the same pallet. Flagging to the hub supervisor.', attachment: null },
+      ],
+      c: {
+        replyBg: reply ? '#fff' : 'transparent', replyFg: reply ? on : '#5A5A72',
+        noteBg: reply ? 'transparent' : '#fff', noteFg: reply ? '#5A5A72' : '#C98A12',
+      },
+      pickReply: () => this.setState({ tab: 'reply' }),
+      pickNote: () => this.setState({ tab: 'note' }),
+      draft: s.draft,
+      onDraft: e => this.setState({ draft: e.target.value }),
+      draftPlaceholder: reply ? 'Write a reply the customer will see…' : 'Internal note — visible to agents only…',
+      draftBg: reply ? '#fff' : '#FFFCF4',
+      sendLabel: reply ? 'Send reply' : 'Save note',
+      assignSelf: () => this.flash('Ticket assigned to Mona Al Zadjali'),
+      resolve: () => { this.setState({ draft: '' }); this.flash(reply ? 'Reply sent to customer' : 'Internal note saved'); },
+      toast: s.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>

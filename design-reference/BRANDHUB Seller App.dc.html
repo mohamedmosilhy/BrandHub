@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #E4E4EA; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  @keyframes bhToast { 0% { opacity: 0; transform: translateY(12px); } 12% { opacity: 1; transform: none; } 88% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(8px); } }
+  @keyframes bhIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes bhSheet { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+  [dir="rtl"] svg[data-flip] { transform: scaleX(-1); }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; display: flex; gap: 32px; padding: 32px; font-family: 'Plus Jakarta Sans', sans-serif; background: #E4E4EA;">
+
+  <aside style="width: 250px; flex-shrink: 0; display: flex; flex-direction: column; gap: 22px; position: sticky; top: 32px; align-self: flex-start;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <span style="font-size: 20px; font-weight: 800; color: #1A1A2E; letter-spacing: -0.01em;">BRAND<span style="font-weight: 500; color: #5A5A72;">HUB</span></span>
+      <span style="font-size: 11.5px; color: #5A5A72; line-height: 1.5;">Seller app — clickable prototype. Tap inside the phone; every screen is reachable.</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <span style="font-size: 10px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF;">PLATFORM</span>
+      <div style="display: flex; gap: 6px;">
+        <button onClick="{{ setIOS }}" style="flex: 1; height: 34px; border: 1px solid #D9D9E2; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">
+          <span style="color: {{ c.iosFg }};">iOS</span>
+        </button>
+        <button onClick="{{ setAndroid }}" style="flex: 1; height: 34px; border: 1px solid #D9D9E2; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">
+          <span style="color: {{ c.andFg }};">Android</span>
+        </button>
+      </div>
+      <span style="font-size: 10px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; margin-top: 6px;">LANGUAGE</span>
+      <div style="display: flex; gap: 6px;">
+        <button onClick="{{ setAr }}" style="flex: 1; height: 34px; border: 1px solid #D9D9E2; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">
+          <span style="color: {{ c.arFg }};">العربية</span>
+        </button>
+        <button onClick="{{ setEn }}" style="flex: 1; height: 34px; border: 1px solid #D9D9E2; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">
+          <span style="color: {{ c.enFg }};">English</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <span style="font-size: 10px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; margin-bottom: 4px;">SCREENS</span>
+      <sc-for list="{{ screenList }}" as="s" hint-placeholder-count="10">
+        <button onClick="{{ s.go }}" style="text-align: left; border: 0; border-radius: 9px; padding: 7px 10px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; background: {{ s.bg }}; color: {{ s.fg }};" style-hover="background: #EEEDF9;">
+          <span style="font-size: 9.5px; font-weight: 700; opacity: .55; width: 14px;">{{ s.n }}</span>{{ s.label }}
+        </button>
+      </sc-for>
+    </div>
+  </aside>
+
+  <div style="flex: 1; display: flex; justify-content: center; align-items: flex-start;">
+    <div style="position: relative; width: 428px; padding: 12px; border-radius: 56px; background: #17171F; box-shadow: 0 30px 70px rgba(26,26,46,.28);">
+      <div dir="{{ dir }}" style="position: relative; width: 404px; height: 876px; border-radius: 46px; overflow: hidden; background: #F5F5F7; display: flex; flex-direction: column; font-family: 'Noto Kufi Arabic', 'Plus Jakarta Sans', sans-serif;">
+
+        <div style="position: relative; height: 46px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 26px; background: {{ statusBg }}; color: {{ statusFg }}; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; z-index: 20;">
+          <span style="direction: ltr;">10:08</span>
+          <sc-if value="{{ isIOS }}" hint-placeholder-val="{{ true }}">
+            <span style="position: absolute; left: 50%; transform: translateX(-50%); top: 8px; width: 104px; height: 30px; border-radius: 99px; background: #17171F;"></span>
+          </sc-if>
+          <sc-if value="{{ isAndroid }}" hint-placeholder-val="{{ false }}">
+            <span style="position: absolute; left: 50%; transform: translateX(-50%); top: 12px; width: 13px; height: 13px; border-radius: 99px; background: #17171F;"></span>
+          </sc-if>
+          <span style="display: flex; align-items: center; gap: 5px; direction: ltr;">
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"></rect><rect x="4.5" y="6" width="3" height="6" rx="1"></rect><rect x="9" y="3" width="3" height="9" rx="1"></rect><rect x="13.5" y="0" width="3" height="12" rx="1"></rect></svg>
+            <svg width="22" height="12" viewBox="0 0 22 12" fill="none"><rect x="0.6" y="0.6" width="17" height="10.8" rx="3" stroke="currentColor" stroke-width="1.2"></rect><rect x="2.2" y="2.2" width="12" height="7.6" rx="1.6" fill="currentColor"></rect><path d="M19.5 4.2v3.6a2 2 0 0 0 0-3.6z" fill="currentColor"></path></svg>
+          </span>
+        </div>
+
+        <div style="flex: 1; overflow-y: auto; overflow-x: hidden; position: relative;">
+
+          <sc-if value="{{ isGate }}" hint-placeholder-val="{{ false }}">
+            <div style="min-height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 16px; padding: 32px 26px; background: #1A1A2E; animation: bhIn .25s ease both;">
+              <span style="width: 56px; height: 56px; border-radius: 18px; background: rgba(255,255,255,.08); color: #A9A5E6; display: grid; place-items: center;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10.5" width="16" height="10" rx="2.5"></rect><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path></svg>
+              </span>
+              <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; color: #fff; line-height: 1.4;">{{ t.gateTitle }}</span>
+              <span style="font-size: 12.5px; color: rgba(255,255,255,.6); line-height: 1.8;">{{ t.gateBody }}</span>
+              <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 8px;">
+                <button onClick="{{ enterApp }}" style="height: 52px; border: 0; border-radius: 16px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">{{ t.gateSignIn }}</button>
+                <button onClick="{{ enterApp }}" style="height: 50px; border: 1px solid rgba(255,255,255,.18); border-radius: 16px; background: transparent; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;" style-hover="background: rgba(255,255,255,.08);">{{ t.gateStore }}</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-direction: column; padding-bottom: 108px; animation: bhIn .25s ease both;">
+              <div style="background: #1A1A2E; padding: 16px 18px 26px; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 11px;">
+                  <span style="width: 42px; height: 42px; border-radius: 13px; background: rgba(255,255,255,.1); color: #fff; display: grid; place-items: center; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 800;">A2</span>
+                  <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+                    <span style="font-size: 10.5px; color: rgba(255,255,255,.55);">{{ t.greeting }}</span>
+                    <span style="font-size: 13.5px; font-weight: 700; color: #fff;">{{ t.storeName }}</span>
+                  </span>
+                  <span style="font-size: 9.5px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: rgba(255,255,255,.12); color: #A9A5E6;">{{ t.roleSeller }}</span>
+                  <button onClick="{{ goProfile }}" style="width: 34px; height: 34px; border-radius: 99px; border: 0; background: rgba(255,255,255,.1); color: #fff; display: grid; place-items: center; cursor: pointer;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8.5" r="3.6"></circle><path d="M5 20c1.2-3.6 4-5.4 7-5.4s5.8 1.8 7 5.4"></path></svg>
+                  </button>
+                </div>
+                <div style="border-radius: 18px; background: rgba(255,255,255,.07); padding: 15px 16px; display: flex; align-items: center; gap: 12px;">
+                  <span style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
+                    <span style="font-size: 10.5px; color: rgba(255,255,255,.55);">{{ t.availableBalance }}</span>
+                    <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 25px; font-weight: 800; color: #fff; direction: ltr;">{{ balance }}</span>
+                  </span>
+                  <button onClick="{{ goEarnings }}" style="border: 0; border-radius: 99px; background: #fff; color: #1A1A2E; font-family: inherit; font-size: 11px; font-weight: 700; padding: 9px 15px; cursor: pointer;">{{ t.viewEarnings }}</button>
+                </div>
+              </div>
+
+              <div style="margin: -14px 16px 0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                <sc-for list="{{ statCards }}" as="k" hint-placeholder-count="6">
+                  <div style="background: #fff; border: 1px solid #E8E8EC; border-radius: 16px; padding: 12px 11px; display: flex; flex-direction: column; gap: 5px;">
+                    <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 19px; font-weight: 800; color: {{ k.fg }};">{{ k.value }}</span>
+                    <span style="font-size: 9.5px; color: #5A5A72; line-height: 1.45;">{{ k.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="padding: 20px 16px 0; display: flex; flex-direction: column; gap: 11px;">
+                <span style="font-size: 13px; font-weight: 800; color: #1A1A2E;">{{ t.quickActions }}</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                  <sc-for list="{{ quickActions }}" as="a" hint-placeholder-count="5">
+                    <button onClick="{{ a.go }}" style="display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #E8E8EC; border-radius: 15px; padding: 13px 12px; cursor: pointer; font-family: inherit; text-align: start;" style-hover="border-color: #C9C6EE;">
+                      <span style="width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-size: 14px; background: {{ a.tint }}; color: {{ a.fg }};">{{ a.mark }}</span>
+                      <span style="flex: 1; min-width: 0; font-size: 11px; font-weight: 700; color: #1A1A2E; line-height: 1.45;">{{ a.label }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="padding: 20px 16px 0; display: flex; flex-direction: column; gap: 11px;">
+                <div style="display: flex; align-items: baseline;">
+                  <span style="flex: 1; font-size: 13px; font-weight: 800; color: #1A1A2E;">{{ t.recentActivity }}</span>
+                  <button onClick="{{ refresh }}" style="background: none; border: 0; font-family: inherit; font-size: 11px; font-weight: 700; color: #7F77DD; cursor: pointer;">{{ t.refresh }}</button>
+                </div>
+                <sc-for list="{{ activity }}" as="a" hint-placeholder-count="3">
+                  <button onClick="{{ a.go }}" style="display: flex; gap: 11px; background: #fff; border: 1px solid #E8E8EC; border-radius: 16px; padding: 13px; cursor: pointer; font-family: inherit; text-align: start;" style-hover="border-color: #C9C6EE;">
+                    <span style="width: 34px; height: 34px; border-radius: 11px; flex-shrink: 0; display: grid; place-items: center; font-size: 14px; background: {{ a.tint }}; color: {{ a.fg }};">{{ a.mark }}</span>
+                    <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+                      <span style="font-size: 11.5px; font-weight: 700; color: #1A1A2E; line-height: 1.5;">{{ a.title }}</span>
+                      <span style="font-size: 10px; color: #9A9AAF; line-height: 1.5;">{{ a.meta }}</span>
+                    </span>
+                    <span style="font-size: 9.5px; font-weight: 700; border-radius: 99px; padding: 3px 9px; height: fit-content; white-space: nowrap; background: {{ a.stBg }}; color: {{ a.stFg }};">{{ a.status }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isProducts }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; min-height: 100%; padding-bottom: 108px; animation: bhIn .25s ease both;">
+              <div style="padding: 14px 18px 12px; background: #fff; border-bottom: 1px solid #E8E8EC; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                  <span style="font-size: 17px; font-weight: 800; color: #1A1A2E;">{{ t.myProducts }}</span>
+                  <span style="font-size: 11px; color: #9A9AAF;">{{ productCountLabel }}</span>
+                  <button onClick="{{ refresh }}" style="margin-inline-start: auto; background: none; border: 0; font-family: inherit; font-size: 11px; font-weight: 700; color: #7F77DD; cursor: pointer;">{{ t.refresh }}</button>
+                </div>
+                <div style="display: flex; gap: 7px; overflow-x: auto;">
+                  <sc-for list="{{ productFilters }}" as="f" hint-placeholder-count="4">
+                    <button onClick="{{ f.pick }}" style="font-family: inherit; font-size: 11px; font-weight: 600; border-radius: 99px; padding: 7px 13px; cursor: pointer; white-space: nowrap; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 11px;">
+                <sc-for list="{{ productCards }}" as="p" hint-placeholder-count="4">
+                  <div style="background: #fff; border: 1px solid #E8E8EC; border-radius: 18px; overflow: hidden;">
+                    <div style="display: flex; gap: 12px; padding: 13px;">
+                      <span style="width: 76px; height: 76px; border-radius: 13px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; background: {{ p.tone }};">{{ p.imgEl }}</span>
+                      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                          <span style="flex: 1; font-size: 11.5px; font-weight: 700; color: #1A1A2E; line-height: 1.5;">{{ p.name }}</span>
+                          <span style="font-size: 9px; font-weight: 700; border-radius: 99px; padding: 3px 9px; white-space: nowrap; background: {{ p.stBg }}; color: {{ p.stFg }};">{{ p.status }}</span>
+                        </div>
+                        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; color: #9A9AAF; direction: ltr;">{{ p.sku }}</span>
+                        <div style="display: flex; align-items: baseline; gap: 8px;">
+                          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 800; color: #1A1A2E; direction: ltr;">{{ p.price }}</span>
+                          <span style="font-size: 10px; color: #5A5A72;">{{ p.share }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; padding: 0 13px 11px;">
+                      <span style="flex: 1; font-size: 9.5px; color: #9A9AAF;">{{ p.meta }}</span>
+                      <button onClick="{{ p.images }}" style="border: 1px solid #E8E8EC; border-radius: 9px; background: #fff; padding: 6px 11px; font-family: inherit; font-size: 10.5px; font-weight: 700; color: #5A5A72; cursor: pointer;" style-hover="border-color: #C9C6EE;">{{ t.images }}</button>
+                      <button onClick="{{ p.edit }}" style="border: 1px solid #E8E8EC; border-radius: 9px; background: #fff; padding: 6px 11px; font-family: inherit; font-size: 10.5px; font-weight: 700; color: #7F77DD; cursor: pointer;" style-hover="border-color: #C9C6EE;">{{ t.edit }}</button>
+                      <button onClick="{{ p.remove }}" style="border: 1px solid #F3D4D4; border-radius: 9px; background: #fff; padding: 6px 11px; font-family: inherit; font-size: 10.5px; font-weight: 700; color: #D64545; cursor: pointer;" style-hover="background: #FCEAEA;">{{ t.deleteAct }}</button>
+                    </div>
+                    <sc-if value="{{ p.rejected }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding: 10px 13px; background: #FCEAEA; display: flex; gap: 8px;">
+                        <span style="font-size: 11px; color: #D64545;">!</span>
+                        <span style="font-size: 10px; color: #A63636; line-height: 1.6;">{{ p.reason }}</span>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+
+                <sc-if value="{{ productsEmpty }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding: 46px 22px; display: flex; flex-direction: column; align-items: center; gap: 11px; text-align: center;">
+                    <span style="font-size: 13px; font-weight: 800; color: #1A1A2E;">{{ t.noProducts }}</span>
+                    <span style="font-size: 11px; color: #9A9AAF; line-height: 1.7;">{{ t.noProductsSub }}</span>
+                    <button onClick="{{ goSubmit }}" style="margin-top: 4px; border: 0; border-radius: 99px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; padding: 12px 22px; cursor: pointer;">{{ t.submitProduct }}</button>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSubmit }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; min-height: 100%; background: #fff; padding-bottom: 96px; animation: bhIn .25s ease both;">
+              <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #E8E8EC;">
+                <button onClick="{{ back }}" style="background: none; border: 0; cursor: pointer; color: #1A1A2E; display: flex; padding: 2px;">
+                  <svg data-flip="1" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"></path></svg>
+                </button>
+                <span style="font-size: 15px; font-weight: 800; color: #1A1A2E;">{{ submitTitle }}</span>
+                <span style="margin-inline-start: auto; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 700; color: #9A9AAF; direction: ltr;">{{ stepLabel }}</span>
+              </div>
+
+              <div style="display: flex; gap: 5px; padding: 12px 16px 4px;">
+                <sc-for list="{{ stepBars }}" as="b" hint-placeholder-count="6">
+                  <span style="flex: 1; height: 4px; border-radius: 99px; background: {{ b.bg }};"></span>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ step1 }}" hint-placeholder-val="{{ true }}">
+                <div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 14px;">
+                  <span style="font-size: 12.5px; font-weight: 800; color: #1A1A2E;">{{ t.stepBasic }}</span>
+                  <label style="display: flex; flex-direction: column; gap: 7px;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.productName }}</span>
+                    <input value="{{ nameVal }}" onChange="{{ onName }}" placeholder="{{ t.productNamePh }}" style="height: 46px; border: 1px solid #E8E8EC; border-radius: 12px; padding: 0 13px; font-family: inherit; font-size: 12.5px; outline: none; background: #FAFAFE;" style-focus="border-color: #7F77DD;">
+                  </label>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.category }}</span>
+                    <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+                      <sc-for list="{{ categories }}" as="c" hint-placeholder-count="6">
+                        <button onClick="{{ c.pick }}" style="font-family: inherit; font-size: 11px; font-weight: 600; border-radius: 99px; padding: 8px 13px; cursor: pointer; border: 1px solid {{ c.border }}; background: {{ c.bg }}; color: {{ c.fg }};">{{ c.label }}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 12px 13px; border-radius: 12px; background: #F5F5F7;">
+                    <span style="flex: 1; font-size: 10.5px; color: #5A5A72; line-height: 1.6;">{{ t.skuHint }}</span>
+                    <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11.5px; font-weight: 700; color: #1A1A2E; direction: ltr; white-space: nowrap; flex-shrink: 0;">{{ skuPreview }}</span>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ step2 }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 14px;">
+                  <span style="font-size: 12.5px; font-weight: 800; color: #1A1A2E;">{{ t.stepPricing }}</span>
+                  <div style="display: flex; gap: 11px;">
+                    <label style="flex: 1; display: flex; flex-direction: column; gap: 7px;">
+                      <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.basePrice }}</span>
+                      <input value="{{ baseVal }}" onChange="{{ onBase }}" style="height: 46px; border: 1px solid #E8E8EC; border-radius: 12px; padding: 0 13px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; outline: none; background: #FAFAFE; direction: ltr;" style-focus="border-color: #7F77DD;">
+                    </label>
+                    <label style="flex: 1; display: flex; flex-direction: column; gap: 7px;">
+                      <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.salePrice }}</span>
+                      <input value="{{ saleVal }}" onChange="{{ onSale }}" style="height: 46px; border: 1px solid #E8E8EC; border-radius: 12px; padding: 0 13px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; outline: none; background: #FAFAFE; direction: ltr;" style-focus="border-color: #7F77DD;">
+                    </label>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: baseline;">
+                      <span style="flex: 1; font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.sellerPct }}</span>
+                      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 800; color: #7F77DD; direction: ltr;">{{ pctLabel }}</span>
+                    </div>
+                    <div style="display: flex; gap: 7px;">
+                      <sc-for list="{{ pctOptions }}" as="p" hint-placeholder-count="4">
+                        <button onClick="{{ p.pick }}" style="flex: 1; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; border-radius: 12px; padding: 11px 4px; cursor: pointer; border: 1px solid {{ p.border }}; background: {{ p.bg }}; color: {{ p.fg }};">{{ p.label }}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="padding: 13px; border-radius: 14px; background: #EEEDF9; display: flex; flex-direction: column; gap: 8px;">
+                    <sc-for list="{{ payoutBreakdown }}" as="b" hint-placeholder-count="3">
+                      <div style="display: flex; align-items: baseline;">
+                        <span style="flex: 1; font-size: 11px; color: #4A4470;">{{ b.label }}</span>
+                        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; color: #1A1A2E; direction: ltr;">{{ b.value }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ step3 }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 14px;">
+                  <span style="font-size: 12.5px; font-weight: 800; color: #1A1A2E;">{{ t.stepVariants }}</span>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.colors }}</span>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                      <sc-for list="{{ colorOpts }}" as="c" hint-placeholder-count="4">
+                        <button onClick="{{ c.toggle }}" style="display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 11px; font-weight: 600; border-radius: 99px; padding: 7px 13px 7px 8px; cursor: pointer; border: 1px solid {{ c.border }}; background: {{ c.bg }}; color: {{ c.fg }};">
+                          <span style="width: 18px; height: 18px; border-radius: 99px; background: {{ c.swatch }}; border: 1px solid rgba(26,26,46,.12);"></span>
+                          {{ c.label }}
+                        </button>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.sizes }}</span>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                      <sc-for list="{{ sizeOpts }}" as="z" hint-placeholder-count="4">
+                        <button onClick="{{ z.toggle }}" style="min-width: 48px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11.5px; font-weight: 700; border-radius: 12px; padding: 10px 12px; cursor: pointer; border: 1px solid {{ z.border }}; background: {{ z.bg }}; color: {{ z.fg }};">{{ z.label }}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <label style="display: flex; flex-direction: column; gap: 7px;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.stockPerVariant }}</span>
+                    <input value="{{ stockVal }}" onChange="{{ onStock }}" style="height: 46px; border: 1px solid #E8E8EC; border-radius: 12px; padding: 0 13px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; outline: none; background: #FAFAFE; direction: ltr;" style-focus="border-color: #7F77DD;">
+                  </label>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: baseline;">
+                      <span style="flex: 1; font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.generatedVariants }}</span>
+                      <span style="font-size: 10.5px; color: #9A9AAF;">{{ variantSummary }}</span>
+                    </div>
+                    <sc-for list="{{ variants }}" as="v" hint-placeholder-count="4">
+                      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #E8E8EC; border-radius: 12px;">
+                        <span style="flex: 1; font-size: 11px; color: #1A1A2E;">{{ v.label }}</span>
+                        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; color: #9A9AAF; direction: ltr;">{{ v.sku }}</span>
+                        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11.5px; font-weight: 700; color: #1A1A2E; direction: ltr;">{{ v.stock }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ step4 }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 14px;">
+                  <span style="font-size: 12.5px; font-weight: 800; color: #1A1A2E;">{{ t.stepTax }}</span>
+                  <button onClick="{{ toggleTaxable }}" style="display: flex; align-items: center; gap: 11px; padding: 13px; border: 1px solid #E8E8EC; border-radius: 14px; background: #fff; cursor: pointer; font-family: inherit; text-align: start;">
+                    <span style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                      <span style="font-size: 12px; font-weight: 700; color: #1A1A2E;">{{ t.taxable }}</span>
+                      <span style="font-size: 10px; color: #9A9AAF; line-height: 1.5;">{{ t.taxableHint }}</span>
+                    </span>
+                    <span style="width: 40px; height: 23px; border-radius: 99px; padding: 2.5px; display: flex; justify-content: {{ taxJustify }}; background: {{ taxTrack }}; flex-shrink: 0;">
+                      <span style="width: 18px; height: 18px; border-radius: 99px; background: #fff;"></span>
+                    </span>
+                  </button>
+                  <sc-if value="{{ taxable }}" hint-placeholder-val="{{ true }}">
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                      <label style="display: flex; flex-direction: column; gap: 7px;">
+                        <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.taxRate }}</span>
+                        <input value="5" style="height: 46px; border: 1px solid #E8E8EC; border-radius: 12px; padding: 0 13px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; outline: none; background: #FAFAFE; direction: ltr;" style-focus="border-color: #7F77DD;">
+                      </label>
+                      <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.taxCategory }}</span>
+                        <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+                          <sc-for list="{{ taxCats }}" as="c" hint-placeholder-count="3">
+                            <button onClick="{{ c.pick }}" style="font-family: inherit; font-size: 11px; font-weight: 600; border-radius: 99px; padding: 8px 13px; cursor: pointer; border: 1px solid {{ c.border }}; background: {{ c.bg }}; color: {{ c.fg }};">{{ c.label }}</button>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ notTaxable }}" hint-placeholder-val="{{ false }}">
+                    <div style="padding: 13px; border-radius: 12px; background: #F5F5F7;">
+                      <span style="font-size: 10.5px; color: #5A5A72; line-height: 1.7;">{{ t.taxOffHint }}</span>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ step5 }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 14px;">
+                  <span style="font-size: 12.5px; font-weight: 800; color: #1A1A2E;">{{ t.stepMedia }}</span>
+                  <label style="display: flex; flex-direction: column; gap: 7px;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.shortDesc }}</span>
+                    <textarea rows="2" placeholder="{{ t.shortDescPh }}" style="resize: none; border: 1px solid #E8E8EC; border-radius: 12px; padding: 12px 13px; font-family: inherit; font-size: 12.5px; outline: none; line-height: 1.7; background: #FAFAFE;" style-focus="border-color: #7F77DD;"></textarea>
+                  </label>
+                  <label style="display: flex; flex-direction: column; gap: 7px;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.fullDesc }}</span>
+                    <textarea rows="4" placeholder="{{ t.fullDescPh }}" style="resize: none; border: 1px solid #E8E8EC; border-radius: 12px; padding: 12px 13px; font-family: inherit; font-size: 12.5px; outline: none; line-height: 1.7; background: #FAFAFE;" style-focus="border-color: #7F77DD;"></textarea>
+                  </label>
+                  <div style="display: flex; flex-direction: column; gap: 9px;">
+                    <div style="display: flex; align-items: baseline;">
+                      <span style="flex: 1; font-size: 11.5px; font-weight: 700; color: #5A5A72;">{{ t.productImages }}</span>
+                      <span style="font-size: 10px; color: #9A9AAF;">{{ imageCountLabel }}</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px;">
+                      <sc-for list="{{ imageSlots }}" as="im" hint-placeholder-count="4">
+                        <span style="aspect-ratio: 1; border-radius: 13px; overflow: hidden; display: grid; place-items: center; position: relative; background: {{ im.tone }};">
+                          {{ im.imgEl }}
+                          <sc-if value="{{ im.primary }}" hint-placeholder-val="{{ false }}">
+                            <span style="position: absolute; bottom: 4px; inset-inline-start: 4px; font-size: 8px; font-weight: 700; border-radius: 99px; padding: 2px 7px; background: #1A1A2E; color: #fff;">{{ t.primary }}</span>
+                          </sc-if>
+                        </span>
+                      </sc-for>
+                      <button onClick="{{ addImage }}" style="aspect-ratio: 1; border: 1.5px dashed #C9C6EE; border-radius: 13px; background: #FAFAFE; color: #7F77DD; font-family: inherit; font-size: 20px; font-weight: 600; cursor: pointer;" style-hover="background: #EEEDF9;">+</button>
+                    </div>
+                    <span style="font-size: 10px; color: #9A9AAF; line-height: 1.7;">{{ t.imageHint }}</span>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ step6 }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 14px;">
+                  <span style="font-size: 12.5px; font-weight: 800; color: #1A1A2E;">{{ t.stepReview }}</span>
+                  <div style="background: #fff; border: 1px solid #E8E8EC; border-radius: 16px; overflow: hidden;">
+                    <sc-for list="{{ reviewRows }}" as="r" hint-placeholder-count="8">
+                      <div style="display: flex; align-items: baseline; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #F1F1F5;">
+                        <span style="font-size: 11px; color: #9A9AAF;">{{ r.label }}</span>
+                        <span style="margin-inline-start: auto; font-size: 11.5px; font-weight: 700; color: #1A1A2E; text-align: end;">{{ r.value }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ validationErrors }}" hint-placeholder-val="{{ false }}">
+                    <div style="padding: 13px; border-radius: 14px; background: #FCEAEA; display: flex; flex-direction: column; gap: 7px;">
+                      <span style="font-size: 11px; font-weight: 700; color: #A63636;">{{ t.fixFirst }}</span>
+                      <sc-for list="{{ errorList }}" as="e" hint-placeholder-count="2">
+                        <span style="font-size: 10.5px; color: #A63636; line-height: 1.6;">· {{ e.label }}</span>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <div style="padding: 13px; border-radius: 14px; background: #FEF7E0; display: flex; gap: 9px;">
+                    <span style="font-size: 12px; color: #B98900;">!</span>
+                    <span style="font-size: 10.5px; color: #7A5C00; line-height: 1.7;">{{ t.approvalNote }}</span>
+                  </div>
+                </div>
+              </sc-if>
+
+              <div style="position: sticky; bottom: 0; margin-top: auto; padding: 12px 16px 16px; background: #fff; border-top: 1px solid #E8E8EC; display: flex; gap: 10px;">
+                <sc-if value="{{ canGoBackStep }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ prevStep }}" style="height: 50px; padding: 0 20px; border: 1px solid #E8E8EC; border-radius: 15px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; color: #1A1A2E; cursor: pointer;" style-hover="border-color: #C9C6EE;">{{ t.previous }}</button>
+                </sc-if>
+                <button onClick="{{ nextStep }}" style="flex: 1; height: 50px; border: 0; border-radius: 15px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">{{ nextLabel }}</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; min-height: 100%; padding-bottom: 108px; animation: bhIn .25s ease both;">
+              <div style="padding: 14px 18px 12px; background: #fff; border-bottom: 1px solid #E8E8EC; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                  <span style="font-size: 17px; font-weight: 800; color: #1A1A2E;">{{ t.salesOrders }}</span>
+                  <span style="font-size: 11px; color: #9A9AAF;">{{ orderCountLabel }}</span>
+                  <button onClick="{{ refresh }}" style="margin-inline-start: auto; background: none; border: 0; font-family: inherit; font-size: 11px; font-weight: 700; color: #7F77DD; cursor: pointer;">{{ t.refresh }}</button>
+                </div>
+                <div style="display: flex; gap: 7px; overflow-x: auto;">
+                  <sc-for list="{{ orderFilters }}" as="f" hint-placeholder-count="5">
+                    <button onClick="{{ f.pick }}" style="font-family: inherit; font-size: 11px; font-weight: 600; border-radius: 99px; padding: 7px 13px; cursor: pointer; white-space: nowrap; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 14px;">
+                <sc-for list="{{ orderGroups }}" as="g" hint-placeholder-count="3">
+                  <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <span style="font-size: 10.5px; font-weight: 700; color: #9A9AAF;">{{ g.date }}</span>
+                    <sc-for list="{{ g.orders }}" as="o" hint-placeholder-count="2">
+                      <button onClick="{{ o.open }}" style="display: flex; flex-direction: column; gap: 10px; background: #fff; border: 1px solid #E8E8EC; border-radius: 18px; padding: 13px; cursor: pointer; font-family: inherit; text-align: start;" style-hover="border-color: #C9C6EE;">
+                        <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11.5px; font-weight: 700; color: #1A1A2E; direction: ltr;">{{ o.code }}</span>
+                          <span style="margin-inline-start: auto; font-size: 9px; font-weight: 700; border-radius: 99px; padding: 3px 9px; background: {{ o.stBg }}; color: {{ o.stFg }};">{{ o.status }}</span>
+                        </div>
+                        <div style="display: flex; gap: 10px; width: 100%;">
+                          <span style="width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; background: {{ o.tone }};">{{ o.imgEl }}</span>
+                          <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+                            <span style="font-size: 11px; color: #1A1A2E; line-height: 1.5;">{{ o.summary }}</span>
+                            <span style="font-size: 10px; color: #9A9AAF;">{{ o.customer }}</span>
+                          </span>
+                        </div>
+                        <div style="display: flex; align-items: baseline; gap: 8px; width: 100%; padding-top: 2px; border-top: 1px solid #F1F1F5;">
+                          <span style="font-size: 9.5px; font-weight: 700; border-radius: 99px; padding: 3px 9px; margin-top: 8px; background: {{ o.payBg }}; color: {{ o.payFg }};">{{ o.payment }}</span>
+                          <span style="margin-inline-start: auto; font-size: 10px; color: #9A9AAF;">{{ t.yourShare }}</span>
+                          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 800; color: #1A1A2E; direction: ltr;">{{ o.share }}</span>
+                        </div>
+                      </button>
+                    </sc-for>
+                  </div>
+                </sc-for>
+
+                <sc-if value="{{ ordersEmpty }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding: 46px 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;">
+                    <span style="font-size: 13px; font-weight: 800; color: #1A1A2E;">{{ t.noOrders }}</span>
+                    <span style="font-size: 11px; color: #9A9AAF; line-height: 1.7;">{{ t.noOrdersSub }}</span>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isEarnings }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; min-height: 100%; padding-bottom: 108px; animation: bhIn .25s ease both;">
+              <div style="background: #1A1A2E; padding: 16px 18px 24px; display: flex; flex-direction: column; gap: 14px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 15px; font-weight: 800; color: #fff;">{{ t.earnings }}</span>
+                  <span style="font-size: 9.5px; font-weight: 700; border-radius: 99px; padding: 4px 10px; white-space: nowrap; flex-shrink: 0; background: rgba(46,158,122,.18); color: #6FD3A9;">{{ t.walletActive }}</span>
+                  <button onClick="{{ refresh }}" style="margin-inline-start: auto; background: none; border: 0; font-family: inherit; font-size: 11px; font-weight: 700; color: rgba(255,255,255,.65); cursor: pointer;">{{ t.refresh }}</button>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <span style="font-size: 10.5px; color: rgba(255,255,255,.55);">{{ t.availableBalance }}</span>
+                  <div style="display: flex; align-items: baseline; gap: 8px; direction: ltr;">
+                    <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 34px; font-weight: 800; color: #fff;">{{ balance }}</span>
+                    <span style="font-size: 12px; color: rgba(255,255,255,.5);">{{ t.omr }}</span>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                  <sc-for list="{{ walletMeta }}" as="m" hint-placeholder-count="2">
+                    <span style="flex: 1; border-radius: 14px; background: rgba(255,255,255,.07); padding: 11px 13px; display: flex; flex-direction: column; gap: 4px;">
+                      <span style="font-size: 9.5px; color: rgba(255,255,255,.5);">{{ m.label }}</span>
+                      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; color: #fff; direction: ltr;">{{ m.value }}</span>
+                    </span>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="padding: 16px 16px 0; display: flex; gap: 9px;">
+                <span style="flex: 1; padding: 11px 12px; border-radius: 12px; background: #FEF7E0; display: flex; gap: 8px;">
+                  <span style="font-size: 11px; color: #B98900;">!</span>
+                  <span style="font-size: 10px; color: #7A5C00; line-height: 1.65;">{{ t.payoutNote }}</span>
+                </span>
+              </div>
+
+              <div style="padding: 16px 16px 0; display: flex; flex-direction: column; gap: 11px;">
+                <span style="font-size: 13px; font-weight: 800; color: #1A1A2E;">{{ t.transactions }}</span>
+                <sc-for list="{{ transactions }}" as="tx" hint-placeholder-count="5">
+                  <div style="display: flex; gap: 11px; background: #fff; border: 1px solid #E8E8EC; border-radius: 16px; padding: 13px;">
+                    <span style="width: 34px; height: 34px; border-radius: 11px; flex-shrink: 0; display: grid; place-items: center; font-size: 14px; background: {{ tx.tint }}; color: {{ tx.fg }};">{{ tx.mark }}</span>
+                    <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+                      <span style="font-size: 11.5px; font-weight: 700; color: #1A1A2E;">{{ tx.type }}</span>
+                      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9.5px; color: #9A9AAF; direction: ltr;">{{ tx.ref }} · {{ tx.date }}</span>
+                      <sc-if value="{{ tx.hasProof }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ tx.proof }}" style="align-self: flex-start; background: none; border: 0; padding: 0; font-family: inherit; font-size: 10px; font-weight: 700; color: #7F77DD; cursor: pointer;">{{ t.viewProof }}</button>
+                      </sc-if>
+                    </span>
+                    <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13.5px; font-weight: 800; color: {{ tx.amountFg }}; direction: ltr;">{{ tx.amount }}</span>
+                      <span style="font-size: 9px; font-weight: 700; border-radius: 99px; padding: 3px 9px; background: {{ tx.stBg }}; color: {{ tx.stFg }};">{{ tx.status }}</span>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; min-height: 100%; padding-bottom: 108px; animation: bhIn .25s ease both;">
+              <div style="background: #fff; border-bottom: 1px solid #E8E8EC; padding: 14px 18px 20px; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 17px; font-weight: 800; color: #1A1A2E;">{{ t.profileBank }}</span>
+                  <button onClick="{{ toggleEdit }}" style="margin-inline-start: auto; background: none; border: 0; font-family: inherit; font-size: 11.5px; font-weight: 700; color: #7F77DD; cursor: pointer; white-space: nowrap; flex-shrink: 0;">{{ editLabel }}</button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 13px;">
+                  <span style="position: relative; width: 68px; height: 68px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800;">
+                    A2
+                    <button onClick="{{ changePhoto }}" style="position: absolute; bottom: -2px; inset-inline-end: -2px; width: 26px; height: 26px; border-radius: 99px; border: 2px solid #fff; background: #7F77DD; color: #fff; display: grid; place-items: center; cursor: pointer;">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"></path><circle cx="12" cy="13" r="3.2"></circle></svg>
+                    </button>
+                  </span>
+                  <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+                    <span style="font-size: 14px; font-weight: 800; color: #1A1A2E;">{{ t.storeName }}</span>
+                    <span style="font-size: 11px; color: #9A9AAF;">{{ t.sellerEmail }}</span>
+                    <span style="align-self: flex-start; font-size: 9.5px; font-weight: 700; border-radius: 99px; padding: 3px 9px; white-space: nowrap; background: #E6F6EE; color: #1F9D62;">{{ t.accountActive }}</span>
+                  </span>
+                </div>
+              </div>
+
+              <div style="padding: 16px; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; flex-direction: column; gap: 11px;">
+                  <span style="font-size: 12.5px; font-weight: 800; color: #1A1A2E;">{{ t.personalInfo }}</span>
+                  <sc-for list="{{ profileFields }}" as="f" hint-placeholder-count="4">
+                    <div style="display: flex; flex-direction: column; gap: 7px;">
+                      <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">{{ f.label }}</span>
+                      <sc-if value="{{ f.editable }}" hint-placeholder-val="{{ false }}">
+                        <input value="{{ f.value }}" style="height: 46px; border: 1px solid #E8E8EC; border-radius: 12px; padding: 0 13px; font-family: inherit; font-size: 12.5px; outline: none; background: #FAFAFE;" style-focus="border-color: #7F77DD;">
+                      </sc-if>
+                      <sc-if value="{{ f.readonly }}" hint-placeholder-val="{{ true }}">
+                        <div style="height: 46px; border: 1px solid #F1F1F5; border-radius: 12px; padding: 0 13px; display: flex; align-items: center; background: #FAFAFB;">
+                          <span style="font-size: 12.5px; color: {{ f.fg }};">{{ f.value }}</span>
+                          <sc-if value="{{ f.locked }}" hint-placeholder-val="{{ false }}">
+                            <span style="margin-inline-start: auto; font-size: 9.5px; color: #9A9AAF;">{{ t.readOnly }}</span>
+                          </sc-if>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <div style="height: 1px; background: #E8E8EC;"></div>
+
+                <div style="display: flex; flex-direction: column; gap: 11px;">
+                  <div style="display: flex; align-items: baseline;">
+                    <span style="flex: 1; font-size: 12.5px; font-weight: 800; color: #1A1A2E;">{{ t.payoutBank }}</span>
+                    <span style="font-size: 10px; color: #9A9AAF;">{{ t.bankHint }}</span>
+                  </div>
+                  <sc-for list="{{ bankFields }}" as="f" hint-placeholder-count="3">
+                    <div style="display: flex; flex-direction: column; gap: 7px;">
+                      <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">{{ f.label }}</span>
+                      <sc-if value="{{ f.editable }}" hint-placeholder-val="{{ false }}">
+                        <input value="{{ f.value }}" style="height: 46px; border: 1px solid #E8E8EC; border-radius: 12px; padding: 0 13px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12.5px; outline: none; background: #FAFAFE; direction: ltr;" style-focus="border-color: #7F77DD;">
+                      </sc-if>
+                      <sc-if value="{{ f.readonly }}" hint-placeholder-val="{{ true }}">
+                        <div style="height: 46px; border: 1px solid #F1F1F5; border-radius: 12px; padding: 0 13px; display: flex; align-items: center; background: #FAFAFB;">
+                          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12.5px; color: #1A1A2E; direction: ltr;">{{ f.value }}</span>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; gap: 10px;">
+                    <button onClick="{{ cancelEdit }}" style="flex: 1; height: 50px; border: 1px solid #E8E8EC; border-radius: 15px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; color: #1A1A2E; cursor: pointer;" style-hover="border-color: #C9C6EE;">{{ t.cancel }}</button>
+                    <button onClick="{{ saveProfile }}" style="flex: 1.4; height: 50px; border: 0; border-radius: 15px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">{{ t.saveChanges }}</button>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ orderSheet }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; justify-content: flex-end;">
+              <div onClick="{{ closeOrder }}" style="position: absolute; inset: 0; background: rgba(26,26,46,.42);"></div>
+              <div style="position: relative; background: #fff; border-radius: 24px 24px 0 0; padding: 14px 18px 24px; display: flex; flex-direction: column; gap: 14px; animation: bhSheet .22s ease both;">
+                <span style="width: 40px; height: 4px; border-radius: 99px; background: #E8E8EC; align-self: center;"></span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; color: #1A1A2E; direction: ltr;">{{ activeOrder.code }}</span>
+                  <span style="font-size: 9.5px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ activeOrder.stBg }}; color: {{ activeOrder.stFg }};">{{ activeOrder.status }}</span>
+                  <span style="margin-inline-start: auto; font-size: 10.5px; color: #9A9AAF;">{{ activeOrder.date }}</span>
+                </div>
+                <div style="display: flex; gap: 11px; padding: 12px; border: 1px solid #E8E8EC; border-radius: 14px;">
+                  <span style="width: 54px; height: 54px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; background: {{ activeOrder.tone }};">{{ activeOrder.imgEl }}</span>
+                  <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #1A1A2E; line-height: 1.5;">{{ activeOrder.summary }}</span>
+                    <span style="font-size: 10px; color: #9A9AAF;">{{ activeOrder.qtyLabel }}</span>
+                  </span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 9px;">
+                  <sc-for list="{{ activeOrder.rows }}" as="r" hint-placeholder-count="5">
+                    <div style="display: flex; align-items: baseline; gap: 12px;">
+                      <span style="font-size: 11px; color: #5A5A72;">{{ r.label }}</span>
+                      <span style="margin-inline-start: auto; font-size: 11.5px; font-weight: 700; color: #1A1A2E; text-align: end;">{{ r.value }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="height: 1px; background: #E8E8EC;"></div>
+                <div style="display: flex; align-items: baseline;">
+                  <span style="flex: 1; font-size: 12.5px; font-weight: 800; color: #1A1A2E;">{{ t.yourShare }}</span>
+                  <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 19px; font-weight: 800; color: #1A1A2E; direction: ltr;">{{ activeOrder.share }}</span>
+                </div>
+                <span style="font-size: 10.5px; color: #9A9AAF; line-height: 1.7;">{{ t.orderSheetNote }}</span>
+                <button onClick="{{ closeOrder }}" style="height: 48px; border: 0; border-radius: 15px; background: #F5F5F7; color: #1A1A2E; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="background: #E8E8EC;">{{ t.close }}</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; inset: 0; z-index: 50; display: grid; place-items: center; padding: 28px;">
+              <div onClick="{{ closeConfirm }}" style="position: absolute; inset: 0; background: rgba(26,26,46,.42);"></div>
+              <div style="position: relative; width: 100%; background: #fff; border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 12px; animation: bhIn .2s ease both;">
+                <span style="font-size: 14.5px; font-weight: 800; color: #1A1A2E;">{{ t.deleteTitle }}</span>
+                <span style="font-size: 11.5px; color: #5A5A72; line-height: 1.7;">{{ confirmBody }}</span>
+                <div style="display: flex; gap: 10px; padding-top: 4px;">
+                  <button onClick="{{ closeConfirm }}" style="flex: 1; height: 46px; border: 1px solid #E8E8EC; border-radius: 14px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; color: #1A1A2E; cursor: pointer;">{{ t.cancel }}</button>
+                  <button onClick="{{ confirmDelete }}" style="flex: 1; height: 46px; border: 0; border-radius: 14px; background: #D64545; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;">{{ t.deleteAct }}</button>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,.97); border-top: 1px solid #E8E8EC; padding: 9px 12px 22px; display: flex; align-items: flex-end; z-index: 30;">
+            <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
+              <button onClick="{{ tb.go }}" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; background: none; border: 0; padding: 5px 0; cursor: pointer; font-family: inherit; color: {{ tb.fg }};">
+                <sc-if value="{{ tb.center }}" hint-placeholder-val="{{ false }}">
+                  <span style="width: 46px; height: 46px; margin-top: -22px; border-radius: 99px; background: #7F77DD; color: #fff; display: grid; place-items: center; box-shadow: 0 8px 18px rgba(127,119,221,.4); font-size: 24px; font-weight: 400; line-height: 1;">+</span>
+                </sc-if>
+                <sc-if value="{{ tb.normal }}" hint-placeholder-val="{{ true }}">
+                  <span style="display: grid; place-items: center;">{{ tb.icon }}</span>
+                </sc-if>
+                <span style="font-size: 9px; font-weight: 700;">{{ tb.label }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; bottom: 108px; left: 22px; right: 22px; background: #1A1A2E; color: #fff; border-radius: 14px; padding: 13px 16px; font-size: 11.5px; font-weight: 600; text-align: center; z-index: 60; animation: bhToast 2.4s ease both;">{{ toast }}</div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:1000}}">
+const TONES = ['#EEEDF9', '#FCEEF3', '#E6F6EE', '#FCF2DC', '#E7F0FC', '#F1F1F5'];
+
+const PRODUCTS = [
+  { ar: 'سماعات A2 لاسلكية بخاصية عزل الضوضاء', en: 'A2 Series wireless noise-cancelling headphones', sku: 'A2-HD-0114', img: 'assets/p1.jpg', price: 38.9, pct: 82, tax: true, date: '21 Aug 2026', status: 'approved' },
+  { ar: 'ساعة رياضية بشاشة AMOLED', en: 'AMOLED sports smartwatch', sku: 'A2-WT-0231', img: 'assets/p2.jpg', price: 24.5, pct: 80, tax: true, date: '20 Aug 2026', status: 'pending' },
+  { ar: 'سماعات أذن احترافية Pro', en: 'Noise-cancelling earbuds Pro', sku: 'A2-EB-0308', img: 'assets/p3.jpg', price: 27.9, pct: 82, tax: true, date: '19 Aug 2026', status: 'pending' },
+  { ar: 'شاحن لاسلكي سريع 20 واط', en: 'Fast wireless charger 20W', sku: 'A2-CH-0412', img: 'assets/p6.jpg', price: 12.4, pct: 78, tax: true, date: '17 Aug 2026', status: 'rejected' },
+  { ar: 'حامل هاتف للسيارة مغناطيسي', en: 'Magnetic car phone mount', sku: 'A2-AC-0520', img: 'assets/p5.jpg', price: 6.75, pct: 75, tax: false, date: '12 Aug 2026', status: 'approved' },
+];
+
+const ORDERS = [
+  { code: 'BH-284193', date: '15 Aug 2026', group: 'today', ar: 'سماعات A2 لاسلكية × 1', en: 'A2 wireless headphones × 1', img: 'assets/p1.jpg', customer: 'Amal Al Balushi', qty: 1, total: 38.9, share: 31.9, status: 'shipped', payment: 'paid', city: 'Muscat · Al Khoud' },
+  { code: 'BH-284101', date: '15 Aug 2026', group: 'today', ar: 'ساعة رياضية AMOLED × 2', en: 'AMOLED smartwatch × 2', img: 'assets/p2.jpg', customer: 'Talal Al Hinai', qty: 2, total: 49.0, share: 39.2, status: 'processing', payment: 'paid', city: 'Muscat · Ghala' },
+  { code: 'BH-283740', date: '11 Aug 2026', group: 'week', ar: 'شاحن لاسلكي سريع × 1', en: 'Fast wireless charger × 1', img: 'assets/p6.jpg', customer: 'Reem Al Shehhi', qty: 1, total: 12.4, share: 9.67, status: 'delivered', payment: 'paid', city: 'Sohar' },
+  { code: 'BH-283012', date: '10 Aug 2026', group: 'week', ar: 'حامل هاتف مغناطيسي × 3', en: 'Magnetic car mount × 3', img: 'assets/p5.jpg', customer: 'Dana Al Kindi', qty: 3, total: 20.25, share: 15.19, status: 'cancelled', payment: 'failed', city: 'Nizwa' },
+  { code: 'BH-281550', date: '02 Aug 2026', group: 'earlier', ar: 'سماعات أذن Pro × 1', en: 'Earbuds Pro × 1', img: 'assets/p3.jpg', customer: 'Hamad Al Maqbali', qty: 1, total: 27.9, share: 22.88, status: 'returned', payment: 'refunded', city: 'Salalah' },
+  { code: 'BH-280774', date: '28 Jul 2026', group: 'earlier', ar: 'سماعات A2 لاسلكية × 2', en: 'A2 wireless headphones × 2', img: 'assets/p1.jpg', customer: 'Noura Al Siyabi', qty: 2, total: 77.8, share: 63.8, status: 'delivered', payment: 'paid', city: 'Muscat · Seeb' },
+];
+
+const TX = [
+  { type: { ar: 'أرباح مبيعات', en: 'Sales earnings' }, amount: 63.8, ref: 'TX-90412', date: '15 Aug', status: 'completed', proof: false },
+  { type: { ar: 'تحويل دفعة', en: 'Payout transfer' }, amount: -120.0, ref: 'PO-1188', date: '01 Aug', status: 'completed', proof: true },
+  { type: { ar: 'أرباح مبيعات', en: 'Sales earnings' }, amount: 39.2, ref: 'TX-90188', date: '28 Jul', status: 'completed', proof: false },
+  { type: { ar: 'خصم مرتجع', en: 'Return deduction' }, amount: -22.88, ref: 'RT-0227', date: '22 Jul', status: 'completed', proof: false },
+  { type: { ar: 'تحويل دفعة', en: 'Payout transfer' }, amount: -95.5, ref: 'PO-1102', date: '01 Jul', status: 'pending', proof: false },
+];
+
+const STATUS_TONE = {
+  pending: { bg: '#FCF2DC', fg: '#C98A12' },
+  approved: { bg: '#E6F6EE', fg: '#1F9D62' },
+  rejected: { bg: '#FCEAEA', fg: '#D64545' },
+  processing: { bg: '#FCF2DC', fg: '#C98A12' },
+  shipped: { bg: '#E7F0FC', fg: '#2A6FDB' },
+  delivered: { bg: '#E6F6EE', fg: '#1F9D62' },
+  cancelled: { bg: '#FCEAEA', fg: '#D64545' },
+  returned: { bg: '#EEEDF9', fg: '#7F77DD' },
+  paid: { bg: '#E6F6EE', fg: '#1F9D62' },
+  failed: { bg: '#FCEAEA', fg: '#D64545' },
+  refunded: { bg: '#EEEDF9', fg: '#7F77DD' },
+  completed: { bg: '#E6F6EE', fg: '#1F9D62' },
+  inactive: { bg: '#F1F1F5', fg: '#5A5A72' },
+};
+
+const STR = {
+  ar: {
+    greeting: 'أهلاً بعودتك', storeName: 'متجر A2 الرسمي', roleSeller: 'بائع', sellerEmail: 'seller@a2store.om',
+    availableBalance: 'الرصيد المتاح', viewEarnings: 'الأرباح', omr: 'ر.ع.',
+    quickActions: 'إجراءات سريعة', recentActivity: 'آخر النشاطات', refresh: 'تحديث',
+    overview: 'الرئيسية', myProducts: 'منتجاتي', submitProduct: 'إضافة منتج', salesOrders: 'الطلبات',
+    earnings: 'الأرباح والدفعات', profileBank: 'الملف والبنك',
+    statSubmitted: 'إجمالي المنتجات', statPending: 'قيد المراجعة', statApproved: 'معتمدة',
+    statRejected: 'مرفوضة', statOrders: 'طلبات البيع', statBalance: 'الرصيد',
+    edit: 'تعديل', deleteAct: 'حذف', images: 'الصور', primary: 'رئيسية',
+    noProducts: 'لم تقم بإضافة منتجات بعد', noProductsSub: 'أضف أول منتج ليراجعه فريق الإدارة ثم يُنشر في المتجر.',
+    noOrders: 'لا توجد طلبات بعد', noOrdersSub: 'ستظهر هنا الطلبات التي تحتوي على منتجاتك.',
+    fAll: 'الكل', fPending: 'قيد المراجعة', fApproved: 'معتمدة', fRejected: 'مرفوضة',
+    fToday: 'اليوم', fProcessing: 'قيد التنفيذ', fDelivered: 'تم التسليم', fCancelled: 'ملغاة',
+    productName: 'اسم المنتج', productNamePh: 'سماعات A2 لاسلكية', category: 'الفئة',
+    skuHint: 'يتم توليد رمز SKU من اسم المنتج', basePrice: 'السعر الأساسي', salePrice: 'سعر البيع',
+    sellerPct: 'نسبة البائع', colors: 'الألوان', sizes: 'المقاسات', stockPerVariant: 'المخزون لكل خيار',
+    generatedVariants: 'الخيارات المولّدة', taxable: 'خاضع للضريبة',
+    taxableHint: 'فعّل الخيار إذا كان المنتج خاضعاً لضريبة القيمة المضافة.',
+    taxRate: 'نسبة الضريبة %', taxCategory: 'فئة الضريبة',
+    taxOffHint: 'المنتج معفى من الضريبة. لن تُضاف أي نسبة عند البيع.',
+    shortDesc: 'وصف مختصر', shortDescPh: 'سطر أو سطران يظهران أعلى صفحة المنتج',
+    fullDesc: 'الوصف الكامل', fullDescPh: 'المواصفات، المحتويات، وكل ما يحتاج العميل معرفته',
+    productImages: 'صور المنتج', imageHint: 'JPEG أو PNG أو WebP · حتى 10 صور · 10 ميغابايت للصورة',
+    stepBasic: 'المعلومات الأساسية', stepPricing: 'التسعير', stepVariants: 'الخيارات والمخزون',
+    stepTax: 'الضريبة', stepMedia: 'الوصف والصور', stepReview: 'المراجعة والإرسال',
+    previous: 'السابق', next: 'التالي', submitForReview: 'إرسال للمراجعة',
+    approvalNote: 'لا يتم نشر المنتج مباشرة. سيراجعه فريق الإدارة ثم يظهر في المتجر بعد الاعتماد.',
+    fixFirst: 'أكمل الحقول التالية قبل الإرسال', close: 'إغلاق',
+    yourShare: 'حصتك', orderSheetNote: 'إدارة حالة الطلب والتوصيل تتم من قِبل فريق المنصة.',
+    walletActive: 'المحفظة نشطة', transactions: 'سجل المعاملات', viewProof: 'عرض إيصال التحويل',
+    payoutNote: 'تحويل الأرباح يتم من قِبل الإدارة في دورة الدفع الشهرية. لا حاجة لطلب التحويل.',
+    txCount: 'عدد المعاملات', currency: 'العملة',
+    personalInfo: 'المعلومات الشخصية', payoutBank: 'بيانات التحويل البنكي',
+    bankHint: 'مطلوبة لاستلام الأرباح', readOnly: 'غير قابل للتعديل',
+    firstName: 'الاسم الأول', lastName: 'اسم العائلة', email: 'البريد الإلكتروني', phone: 'رقم الهاتف',
+    bankName: 'اسم البنك', bankAccount: 'رقم الحساب', iban: 'الآيبان',
+    accountActive: 'حساب نشط', editData: 'تعديل البيانات', saveChanges: 'حفظ التغييرات', cancel: 'إلغاء',
+    deleteTitle: 'حذف المنتج؟', deleteBody: 'سيتم حذف "{n}" نهائياً من قائمة منتجاتك.',
+    gateTitle: 'هذه المنطقة مخصصة للبائعين', gateBody: 'سجّل الدخول بحساب بائع معتمد للوصول إلى لوحة التحكم وإدارة منتجاتك وأرباحك.',
+    gateSignIn: 'تسجيل الدخول كبائع', gateStore: 'العودة إلى المتجر',
+    savedOk: 'تم حفظ التغييرات', deletedOk: 'تم حذف المنتج', submittedOk: 'تم إرسال المنتج للمراجعة',
+    refreshed: 'تم التحديث', imageAdded: 'تمت إضافة الصورة', photoOk: 'تم تحديث صورة المتجر',
+  },
+  en: {
+    greeting: 'Welcome back', storeName: 'A2 Official Store', roleSeller: 'Seller', sellerEmail: 'seller@a2store.om',
+    availableBalance: 'Available balance', viewEarnings: 'Earnings', omr: 'OMR',
+    quickActions: 'Quick actions', recentActivity: 'Recent activity', refresh: 'Refresh',
+    overview: 'Home', myProducts: 'My products', submitProduct: 'Submit product', salesOrders: 'Orders',
+    earnings: 'Earnings & payouts', profileBank: 'Profile & bank',
+    statSubmitted: 'Total products', statPending: 'Pending', statApproved: 'Approved',
+    statRejected: 'Rejected', statOrders: 'Sales orders', statBalance: 'Balance',
+    edit: 'Edit', deleteAct: 'Delete', images: 'Images', primary: 'Primary',
+    noProducts: 'You have not submitted products yet', noProductsSub: 'Add your first product and the admin team will review it before it goes live.',
+    noOrders: 'No sales yet', noOrdersSub: 'Orders containing your products will appear here.',
+    fAll: 'All', fPending: 'Pending', fApproved: 'Approved', fRejected: 'Rejected',
+    fToday: 'Today', fProcessing: 'Processing', fDelivered: 'Delivered', fCancelled: 'Cancelled',
+    productName: 'Product name', productNamePh: 'A2 wireless headphones', category: 'Category',
+    skuHint: 'SKU is generated from the product name', basePrice: 'Base price', salePrice: 'Sale price',
+    sellerPct: 'Seller percentage', colors: 'Colors', sizes: 'Sizes', stockPerVariant: 'Stock per variant',
+    generatedVariants: 'Generated variants', taxable: 'Taxable',
+    taxableHint: 'Turn on if this product is subject to VAT.',
+    taxRate: 'Tax rate %', taxCategory: 'Tax category',
+    taxOffHint: 'This product is tax exempt. No rate will be applied at checkout.',
+    shortDesc: 'Short description', shortDescPh: 'One or two lines shown at the top of the product page',
+    fullDesc: 'Full description', fullDescPh: 'Specifications, what is in the box, and anything the customer should know',
+    productImages: 'Product images', imageHint: 'JPEG, PNG or WebP · up to 10 images · 10 MB each',
+    stepBasic: 'Basic info', stepPricing: 'Pricing', stepVariants: 'Variants & stock',
+    stepTax: 'Tax', stepMedia: 'Description & images', stepReview: 'Review & submit',
+    previous: 'Back', next: 'Next', submitForReview: 'Submit for review',
+    approvalNote: 'Products are not published directly. An admin reviews the request and the product goes live once approved.',
+    fixFirst: 'Complete these before submitting', close: 'Close',
+    yourShare: 'Your share', orderSheetNote: 'Order status and delivery are managed by the platform team.',
+    walletActive: 'Wallet active', transactions: 'Transaction history', viewProof: 'View transfer receipt',
+    payoutNote: 'Payouts are transferred by the admin team on the monthly cycle. No request needed from you.',
+    txCount: 'Transactions', currency: 'Currency',
+    personalInfo: 'Personal information', payoutBank: 'Payout bank details',
+    bankHint: 'Required to receive earnings', readOnly: 'Read only',
+    firstName: 'First name', lastName: 'Last name', email: 'Email', phone: 'Phone number',
+    bankName: 'Bank name', bankAccount: 'Account number', iban: 'IBAN',
+    accountActive: 'Account active', editData: 'Edit data', saveChanges: 'Save changes', cancel: 'Cancel',
+    deleteTitle: 'Delete this product?', deleteBody: '“{n}” will be permanently removed from your products.',
+    gateTitle: 'This area is for sellers', gateBody: 'Sign in with an approved seller account to reach the dashboard and manage your products and earnings.',
+    gateSignIn: 'Sign in as seller', gateStore: 'Back to the store',
+    savedOk: 'Changes saved', deletedOk: 'Product deleted', submittedOk: 'Product sent for review',
+    refreshed: 'Refreshed', imageAdded: 'Image added', photoOk: 'Store photo updated',
+  },
+};
+
+const CATS = [
+  { ar: 'إلكترونيات', en: 'Electronics' }, { ar: 'صوتيات', en: 'Audio' }, { ar: 'إكسسوارات', en: 'Accessories' },
+  { ar: 'ألعاب', en: 'Gaming' }, { ar: 'منزل', en: 'Home' }, { ar: 'جمال', en: 'Beauty' },
+];
+const COLORS = [
+  { ar: 'أسود', en: 'Black', hex: '#1A1A2E' }, { ar: 'بنفسجي', en: 'Purple', hex: '#7F77DD' },
+  { ar: 'رملي', en: 'Sand', hex: '#D4C9BD' }, { ar: 'أبيض', en: 'White', hex: '#F1F1F5' },
+];
+const SIZES = ['S', 'M', 'L', 'XL'];
+const TAXCATS = [{ ar: 'قياسية 5%', en: 'Standard 5%' }, { ar: 'مخفّضة', en: 'Reduced' }, { ar: 'معفاة', en: 'Exempt' }];
+const IMGS = ['assets/p1.jpg', 'assets/p2.jpg', 'assets/p3.jpg'];
+
+class Component extends DCLogic {
+  state = {
+    platform: 'ios', lang: 'ar', screen: 'overview', stack: [],
+    prodFilter: 'all', orderFilter: 'all', openOrder: null, confirm: null,
+    step: 1, name: '', cat: 0, base: '32.000', sale: '27.900', pct: 82,
+    colors: [0, 1], sizes: [], stock: '40', taxable: true, taxCat: 0, images: 3,
+    editing: false, toast: null,
+  };
+
+  componentWillUnmount() { clearTimeout(this._tt); }
+
+  pic(src, style) { return React.createElement('img', { src: src, alt: '', style: style }); }
+
+  flash(msg) {
+    clearTimeout(this._tt);
+    this.setState({ toast: msg });
+    this._tt = setTimeout(() => this.setState({ toast: null }), 2400);
+  }
+
+  nav(screen) {
+    const el = this.scroller;
+    this.setState(s => ({ screen, stack: s.stack.concat(s.screen) }));
+    if (el) el.scrollTop = 0;
+  }
+
+  goBack() {
+    this.setState(s => {
+      const st = s.stack.slice();
+      const prev = st.pop() || 'overview';
+      return { screen: prev, stack: st };
+    });
+  }
+
+  money(n) { return (n < 0 ? '−' : '') + Math.abs(n).toFixed(3); }
+
+  variantList() {
+    const s = this.state, ar = s.lang === 'ar';
+    const cs = s.colors.map(i => ar ? COLORS[i].ar : COLORS[i].en);
+    const zs = s.sizes.map(i => SIZES[i]);
+    let combos;
+    if (cs.length && zs.length) { combos = []; cs.forEach(c => zs.forEach(z => combos.push(c + ' · ' + z))); }
+    else if (cs.length) combos = cs;
+    else if (zs.length) combos = zs;
+    else combos = [ar ? 'الخيار الافتراضي' : 'Default variant'];
+    return combos;
+  }
+
+  skuBase() {
+    const n = this.state.name.trim();
+    if (!n) return 'A2-XXX-0000';
+    const part = n.replace(/[^a-zA-Z\u0621-\u064A ]/g, '').split(' ').filter(Boolean).slice(0, 2)
+      .map(w => w.slice(0, 2).toUpperCase()).join('');
+    return 'A2-' + (part || 'PR') + '-' + String(600 + n.length * 7).slice(0, 4);
+  }
+
+  renderVals() {
+    const s = this.state, ar = s.lang === 'ar', lang = s.lang, t = STR[lang];
+    const on = '#7F77DD';
+    const tone = k => STATUS_TONE[k] || STATUS_TONE.inactive;
+    const statusLabel = k => ({
+      pending: ar ? 'قيد المراجعة' : 'Pending', approved: ar ? 'معتمد' : 'Approved',
+      rejected: ar ? 'مرفوض' : 'Rejected', processing: ar ? 'قيد التنفيذ' : 'Processing',
+      shipped: ar ? 'تم الشحن' : 'Shipped', delivered: ar ? 'تم التسليم' : 'Delivered',
+      cancelled: ar ? 'ملغى' : 'Cancelled', returned: ar ? 'مرتجع' : 'Returned',
+      paid: ar ? 'مدفوع' : 'Paid', failed: ar ? 'فشل الدفع' : 'Failed',
+      refunded: ar ? 'مسترجع' : 'Refunded', completed: ar ? 'مكتملة' : 'Completed',
+    })[k] || k;
+
+    const counts = {
+      total: PRODUCTS.length,
+      pending: PRODUCTS.filter(p => p.status === 'pending').length,
+      approved: PRODUCTS.filter(p => p.status === 'approved').length,
+      rejected: PRODUCTS.filter(p => p.status === 'rejected').length,
+    };
+    const balance = 218.42;
+
+    let prodList = PRODUCTS;
+    if (s.prodFilter !== 'all') prodList = prodList.filter(p => p.status === s.prodFilter);
+
+    let ordList = ORDERS;
+    if (s.orderFilter === 'today') ordList = ordList.filter(o => o.group === 'today');
+    else if (s.orderFilter !== 'all') ordList = ordList.filter(o => o.status === s.orderFilter);
+
+    const groupNames = {
+      today: ar ? 'اليوم' : 'Today', week: ar ? 'هذا الأسبوع' : 'This week', earlier: ar ? 'سابقاً' : 'Earlier',
+    };
+    const orderCard = o => ({
+      code: o.code, date: o.date, customer: o.customer + ' · ' + o.city,
+      summary: ar ? o.ar : o.en, tone: TONES[ORDERS.indexOf(o) % TONES.length],
+      imgEl: this.pic(o.img, { width: '84%', height: '84%', objectFit: 'contain' }),
+      status: statusLabel(o.status), stBg: tone(o.status).bg, stFg: tone(o.status).fg,
+      payment: statusLabel(o.payment), payBg: tone(o.payment).bg, payFg: tone(o.payment).fg,
+      share: this.money(o.share),
+      qtyLabel: (ar ? 'الكمية: ' : 'Quantity: ') + o.qty,
+      open: () => this.setState({ openOrder: ORDERS.indexOf(o) }),
+      rows: [
+        { label: ar ? 'العميل' : 'Customer', value: o.customer },
+        { label: ar ? 'العنوان' : 'Address', value: o.city },
+        { label: ar ? 'حالة الدفع' : 'Payment', value: statusLabel(o.payment) },
+        { label: ar ? 'إجمالي الطلب' : 'Order total', value: this.money(o.total) },
+        { label: ar ? 'عمولة المنصة' : 'Platform commission', value: this.money(o.total - o.share) },
+      ],
+    });
+    const groups = ['today', 'week', 'earlier'].map(g => ({
+      date: groupNames[g], orders: ordList.filter(o => o.group === g).map(orderCard),
+    })).filter(g => g.orders.length);
+
+    const active = s.openOrder != null ? orderCard(ORDERS[s.openOrder]) : orderCard(ORDERS[0]);
+    const combos = this.variantList();
+    const stockNum = parseInt(s.stock, 10) || 0;
+    const errors = [];
+    if (!s.name.trim()) errors.push({ label: t.productName });
+    if (!parseFloat(s.base)) errors.push({ label: t.basePrice });
+    if (!parseFloat(s.sale)) errors.push({ label: t.salePrice });
+    if (!stockNum) errors.push({ label: t.stockPerVariant });
+    if (!s.images) errors.push({ label: t.productImages });
+
+    const chip = active2 => ({
+      bg: active2 ? '#EEEDF9' : '#fff', fg: active2 ? on : '#5A5A72', border: active2 ? '#C9C6EE' : '#E8E8EC',
+    });
+    const icon = d => React.createElement('svg', {
+      width: 21, height: 21, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor',
+      strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round',
+    }, React.createElement('path', { d }));
+
+    return {
+      dir: ar ? 'rtl' : 'ltr', t,
+      isIOS: s.platform === 'ios', isAndroid: s.platform === 'android',
+      statusBg: s.screen === 'overview' || s.screen === 'earnings' || s.screen === 'gate' ? '#1A1A2E' : '#fff',
+      statusFg: s.screen === 'overview' || s.screen === 'earnings' || s.screen === 'gate' ? '#fff' : '#1A1A2E',
+      setIOS: () => this.setState({ platform: 'ios' }),
+      setAndroid: () => this.setState({ platform: 'android' }),
+      setAr: () => this.setState({ lang: 'ar' }),
+      setEn: () => this.setState({ lang: 'en' }),
+      c: {
+        iosFg: s.platform === 'ios' ? on : '#5A5A72', andFg: s.platform === 'android' ? on : '#5A5A72',
+        arFg: ar ? on : '#5A5A72', enFg: ar ? '#5A5A72' : on,
+      },
+      screenList: [
+        ['gate', ar ? 'بوابة الدخول' : 'Access gate'], ['overview', t.overview],
+        ['products', t.myProducts], ['submit', t.submitProduct], ['orders', t.salesOrders],
+        ['earnings', t.earnings], ['profile', t.profileBank],
+      ].map((n, i) => ({
+        n: String(i + 1).padStart(2, '0'), label: n[1],
+        bg: s.screen === n[0] ? '#EEEDF9' : 'transparent', fg: s.screen === n[0] ? on : '#3A3A52',
+        go: () => this.setState({ screen: n[0], stack: [], openOrder: null }),
+      })),
+
+      isGate: s.screen === 'gate', isOverview: s.screen === 'overview', isProducts: s.screen === 'products',
+      isSubmit: s.screen === 'submit', isOrders: s.screen === 'orders',
+      isEarnings: s.screen === 'earnings', isProfile: s.screen === 'profile',
+      showTabs: s.screen !== 'gate' && s.screen !== 'submit',
+      back: () => this.goBack(),
+      enterApp: () => this.setState({ screen: 'overview', stack: [] }),
+      refresh: () => this.flash(t.refreshed),
+      toast: s.toast,
+
+      balance: this.money(balance),
+      statCards: [
+        { value: counts.total, label: t.statSubmitted, fg: '#1A1A2E' },
+        { value: counts.pending, label: t.statPending, fg: '#C98A12' },
+        { value: counts.approved, label: t.statApproved, fg: '#1F9D62' },
+        { value: counts.rejected, label: t.statRejected, fg: '#D64545' },
+        { value: ORDERS.length, label: t.statOrders, fg: '#1A1A2E' },
+        { value: this.money(balance), label: t.statBalance, fg: '#7F77DD' },
+      ],
+      quickActions: [
+        { label: t.submitProduct, mark: '＋', tint: '#EEEDF9', fg: on, go: () => this.nav('submit') },
+        { label: t.myProducts, mark: '▤', tint: '#FCEEF3', fg: '#D4537E', go: () => this.nav('products') },
+        { label: t.salesOrders, mark: '☰', tint: '#E7F0FC', fg: '#2A6FDB', go: () => this.nav('orders') },
+        { label: t.earnings, mark: '﷼', tint: '#E6F6EE', fg: '#1F9D62', go: () => this.nav('earnings') },
+        { label: t.profileBank, mark: '☺', tint: '#FCF2DC', fg: '#C98A12', go: () => this.nav('profile') },
+      ],
+      activity: [
+        {
+          mark: '▤', tint: '#EEEDF9', fg: on,
+          title: ar ? PRODUCTS[2].ar : PRODUCTS[2].en,
+          meta: (ar ? 'آخر منتج مُرسل · ' : 'Latest submission · ') + PRODUCTS[2].date,
+          status: statusLabel('pending'), stBg: tone('pending').bg, stFg: tone('pending').fg,
+          go: () => this.nav('products'),
+        },
+        {
+          mark: '☰', tint: '#E7F0FC', fg: '#2A6FDB',
+          title: ORDERS[0].code + ' · ' + (ar ? ORDERS[0].ar : ORDERS[0].en),
+          meta: ORDERS[0].customer + ' · ' + ORDERS[0].date,
+          status: statusLabel('shipped'), stBg: tone('shipped').bg, stFg: tone('shipped').fg,
+          go: () => this.nav('orders'),
+        },
+        {
+          mark: '﷼', tint: '#E6F6EE', fg: '#1F9D62',
+          title: ar ? TX[0].type.ar : TX[0].type.en,
+          meta: TX[0].ref + ' · ' + TX[0].date,
+          status: this.money(TX[0].amount), stBg: '#E6F6EE', stFg: '#1F9D62',
+          go: () => this.nav('earnings'),
+        },
+      ],
+      goProfile: () => this.nav('profile'),
+      goEarnings: () => this.nav('earnings'),
+      goSubmit: () => this.nav('submit'),
+
+      productCountLabel: prodList.length + ' / ' + PRODUCTS.length,
+      productFilters: [['all', t.fAll], ['pending', t.fPending], ['approved', t.fApproved], ['rejected', t.fRejected]]
+        .map(f => Object.assign({ label: f[1], pick: () => this.setState({ prodFilter: f[0] }) }, chip(s.prodFilter === f[0]))),
+      productsEmpty: prodList.length === 0,
+      productCards: prodList.map(p => ({
+        name: ar ? p.ar : p.en, sku: p.sku, price: this.money(p.price),
+        share: (ar ? 'حصتك ' : 'Your share ') + p.pct + '%',
+        tone: TONES[PRODUCTS.indexOf(p) % TONES.length],
+        imgEl: this.pic(p.img, { width: '84%', height: '84%', objectFit: 'contain' }),
+        status: statusLabel(p.status), stBg: tone(p.status).bg, stFg: tone(p.status).fg,
+        meta: (p.tax ? (ar ? 'خاضع للضريبة' : 'Taxable') : (ar ? 'معفى' : 'Exempt')) + ' · ' + p.date,
+        rejected: p.status === 'rejected',
+        reason: ar ? 'مرفوض: الصور لا تطابق مواصفات الجودة المطلوبة. أعد الرفع بدقة 2000×2000.'
+                   : 'Rejected: images do not meet the quality spec. Re-upload at 2000×2000.',
+        edit: () => { this.setState({ name: ar ? p.ar : p.en, step: 1 }); this.nav('submit'); },
+        images: () => this.flash(t.imageAdded),
+        remove: () => this.setState({ confirm: ar ? p.ar : p.en }),
+      })),
+      confirmOpen: !!s.confirm,
+      confirmBody: t.deleteBody.replace('{n}', s.confirm || ''),
+      closeConfirm: () => this.setState({ confirm: null }),
+      confirmDelete: () => { this.setState({ confirm: null }); this.flash(t.deletedOk); },
+
+      step1: s.step === 1, step2: s.step === 2, step3: s.step === 3,
+      step4: s.step === 4, step5: s.step === 5, step6: s.step === 6,
+      submitTitle: t.submitProduct,
+      stepLabel: s.step + ' / 6',
+      stepBars: [1, 2, 3, 4, 5, 6].map(i => ({ bg: i <= s.step ? on : '#E8E8EC' })),
+      canGoBackStep: s.step > 1,
+      nextLabel: s.step === 6 ? t.submitForReview : t.next,
+      prevStep: () => this.setState(x => ({ step: Math.max(1, x.step - 1) })),
+      nextStep: () => {
+        if (s.step < 6) { this.setState({ step: s.step + 1 }); return; }
+        if (errors.length) { this.flash(t.fixFirst); return; }
+        this.setState({ step: 1, name: '' });
+        this.flash(t.submittedOk);
+        this.nav('products');
+      },
+      nameVal: s.name, onName: e => this.setState({ name: e.target.value }),
+      skuPreview: this.skuBase(),
+      categories: CATS.map((c, i) => Object.assign({ label: ar ? c.ar : c.en, pick: () => this.setState({ cat: i }) }, chip(s.cat === i))),
+      baseVal: s.base, onBase: e => this.setState({ base: e.target.value }),
+      saleVal: s.sale, onSale: e => this.setState({ sale: e.target.value }),
+      pctLabel: s.pct + '%',
+      pctOptions: [75, 78, 80, 82].map(p => Object.assign({ label: p + '%', pick: () => this.setState({ pct: p }) }, chip(s.pct === p))),
+      payoutBreakdown: (() => {
+        const sale = parseFloat(s.sale) || 0;
+        return [
+          { label: ar ? 'سعر البيع' : 'Sale price', value: this.money(sale) },
+          { label: ar ? 'حصتك' : 'Your share', value: this.money(sale * s.pct / 100) },
+          { label: ar ? 'عمولة المنصة' : 'Platform commission', value: this.money(sale * (100 - s.pct) / 100) },
+        ];
+      })(),
+      colorOpts: COLORS.map((c, i) => Object.assign({
+        label: ar ? c.ar : c.en, swatch: c.hex,
+        toggle: () => this.setState(x => ({ colors: x.colors.indexOf(i) < 0 ? x.colors.concat(i) : x.colors.filter(j => j !== i) })),
+      }, chip(s.colors.indexOf(i) >= 0))),
+      sizeOpts: SIZES.map((z, i) => Object.assign({
+        label: z,
+        toggle: () => this.setState(x => ({ sizes: x.sizes.indexOf(i) < 0 ? x.sizes.concat(i) : x.sizes.filter(j => j !== i) })),
+      }, chip(s.sizes.indexOf(i) >= 0))),
+      stockVal: s.stock, onStock: e => this.setState({ stock: e.target.value }),
+      variantSummary: combos.length + ' · ' + (stockNum * combos.length) + (ar ? ' قطعة' : ' units'),
+      variants: combos.map((label, i) => ({
+        label, sku: this.skuBase() + '-' + String(i + 1).padStart(2, '0'), stock: String(stockNum),
+      })),
+      taxable: s.taxable, notTaxable: !s.taxable,
+      taxTrack: s.taxable ? on : '#D9D9E2', taxJustify: s.taxable ? 'flex-end' : 'flex-start',
+      toggleTaxable: () => this.setState(x => ({ taxable: !x.taxable })),
+      taxCats: TAXCATS.map((c, i) => Object.assign({ label: ar ? c.ar : c.en, pick: () => this.setState({ taxCat: i }) }, chip(s.taxCat === i))),
+      imageCountLabel: s.images + ' / 10',
+      imageSlots: IMGS.slice(0, s.images).map((src, i) => ({
+        tone: TONES[i % TONES.length], primary: i === 0,
+        imgEl: this.pic(src, { width: '100%', height: '100%', objectFit: 'cover' }),
+      })),
+      addImage: () => { this.setState(x => ({ images: Math.min(10, x.images + 1) })); this.flash(t.imageAdded); },
+      reviewRows: [
+        { label: t.productName, value: s.name.trim() || '—' },
+        { label: t.category, value: ar ? CATS[s.cat].ar : CATS[s.cat].en },
+        { label: 'SKU', value: this.skuBase() },
+        { label: t.basePrice, value: this.money(parseFloat(s.base) || 0) },
+        { label: t.salePrice, value: this.money(parseFloat(s.sale) || 0) },
+        { label: t.sellerPct, value: s.pct + '%' },
+        { label: t.generatedVariants, value: combos.length + ' · ' + (stockNum * combos.length) },
+        { label: t.taxable, value: s.taxable ? (ar ? 'نعم · ' : 'Yes · ') + (ar ? TAXCATS[s.taxCat].ar : TAXCATS[s.taxCat].en) : (ar ? 'لا' : 'No') },
+        { label: t.productImages, value: String(s.images) },
+      ],
+      validationErrors: errors.length > 0,
+      errorList: errors,
+
+      orderCountLabel: ordList.length + ' / ' + ORDERS.length,
+      orderFilters: [['all', t.fAll], ['today', t.fToday], ['processing', t.fProcessing], ['delivered', t.fDelivered], ['cancelled', t.fCancelled]]
+        .map(f => Object.assign({ label: f[1], pick: () => this.setState({ orderFilter: f[0] }) }, chip(s.orderFilter === f[0]))),
+      orderGroups: groups,
+      ordersEmpty: ordList.length === 0,
+      orderSheet: s.openOrder != null,
+      activeOrder: active,
+      closeOrder: () => this.setState({ openOrder: null }),
+
+      walletMeta: [
+        { label: t.txCount, value: String(TX.length) },
+        { label: t.currency, value: 'OMR' },
+      ],
+      transactions: TX.map(tx => ({
+        type: ar ? tx.type.ar : tx.type.en, ref: tx.ref, date: tx.date,
+        amount: (tx.amount > 0 ? '+' : '') + this.money(tx.amount),
+        amountFg: tx.amount > 0 ? '#1F9D62' : '#1A1A2E',
+        mark: tx.amount > 0 ? '↓' : '↑',
+        tint: tx.amount > 0 ? '#E6F6EE' : '#EEEDF9',
+        fg: tx.amount > 0 ? '#1F9D62' : on,
+        status: statusLabel(tx.status), stBg: tone(tx.status).bg, stFg: tone(tx.status).fg,
+        hasProof: tx.proof, proof: () => this.flash(ar ? 'فتح إيصال التحويل' : 'Opening transfer receipt'),
+      })),
+
+      editing: s.editing,
+      editLabel: s.editing ? t.cancel : t.editData,
+      toggleEdit: () => this.setState(x => ({ editing: !x.editing })),
+      cancelEdit: () => this.setState({ editing: false }),
+      saveProfile: () => { this.setState({ editing: false }); this.flash(t.savedOk); },
+      changePhoto: () => this.flash(t.photoOk),
+      profileFields: [
+        { label: t.firstName, value: ar ? 'سالم' : 'Salim', edit: true },
+        { label: t.lastName, value: ar ? 'العبري' : 'Al Abri', edit: true },
+        { label: t.email, value: t.sellerEmail, edit: false, locked: true },
+        { label: t.phone, value: '+968 9123 4477', edit: true },
+      ].map(f => ({
+        label: f.label, value: f.value,
+        editable: s.editing && f.edit, readonly: !(s.editing && f.edit),
+        locked: !!f.locked, fg: f.locked ? '#9A9AAF' : '#1A1A2E',
+      })),
+      bankFields: [
+        { label: t.bankName, value: ar ? 'بنك مسقط' : 'Bank Muscat' },
+        { label: t.bankAccount, value: '•••• •••• 4471' },
+        { label: t.iban, value: 'OM12 0018 0000 0044 7100 91' },
+      ].map(f => ({ label: f.label, value: f.value, editable: s.editing, readonly: !s.editing })),
+
+      tabs: [
+        { key: 'overview', label: t.overview, icon: icon('M4 11.5 12 5l8 6.5V20H4z') },
+        { key: 'products', label: t.myProducts, icon: icon('M4 7h16v13H4zM4 7l2-3h12l2 3M9 11h6') },
+        { key: 'submit', label: t.submitProduct, center: true },
+        { key: 'orders', label: t.salesOrders, icon: icon('M5 4h14v16H5zM9 9h6M9 13h6M9 17h3') },
+        { key: 'earnings', label: t.earnings, icon: icon('M4 18V9M10 18V5M16 18v-6M20 18H3') },
+      ].map(tb => ({
+        label: tb.label, icon: tb.icon, center: !!tb.center, normal: !tb.center,
+        fg: s.screen === tb.key ? on : '#9A9AAF',
+        go: () => this.setState({ screen: tb.key, stack: [], openOrder: null }),
+      })),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

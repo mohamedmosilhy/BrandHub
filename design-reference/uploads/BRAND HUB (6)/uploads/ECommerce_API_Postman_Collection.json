@@ -1,0 +1,5519 @@
+{
+  "info": {
+    "_postman_id": "ecommerce-api-testing-v2",
+    "name": "E-Commerce API | Full Testing Collection",
+    "description": "Complete role-based Postman collection for the E-Commerce backend — Testing Team v2.\n\n═══════════════════════════════════════════════════════\nHOW TO USE\n═══════════════════════════════════════════════════════\n\n1. Import this collection + the environment file (ECommerce_API_Testing_Environment.json)\n2. Start infrastructure: docker-compose up -d\n3. Start the app: mvn spring-boot:run\n4. Run in order within each role folder:\n   - A = Super Admin → Browse Products → Admin sections\n   - B = Seller → Browse Products → Seller Products → Cart & Orders\n   - C = Customer → Browse → Cart → Orders → Wallet → Profile\n\nAccounts (set in environment):\n  Super Admin → superadmin@ecommerce.com / SuperAdmin123!\n  Seller     → seller@ecommerce.com / Seller123!\n  Customer   → customer@ecommerce.com / Customer123!\n\n═══════════════════════════════════════════════════════\nFOLDER STRUCTURE\n═══════════════════════════════════════════════════════\n\n👑 A — SUPER ADMIN       Role-based tests + admin management\n🏪 B — SELLER            Seller product submission workflow\n🛍️ C — CUSTOMER          Full purchase lifecycle + wallet\n🧪 TESTING — QPay Webhook Simulator   Webhook simulation (no real payment)\n🧪 TESTING — Security & Edge Cases    Negative testing: 401/403/404/400 cases\n🏥 ADMIN — Categories    Category CRUD management\n🏥 ADMIN — Orders        Order status management\n🛍️ CUSTOMER — Wishlist   Wishlist add/remove\n🛍️ CUSTOMER — Reviews    Product reviews (5-star + 1-star)\n🛍️ CUSTOMER — Coupons    Coupon validation + notifications\n🔍 Search & Elasticsearch  ES search, empty query, no-results\n📊 Actuator & Health      Health, info, prometheus, metrics\n\n═══════════════════════════════════════════════════════\nFULL E2E FLOW (Customer)\n═══════════════════════════════════════════════════════\n\n  1. Login (C — Customer)\n  2. Browse Products / Search\n  3. Add to Cart\n  4. Add address (Profile)\n  5. POST /orders → walletPayment=true  → instant wallet deduction\n  6. GET /wallet → see balance reduced\n  7. POST /orders/{{id}}/cancel → wallet refunded\n  8. GET /wallet → balance restored\n\n  For card payment:\n  5. POST /orders → walletPayment=false → QPay payment URL\n  6. ⚠️ Open paymentUrl in browser → pay on QPay\n  7. Use QPay Webhook Simulator to confirm payment\n  8. GET /orders/{{id}} → status = CONFIRMED\n\n═══════════════════════════════════════════════════════\nCOLLECTION VARIABLES (auto-saved by test scripts)\n═══════════════════════════════════════════════════════\n\n  adminAccessToken / sellerAccessToken / customerAccessToken\n  refreshToken, userId, productId, categoryId, variantId\n  cartItemId, addressId, orderId, productRequestId, roleId\n  walletId, qpayReferenceId, paymentUrl\n\n═══════════════════════════════════════════════════════",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081/api/v1",
+      "type": "default"
+    },
+    {
+      "key": "appUrl",
+      "value": "http://localhost:8081",
+      "type": "default"
+    },
+    {
+      "key": "adminAccessToken",
+      "value": "",
+      "type": "secret"
+    },
+    {
+      "key": "sellerAccessToken",
+      "value": "",
+      "type": "secret"
+    },
+    {
+      "key": "customerAccessToken",
+      "value": "",
+      "type": "secret"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "secret"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "productId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "categoryId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "categorySlug",
+      "value": "electronics",
+      "type": "default"
+    },
+    {
+      "key": "variantId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "cartItemId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "addressId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "orderId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "blockUserId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "roleId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "productRequestId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "walletId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "qpayReferenceId",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "paymentUrl",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "adminEmail",
+      "value": "superadmin@ecommerce.com",
+      "type": "default"
+    },
+    {
+      "key": "adminPassword",
+      "value": "SuperAdmin123!",
+      "type": "secret"
+    },
+    {
+      "key": "sellerEmail",
+      "value": "seller@ecommerce.com",
+      "type": "default"
+    },
+    {
+      "key": "sellerPassword",
+      "value": "Seller123!",
+      "type": "secret"
+    },
+    {
+      "key": "sellerPhoneNumber",
+      "value": "+201001234567",
+      "type": "default"
+    },
+    {
+      "key": "sellerIbanNumber",
+      "value": "EG380019000500000000263180002",
+      "type": "secret"
+    },
+    {
+      "key": "sellerBankAccountNumber",
+      "value": "1234567890",
+      "type": "secret"
+    },
+    {
+      "key": "sellerBankName",
+      "value": "Test Bank",
+      "type": "default"
+    },
+    {
+      "key": "customerEmail",
+      "value": "customer@ecommerce.com",
+      "type": "default"
+    },
+    {
+      "key": "customerPassword",
+      "value": "Customer123!",
+      "type": "secret"
+    }
+  ],
+  "item": [
+    {
+      "name": "FRONTEND - Public Categories",
+      "description": "Public category endpoints for frontend navigation and category pages. No auth token required.",
+      "item": [
+        {
+          "name": "GET /categories/tree - all categories",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains category array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success', true);",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "    pm.expect(jsonData.data).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Save first category id and slug\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.length > 0) {",
+                  "        pm.collectionVariables.set('categoryId', jsonData.data[0].id);",
+                  "        pm.collectionVariables.set('categorySlug', jsonData.data[0].slug);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/tree",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", "tree"]
+            },
+            "description": "Returns active categories as a tree. Use response.data for the frontend category list."
+          }
+        },
+        {
+          "name": "GET /categories/{{categoryId}} - category by id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", "{{categoryId}}"]
+            },
+            "description": "Returns one category by UUID. Run GET /categories/tree first to populate categoryId."
+          }
+        },
+        {
+          "name": "GET /categories/slug/{{categorySlug}} - category by slug",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/slug/{{categorySlug}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", "slug", "{{categorySlug}}"]
+            },
+            "description": "Returns one category by slug. Run GET /categories/tree first to populate categorySlug."
+          }
+        },
+        {
+          "name": "GET /products/category/{{categoryId}} - products in category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/category/{{categoryId}}?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "category", "{{categoryId}}"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "description": "Returns products for a category. Run GET /categories/tree first to populate categoryId."
+          }
+        }
+      ]
+    },
+    {
+      "name": "👑 A — SUPER ADMIN",
+      "item": [
+        {
+          "name": "1. Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Login successful - 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has accessToken\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('accessToken');",
+                  "    pm.expect(jsonData.accessToken).to.be.a('string');",
+                  "});",
+                  "",
+                  "pm.test(\"Save admin access token\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"adminAccessToken\", jsonData.accessToken);",
+                  "    if (jsonData.user && jsonData.user.id) {",
+                  "        pm.collectionVariables.set(\"userId\", jsonData.user.id.toString());",
+                  "    }",
+                  "    if (jsonData.refreshToken) {",
+                  "        pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{adminEmail}}\",\n    \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Browse Products",
+          "item": [
+            {
+              "name": "GET /products?page=0&size=20",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first product ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.content && jsonData.content.length > 0) {",
+                      "        pm.collectionVariables.set(\"productId\", jsonData.content[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products?page=0&size=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "20" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /products/featured",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/featured",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "featured"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/new-arrivals",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/new-arrivals",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "new-arrivals"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/best-sellers",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/best-sellers",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "best-sellers"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/search?q=headphone",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save productId from search\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.content && jsonData.content.length > 0) {",
+                      "        pm.collectionVariables.set(\"productId\", jsonData.content[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/search?q=headphone",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "search"],
+                  "query": [{ "key": "q", "value": "headphone" }]
+                }
+              }
+            },
+            {
+              "name": "GET /products/{{productId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save variantId and categoryId\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.variants && jsonData.variants.length > 0) {",
+                      "        pm.collectionVariables.set(\"variantId\", jsonData.variants[0].id.toString());",
+                      "    }",
+                      "    if (jsonData.category && jsonData.category.id) {",
+                      "        pm.collectionVariables.set(\"categoryId\", jsonData.category.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/{{productId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "{{productId}}"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/slug/wireless-headphones",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/slug/wireless-headphones",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "slug", "wireless-headphones"]
+                }
+              }
+            },
+            {
+              "name": "GET /categories/tree",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first category ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.data && jsonData.data.length > 0) {",
+                      "        pm.collectionVariables.set(\"categoryId\", jsonData.data[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/categories/tree",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["categories", "tree"]
+                }
+              }
+            },
+            {
+              "name": "GET /categories/{{categoryId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/categories/{{categoryId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["categories", "{{categoryId}}"]
+                }
+              }
+            },
+            {
+              "name": "GET /categories/slug/electronics",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/categories/slug/electronics",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["categories", "slug", "electronics"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/category/{{categoryId}}?page=0&size=10",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/category/{{categoryId}}?page=0&size=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "category", "{{categoryId}}"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /search/products?q=headphone&page=0&size=10",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/search/products?q=headphone&page=0&size=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["search", "products"],
+                  "query": [
+                    { "key": "q", "value": "headphone" },
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "10" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin Products",
+          "item": [
+            {
+              "name": "GET /admin/products?page=0&size=20",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save product ID for admin operations\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.content && jsonData.content.length > 0) {",
+                      "        pm.collectionVariables.set(\"productId\", jsonData.content[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/products?page=0&size=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "products"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "20" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "POST /admin/products",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});",
+                      "",
+                      "pm.test(\"Save created product ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.id) {",
+                      "        pm.collectionVariables.set(\"productId\", jsonData.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Admin Test Product\",\n    \"categoryId\": \"{{categoryId}}\",\n    \"description\": \"Test product created by admin via Postman\",\n    \"shortDescription\": \"Admin test\",\n    \"basePrice\": 999.99,\n    \"salePrice\": 899.99,\n    \"sellerPercentage\": 80,\n    \"variants\": [\n        {\n            \"name\": \"Standard\",\n            \"sku\": \"ADMIN-TEST-STD\",\n            \"price\": 899.99,\n            \"stock\": 10,\n            \"attributes\": {\"color\": \"Black\", \"size\": \"Standard\"}\n        }\n    ],\n    \"images\": [\n        {\n            \"url\": \"https://example.com/img1.jpg\",\n            \"isPrimary\": true\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/products",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "products"]
+                }
+              }
+            },
+            {
+              "name": "PUT /admin/products/{{productId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Updated Admin Product\",\n    \"categoryId\": \"{{categoryId}}\",\n    \"description\": \"Updated description for admin product\",\n    \"shortDescription\": \"Updated short desc\",\n    \"basePrice\": 1099.99,\n    \"salePrice\": 999.99,\n    \"sellerPercentage\": 75,\n    \"variants\": [\n        {\n            \"name\": \"Standard\",\n            \"sku\": \"ADMIN-UPD-STD\",\n            \"price\": 999.99,\n            \"stock\": 15,\n            \"attributes\": {\"color\": \"Black\", \"size\": \"Standard\"}\n        },\n        {\n            \"name\": \"Premium\",\n            \"sku\": \"ADMIN-UPD-PRM\",\n            \"price\": 1299.99,\n            \"stock\": 8,\n            \"attributes\": {\"color\": \"Silver\", \"size\": \"Premium\"}\n        }\n    ],\n    \"images\": [\n        {\n            \"url\": \"https://example.com/img1.jpg\",\n            \"isPrimary\": true\n        },\n        {\n            \"url\": \"https://example.com/img2.jpg\",\n            \"isPrimary\": false\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/products/{{productId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "products", "{{productId}}"]
+                }
+              }
+            },
+            {
+              "name": "DELETE /admin/products/{{productId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/products/{{productId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "products", "{{productId}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin Users",
+          "item": [
+            {
+              "name": "POST /admin/users",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});",
+                      "",
+                      "pm.test(\"Save created user ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.id) {",
+                      "        pm.collectionVariables.set(\"blockUserId\", jsonData.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"Admin\",\n    \"email\": \"testadmin\" + Date.now() + \"@ecommerce.com\",\n    \"password\": \"TestAdmin123!\",\n    \"phoneNumber\": \"+966501234567\",\n    \"roleName\": \"ROLE_ADMIN\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "users"]
+                }
+              }
+            },
+            {
+              "name": "GET /admin/users?page=0&size=20",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save blockUserId from second user\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.content && jsonData.content.length > 1) {",
+                      "        pm.collectionVariables.set(\"blockUserId\", jsonData.content[1].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users?page=0&size=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "users"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "20" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /admin/users/{{userId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users/{{userId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "users", "{{userId}}"]
+                }
+              }
+            },
+            {
+              "name": "PUT /admin/users/{{blockUserId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users/{{blockUserId}}?firstName=Updated&lastName=Name&phone=+966501111111",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "users", "{{blockUserId}}"],
+                  "query": [
+                    { "key": "firstName", "value": "Updated" },
+                    { "key": "lastName", "value": "Name" },
+                    { "key": "phone", "value": "+966501111111" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "POST /admin/users/{{blockUserId}}/block",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users/{{blockUserId}}/block",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "users", "{{blockUserId}}", "block"]
+                }
+              }
+            },
+            {
+              "name": "POST /admin/users/{{blockUserId}}/unblock",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users/{{blockUserId}}/unblock",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "users", "{{blockUserId}}", "unblock"]
+                }
+              }
+            },
+            {
+              "name": "POST /admin/users/{{blockUserId}}/reset-password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users/{{blockUserId}}/reset-password?newPassword=ResetPass123!",
+                  "host": ["{{baseUrl}}"],
+                  "path": [
+                    "admin",
+                    "users",
+                    "{{blockUserId}}",
+                    "reset-password"
+                  ],
+                  "query": [{ "key": "newPassword", "value": "ResetPass123!" }]
+                }
+              }
+            },
+            {
+              "name": "DELETE /admin/users/{{blockUserId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users/{{blockUserId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "users", "{{blockUserId}}"]
+                }
+              }
+            },
+            {
+              "name": "POST /admin/users/{{userId}}/roles",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"roleName\": \"ROLE_SELLER\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users/{{userId}}/roles",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "users", "{{userId}}", "roles"]
+                }
+              }
+            },
+            {
+              "name": "DELETE /admin/users/{{blockUserId}}/roles/ROLE_MANAGER",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/users/{{blockUserId}}/roles/ROLE_MANAGER",
+                  "host": ["{{baseUrl}}"],
+                  "path": [
+                    "admin",
+                    "users",
+                    "{{blockUserId}}",
+                    "roles",
+                    "ROLE_MANAGER"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin Roles",
+          "item": [
+            {
+              "name": "GET /admin/roles",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first role ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.content && jsonData.content.length > 0) {",
+                      "        pm.collectionVariables.set(\"roleId\", jsonData.content[0].id.toString());",
+                      "    } else if (Array.isArray(jsonData) && jsonData.length > 0 && jsonData[0].id) {",
+                      "        pm.collectionVariables.set(\"roleId\", jsonData[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "roles"]
+                }
+              }
+            },
+            {
+              "name": "GET /admin/roles/permissions",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/permissions",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "roles", "permissions"]
+                }
+              }
+            },
+            {
+              "name": "POST /admin/roles",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});",
+                      "",
+                      "pm.test(\"Save created role ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.id) {",
+                      "        pm.collectionVariables.set(\"roleId\", jsonData.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"ROLE_TEST_ROLE\",\n    \"displayName\": \"Test Role\",\n    \"description\": \"Test role created via Postman\",\n    \"permissions\": [\"product:read\", \"order:read\"]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "roles"]
+                }
+              }
+            },
+            {
+              "name": "GET /admin/roles/{{roleId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/{{roleId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "roles", "{{roleId}}"]
+                }
+              }
+            },
+            {
+              "name": "GET /admin/roles/name/ROLE_ADMIN",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/name/ROLE_ADMIN",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "roles", "name", "ROLE_ADMIN"]
+                }
+              }
+            },
+            {
+              "name": "PUT /admin/roles/{{roleId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"ROLE_TEST_ROLE\",\n    \"displayName\": \"Test Role Updated\",\n    \"description\": \"Updated via Postman\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/{{roleId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "roles", "{{roleId}}"]
+                }
+              }
+            },
+            {
+              "name": "POST /admin/roles/{{roleId}}/permissions",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/{{roleId}}/permissions?permission=inventory:read",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "roles", "{{roleId}}", "permissions"],
+                  "query": [{ "key": "permission", "value": "inventory:read" }]
+                }
+              }
+            },
+            {
+              "name": "DELETE /admin/roles/{{roleId}}/permissions",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/{{roleId}}/permissions?permission=inventory:read",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "roles", "{{roleId}}", "permissions"],
+                  "query": [{ "key": "permission", "value": "inventory:read" }]
+                }
+              }
+            },
+            {
+              "name": "DELETE /admin/roles/{{roleId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/{{roleId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "roles", "{{roleId}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin Approvals",
+          "item": [
+            {
+              "name": "GET /admin/product-requests?page=0&size=10",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first product request ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.content && jsonData.content.length > 0) {",
+                      "        pm.collectionVariables.set(\"productRequestId\", jsonData.content[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/product-requests?page=0&size=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "product-requests"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /admin/product-requests?status=PENDING",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/product-requests?status=PENDING&page=0&size=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "product-requests"],
+                  "query": [
+                    { "key": "status", "value": "PENDING" },
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "PUT /admin/product-requests/{{productRequestId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"salePrice\": 1049.99,\n    \"sellerPercentage\": 65,\n    \"shortDescription\": \"Admin-reviewed gaming laptop\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/product-requests/{{productRequestId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["admin", "product-requests", "{{productRequestId}}"]
+                }
+              }
+            },
+            {
+              "name": "POST /admin/product-requests/{{productRequestId}}/approve",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/product-requests/{{productRequestId}}/approve",
+                  "host": ["{{baseUrl}}"],
+                  "path": [
+                    "admin",
+                    "product-requests",
+                    "{{productRequestId}}",
+                    "approve"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "POST /admin/product-requests/{{productRequestId}}/reject",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/product-requests/{{productRequestId}}/reject?reason=Incomplete%20information",
+                  "host": ["{{baseUrl}}"],
+                  "path": [
+                    "admin",
+                    "product-requests",
+                    "{{productRequestId}}",
+                    "reject"
+                  ],
+                  "query": [
+                    { "key": "reason", "value": "Incomplete%20information" }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🏪 B — SELLER",
+      "item": [
+        {
+          "name": "1. Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Login successful - 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has accessToken\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('accessToken');",
+                  "});",
+                  "",
+                  "pm.test(\"Save seller access token\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"sellerAccessToken\", jsonData.accessToken);",
+                  "    if (jsonData.user && jsonData.user.id) {",
+                  "        pm.collectionVariables.set(\"userId\", jsonData.user.id.toString());",
+                  "    }",
+                  "    if (jsonData.refreshToken) {",
+                  "        pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{sellerEmail}}\",\n    \"password\": \"{{sellerPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "2. Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201 or 200\", function () {",
+                  "    var status = pm.response.code;",
+                  "    pm.expect(status === 201 || status === 200).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test Seller\",\n    \"email\": \"testseller\" + Date.now() + \"@ecommerce.com\",\n    \"password\": \"Seller123!\",\n    \"phoneNumber\": \"{{sellerPhoneNumber}}\",\n    \"ibanNumber\": \"{{sellerIbanNumber}}\",\n    \"bankAccountNumber\": \"{{sellerBankAccountNumber}}\",\n    \"bankName\": \"{{sellerBankName}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register/seller",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register", "seller"]
+            }
+          }
+        },
+        {
+          "name": "Browse Products",
+          "item": [
+            {
+              "name": "GET /products?page=0&size=20",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products?page=0&size=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "20" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /products/featured",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/featured",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "featured"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/search?q=laptop",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/search?q=laptop",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "search"],
+                  "query": [{ "key": "q", "value": "laptop" }]
+                }
+              }
+            },
+            {
+              "name": "GET /categories/tree",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/categories/tree",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["categories", "tree"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seller Products",
+          "item": [
+            {
+              "name": "POST /seller/products",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});",
+                      "",
+                      "pm.test(\"Save product request ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.id) {",
+                      "        pm.collectionVariables.set(\"productRequestId\", jsonData.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Seller Test Gaming Laptop\",\n    \"categoryId\": \"{{categoryId}}\",\n    \"description\": \"High-performance gaming laptop with RTX graphics\",\n    \"shortDescription\": \"Gaming Laptop RTX 4060\",\n    \"basePrice\": 1299.99,\n    \"salePrice\": 1099.99,\n    \"sellerPercentage\": 70,\n    \"variants\": [\n        {\n            \"name\": \"16GB RAM\",\n            \"sku\": \"SELLER-LAPTOP-16GB\",\n            \"price\": 1099.99,\n            \"stock\": 15,\n            \"attributes\": {\"ram\": \"16GB\", \"storage\": \"512GB SSD\"}\n        },\n        {\n            \"name\": \"32GB RAM\",\n            \"sku\": \"SELLER-LAPTOP-32GB\",\n            \"price\": 1299.99,\n            \"stock\": 10,\n            \"attributes\": {\"ram\": \"32GB\", \"storage\": \"1TB SSD\"}\n        }\n    ],\n    \"images\": [\n        {\n            \"url\": \"https://example.com/laptop-front.jpg\",\n            \"isPrimary\": true\n        },\n        {\n            \"url\": \"https://example.com/laptop-side.jpg\",\n            \"isPrimary\": false\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/seller/products",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["seller", "products"]
+                }
+              }
+            },
+            {
+              "name": "GET /seller/products?page=0&size=10",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/seller/products?page=0&size=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["seller", "products"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /seller/products/{{productRequestId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/seller/products/{{productRequestId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["seller", "products", "{{productRequestId}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cart & Orders",
+          "item": [
+            {
+              "name": "GET /cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first cart item ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.items && jsonData.items.length > 0) {",
+                      "        pm.collectionVariables.set(\"cartItemId\", jsonData.items[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart"]
+                }
+              }
+            },
+            {
+              "name": "POST /cart/items",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"productId\": \"{{productId}}\",\n    \"variantId\": \"{{variantId}}\",\n    \"quantity\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/cart/items",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart", "items"]
+                }
+              }
+            },
+            {
+              "name": "PUT /cart/items/{{cartItemId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart/items/{{cartItemId}}?quantity=5",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart", "items", "{{cartItemId}}"],
+                  "query": [{ "key": "quantity", "value": "5" }]
+                }
+              }
+            },
+            {
+              "name": "DELETE /cart/items/{{cartItemId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart/items/{{cartItemId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart", "items", "{{cartItemId}}"]
+                }
+              }
+            },
+            {
+              "name": "DELETE /cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart"]
+                }
+              }
+            },
+            {
+              "name": "GET /orders?page=0&size=10",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first order ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.content && jsonData.content.length > 0) {",
+                      "        pm.collectionVariables.set(\"orderId\", jsonData.content[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/orders?page=0&size=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /orders/{{orderId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/orders/{{orderId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders", "{{orderId}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Profile & Addresses",
+          "item": [
+            {
+              "name": "GET /users/me",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/me",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me"]
+                }
+              }
+            },
+            {
+              "name": "GET /users/me/addresses",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first address ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.addresses && jsonData.addresses.length > 0) {",
+                      "        pm.collectionVariables.set(\"addressId\", jsonData.addresses[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/me/addresses",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me", "addresses"]
+                }
+              }
+            },
+            {
+              "name": "POST /users/me/addresses",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});",
+                      "",
+                      "pm.test(\"Save new address ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.id) {",
+                      "        pm.collectionVariables.set(\"addressId\", jsonData.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"fullName\": \"Test Seller\",\n    \"phone\": \"+966501234567\",\n    \"addressLine1\": \"123 Seller Street\",\n    \"addressLine2\": \"Apt 4B\",\n    \"city\": \"Riyadh\",\n    \"state\": \"Riyadh Province\",\n    \"postalCode\": \"12345\",\n    \"country\": \"Saudi Arabia\",\n    \"isDefault\": false\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users/me/addresses",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me", "addresses"]
+                }
+              }
+            },
+            {
+              "name": "POST /orders",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var uuid = require('uuid');",
+                      "pm.variables.set('requestId', uuid.v4());",
+                      "",
+                      "// Auto-detect default address",
+                      "var baseUrl = pm.collectionVariables.get('baseUrl');",
+                      "var token = pm.collectionVariables.get('sellerAccessToken');",
+                      "",
+                      "pm.sendRequest({",
+                      "    url: baseUrl + '/users/me/addresses',",
+                      "    method: 'GET',",
+                      "    header: {",
+                      "        'Authorization': 'Bearer ' + token,",
+                      "        'Content-Type': 'application/json'",
+                      "    }",
+                      "}, function (err, res) {",
+                      "    if (err) {",
+                      "        console.log('Auto-detect failed:', err.message);",
+                      "        return;",
+                      "    }",
+                      "    var body = res.json();",
+                      "    var addresses = body.addresses || [];",
+                      "    var defaultAddr = addresses.find(function(a) { return a.isDefault === true; });",
+                      "    var chosen = defaultAddr || (addresses.length > 0 ? addresses[0] : null);",
+                      "    if (chosen && chosen.id) {",
+                      "        pm.collectionVariables.set('addressId', chosen.id.toString());",
+                      "        console.log('Auto-detected address:', chosen.fullName, chosen.id);",
+                      "    } else {",
+                      "        console.log('No addresses found — add one first');",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});",
+                      "",
+                      "pm.test(\"Save created order ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.id) {",
+                      "        pm.collectionVariables.set(\"orderId\", jsonData.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{sellerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"shippingAddressId\": \"{{addressId}}\",\n    \"couponCode\": \"WELCOME10\",\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"walletPayment\": false\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/orders",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🛍️ C — CUSTOMER",
+      "item": [
+        {
+          "name": "1. Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Login successful - 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has accessToken\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('accessToken');",
+                  "});",
+                  "",
+                  "pm.test(\"Save customer access token\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"customerAccessToken\", jsonData.accessToken);",
+                  "    if (jsonData.user && jsonData.user.id) {",
+                  "        pm.collectionVariables.set(\"userId\", jsonData.user.id.toString());",
+                  "    }",
+                  "    if (jsonData.refreshToken) {",
+                  "        pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{customerEmail}}\",\n    \"password\": \"{{customerPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "2. Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201 or 200\", function () {",
+                  "    var status = pm.response.code;",
+                  "    pm.expect(status === 201 || status === 200).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Ahmed\",\n    \"lastName\": \"Al-Saleh\",\n    \"email\": \"ahmed.alsaleh\" + Date.now() + \"@test.com\",\n    \"password\": \"Customer123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Browse Products",
+          "item": [
+            {
+              "name": "GET /products?page=0&size=20",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first product ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.content && jsonData.content.length > 0) {",
+                      "        pm.collectionVariables.set(\"productId\", jsonData.content[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products?page=0&size=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "20" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /products/featured",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/featured",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "featured"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/new-arrivals",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/new-arrivals",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "new-arrivals"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/best-sellers",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/best-sellers",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "best-sellers"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/search?q=headphone",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/search?q=headphone",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "search"],
+                  "query": [{ "key": "q", "value": "headphone" }]
+                }
+              }
+            },
+            {
+              "name": "GET /products/{{productId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save variantId and categoryId\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.variants && jsonData.variants.length > 0) {",
+                      "        pm.collectionVariables.set(\"variantId\", jsonData.variants[0].id.toString());",
+                      "    }",
+                      "    if (jsonData.category && jsonData.category.id) {",
+                      "        pm.collectionVariables.set(\"categoryId\", jsonData.category.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/{{productId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "{{productId}}"]
+                }
+              }
+            },
+            {
+              "name": "GET /categories/tree",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first category ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.data && jsonData.data.length > 0) {",
+                      "        pm.collectionVariables.set(\"categoryId\", jsonData.data[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/categories/tree",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["categories", "tree"]
+                }
+              }
+            },
+            {
+              "name": "GET /products/category/{{categoryId}}?page=0&size=10",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products/category/{{categoryId}}?page=0&size=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products", "category", "{{categoryId}}"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /search/products?q=laptop&page=0&size=10",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/search/products?q=laptop&page=0&size=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["search", "products"],
+                  "query": [
+                    { "key": "q", "value": "laptop" },
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "10" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cart",
+          "item": [
+            {
+              "name": "GET /cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first cart item ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.items && jsonData.items.length > 0) {",
+                      "        pm.collectionVariables.set(\"cartItemId\", jsonData.items[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart"]
+                }
+              }
+            },
+            {
+              "name": "POST /cart/items",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});",
+                      "",
+                      "pm.test(\"Save cart item ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.id) {",
+                      "        pm.collectionVariables.set(\"cartItemId\", jsonData.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"productId\": \"{{productId}}\",\n    \"variantId\": \"{{variantId}}\",\n    \"quantity\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/cart/items",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart", "items"]
+                }
+              }
+            },
+            {
+              "name": "PUT /cart/items/{{cartItemId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart/items/{{cartItemId}}?quantity=5",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart", "items", "{{cartItemId}}"],
+                  "query": [{ "key": "quantity", "value": "5" }]
+                }
+              }
+            },
+            {
+              "name": "DELETE /cart/items/{{cartItemId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart/items/{{cartItemId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart", "items", "{{cartItemId}}"]
+                }
+              }
+            },
+            {
+              "name": "DELETE /cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/cart",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cart"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Orders",
+          "item": [
+            {
+              "name": "GET /users/me/addresses",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save default or first address ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var addresses = jsonData.addresses || [];",
+                      "    var defaultAddr = addresses.find(function(a) { return a.isDefault === true; });",
+                      "    var addr = defaultAddr || (addresses.length > 0 ? addresses[0] : null);",
+                      "    if (addr && addr.id) {",
+                      "        pm.collectionVariables.set(\"addressId\", addr.id.toString());",
+                      "        pm.test(\"Address auto-detected: \" + addr.fullName, true);",
+                      "    } else {",
+                      "        pm.test(\"No address found — add one first\", false);",
+                      "    }",
+                      "});",
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/me/addresses",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me", "addresses"]
+                }
+              }
+            },
+            {
+              "name": "POST /users/me/addresses",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});",
+                      "",
+                      "pm.test(\"Save new address ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.id) {",
+                      "        pm.collectionVariables.set(\"addressId\", jsonData.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"fullName\": \"Ahmed Al-Saleh\",\n    \"phone\": \"+966501234567\",\n    \"addressLine1\": \"456 Customer Avenue\",\n    \"addressLine2\": \"Villa 12\",\n    \"city\": \"Jeddah\",\n    \"state\": \"Makkah Province\",\n    \"postalCode\": \"23456\",\n    \"country\": \"Saudi Arabia\",\n    \"isDefault\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users/me/addresses",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me", "addresses"]
+                }
+              }
+            },
+            {
+              "name": "POST /orders",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var uuid = require('uuid');",
+                      "pm.variables.set('requestId', uuid.v4());",
+                      "",
+                      "// Auto-detect default address (no need to run GET addresses first)",
+                      "var baseUrl = pm.collectionVariables.get('baseUrl');",
+                      "var token = pm.collectionVariables.get('customerAccessToken');",
+                      "",
+                      "pm.sendRequest({",
+                      "    url: baseUrl + '/users/me/addresses',",
+                      "    method: 'GET',",
+                      "    header: {",
+                      "        'Authorization': 'Bearer ' + token,",
+                      "        'Content-Type': 'application/json'",
+                      "    }",
+                      "}, function (err, res) {",
+                      "    if (err) {",
+                      "        console.log('Auto-detect failed:', err.message);",
+                      "        return;",
+                      "    }",
+                      "    var body = res.json();",
+                      "    var addresses = body.addresses || [];",
+                      "    var defaultAddr = addresses.find(function(a) { return a.isDefault === true; });",
+                      "    var chosen = defaultAddr || (addresses.length > 0 ? addresses[0] : null);",
+                      "    if (chosen && chosen.id) {",
+                      "        pm.collectionVariables.set('addressId', chosen.id.toString());",
+                      "        console.log('Auto-detected address:', chosen.fullName, chosen.id);",
+                      "    } else {",
+                      "        console.log('No addresses found — add one first via POST /users/me/addresses');",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 or 200\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 201 || status === 200).to.be.true;",
+                      "});",
+                      "",
+                      "pm.test(\"Save created order ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.id) {",
+                      "        pm.collectionVariables.set(\"orderId\", jsonData.id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"shippingAddressId\": \"{{addressId}}\",\n    \"couponCode\": \"WELCOME10\",\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"walletPayment\": false\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/orders",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders"]
+                }
+              }
+            },
+            {
+              "name": "GET /orders?page=0&size=10",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save first order ID\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.content && jsonData.content.length > 0) {",
+                      "        pm.collectionVariables.set(\"orderId\", jsonData.content[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/orders?page=0&size=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GET /orders/{{orderId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/orders/{{orderId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders", "{{orderId}}"]
+                }
+              }
+            },
+            {
+              "name": "POST /orders/{{orderId}}/cancel",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/orders/{{orderId}}/cancel?reason=Changed%20mind",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders", "{{orderId}}", "cancel"],
+                  "query": [{ "key": "reason", "value": "Changed%20mind" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Wallet + QPay",
+          "item": [
+            {
+              "name": "GET /wallet",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save walletId and initial balance\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.data && jsonData.data.id) {",
+                      "        pm.collectionVariables.set(\"walletId\", jsonData.data.id.toString());",
+                      "    }",
+                      "});",
+                      "",
+                      "pm.test(\"Wallet has balance and currency fields\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data).to.have.property('balance');",
+                      "    pm.expect(jsonData.data).to.have.property('currency');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/wallet",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["wallet"]
+                }
+              }
+            },
+            {
+              "name": "POST /wallet/charge — initiate QPay payment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 — QPay payment page created\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Response contains QPay payment URL\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data).to.have.property('paymentUrl');",
+                      "    pm.expect(jsonData.data.gateway).to.equal('QPAY');",
+                      "    pm.expect(jsonData.data.referenceId).to.be.a('string');",
+                      "});",
+                      "",
+                      "pm.test(\"Save QPay reference ID and payment URL\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.data && jsonData.data.referenceId) {",
+                      "        pm.collectionVariables.set('qpayReferenceId', jsonData.data.referenceId);",
+                      "    }",
+                      "    if (jsonData.data && jsonData.data.paymentUrl) {",
+                      "        pm.collectionVariables.set('paymentUrl', jsonData.data.paymentUrl);",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"amount\": 50.000,\n    \"paymentMethod\": \"QPay\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/wallet/charge",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["wallet", "charge"]
+                }
+              }
+            },
+            {
+              "name": "⚠️  Manual Step: Complete payment on QPay portal",
+              "event": [],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "description": "Open {{paymentUrl}} in your browser, complete the QPay payment. After payment, QPay will call our webhook to credit the wallet automatically.",
+                "url": {
+                  "raw": "{{paymentUrl}}",
+                  "host": []
+                }
+              }
+            },
+            {
+              "name": "GET /wallet/transactions?page=0&size=20",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Transactions list returned\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data).to.have.property('content');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/wallet/transactions?page=0&size=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["wallet", "transactions"],
+                  "query": [
+                    { "key": "page", "value": "0" },
+                    { "key": "size", "value": "20" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "POST /orders — walletPayment=true (instant deduction)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 — order placed\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Save orderId\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var orderData = (jsonData.data && jsonData.data.order) ? jsonData.data.order : jsonData.data;",
+                      "    if (orderData && orderData.id) {",
+                      "        pm.collectionVariables.set('orderId', orderData.id.toString());",
+                      "    }",
+                      "});",
+                      "",
+                      "pm.test(\"walletPaid = true (instant deduction)\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var orderData = (jsonData.data && jsonData.data.order) ? jsonData.data.order : jsonData.data;",
+                      "    pm.expect(orderData.walletPaid).to.equal(true);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"shippingAddressId\": \"{{addressId}}\",\n    \"walletPayment\": true,\n    \"notes\": \"Paid via wallet balance\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/orders",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders"]
+                }
+              }
+            },
+            {
+              "name": "POST /orders — walletPayment=false (QPay card payment)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 201 — order + payment page created\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test(\"Response contains QPay payment URL\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data).to.have.property('payment');",
+                      "    pm.expect(jsonData.data.payment).to.have.property('paymentUrl');",
+                      "});",
+                      "",
+                      "pm.test(\"Save orderId and QPay ref\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var orderData = jsonData.data.order;",
+                      "    var paymentData = jsonData.data.payment;",
+                      "    if (orderData && orderData.id) {",
+                      "        pm.collectionVariables.set('orderId', orderData.id.toString());",
+                      "    }",
+                      "    if (paymentData && paymentData.referenceId) {",
+                      "        pm.collectionVariables.set('qpayReferenceId', paymentData.referenceId);",
+                      "    }",
+                      "    if (paymentData && paymentData.paymentUrl) {",
+                      "        pm.collectionVariables.set('paymentUrl', paymentData.paymentUrl);",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"shippingAddressId\": \"{{addressId}}\",\n    \"walletPayment\": false,\n    \"notes\": \"Paid via QPay card\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/orders",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders"]
+                }
+              }
+            },
+            {
+              "name": "⚠️  Manual: Complete QPay card payment in browser",
+              "event": [],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "description": "Open {{paymentUrl}} in your browser, pay with card. After payment, QPay will call our webhook to confirm the order automatically.",
+                "url": {
+                  "raw": "{{paymentUrl}}",
+                  "host": []
+                }
+              }
+            },
+            {
+              "name": "POST /orders/{{orderId}}/cancel — triggers refund",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Order status is CANCELLED\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.status).to.equal('CANCELLED');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/orders/{{orderId}}/cancel?reason=Changed%20mind",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["orders", "{{orderId}}", "cancel"],
+                  "query": [{ "key": "reason", "value": "Changed%20mind" }]
+                }
+              }
+            },
+            {
+              "name": "GET /wallet — verify balance restored",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/wallet",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["wallet"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "item": [
+            {
+              "name": "GET /users/me",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save addressId from profile\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.addresses && jsonData.addresses.length > 0) {",
+                      "        pm.collectionVariables.set(\"addressId\", jsonData.addresses[0].id.toString());",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/me",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me"]
+                }
+              }
+            },
+            {
+              "name": "PUT /users/me",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"Ahmed\",\n    \"lastName\": \"Al-Saleh Updated\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users/me",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me"]
+                }
+              }
+            },
+            {
+              "name": "PATCH /users/me/password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"currentPassword\": \"{{customerPassword}}\",\n    \"newPassword\": \"NewCustomer123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users/me/password",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me", "password"]
+                }
+              }
+            },
+            {
+              "name": "PUT /users/me/addresses/{{addressId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"fullName\": \"Ahmed Al-Saleh\",\n    \"phone\": \"+966501234567\",\n    \"addressLine1\": \"456 Customer Avenue Updated\",\n    \"addressLine2\": \"Villa 15\",\n    \"city\": \"Riyadh\",\n    \"state\": \"Riyadh Province\",\n    \"postalCode\": \"23456\",\n    \"country\": \"Saudi Arabia\",\n    \"isDefault\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users/me/addresses/{{addressId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me", "addresses", "{{addressId}}"]
+                }
+              }
+            },
+            {
+              "name": "DELETE /users/me/addresses/{{addressId}}",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200 or 204\", function () {",
+                      "    var status = pm.response.code;",
+                      "    pm.expect(status === 200 || status === 204).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/me/addresses/{{addressId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me", "addresses", "{{addressId}}"]
+                }
+              }
+            },
+            {
+              "name": "POST /users/me/addresses/{{addressId}}/set-default",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/me/addresses/{{addressId}}/set-default",
+                  "host": ["{{baseUrl}}"],
+                  "path": [
+                    "users",
+                    "me",
+                    "addresses",
+                    "{{addressId}}",
+                    "set-default"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Token Management",
+          "item": [
+            {
+              "name": "POST /auth/refresh",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Save refreshed access token\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    if (jsonData.accessToken) {",
+                      "        pm.collectionVariables.set(\"customerAccessToken\", jsonData.accessToken);",
+                      "    }",
+                      "    if (jsonData.refreshToken) {",
+                      "        pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/refresh",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "refresh"]
+                }
+              }
+            },
+            {
+              "name": "POST /auth/logout",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Clear customer access token\", function () {",
+                      "    pm.collectionVariables.set(\"customerAccessToken\", \"\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{customerAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/logout",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "logout"]
+                }
+              }
+            },
+            {
+              "name": "POST /auth/forgot-password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"{{customerEmail}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/forgot-password",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "forgot-password"]
+                }
+              }
+            },
+            {
+              "name": "POST /auth/reset-password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"token\": \"your-reset-token-here\",\n    \"newPassword\": \"NewPassword123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/reset-password",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "reset-password"]
+                }
+              }
+            },
+            {
+              "name": "GET /auth/verify-email",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/verify-email?token=your-token",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "verify-email"],
+                  "query": [{ "key": "token", "value": "your-token" }]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🧪 TESTING — QPay Webhook Simulator",
+      "description": "Simulate QPay webhook callbacks to test payment confirmation flows. Use these after placing an order or initiating a wallet topup to simulate what QPay would do when a customer completes payment.",
+      "item": [
+        {
+          "name": "🔁 Simulate: Wallet Topup — PAID callback",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Webhook processed successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.equal('received');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reference_id\": \"{{qpayReferenceId}}\",\n    \"transaction_id\": \"QPAY-SIM-TX-{{$timestamp}}\",\n    \"status\": \"PAID\",\n    \"amount\": \"50.000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/webhook/qpay",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "webhook", "qpay"]
+            }
+          }
+        },
+        {
+          "name": "🔁 Simulate: Order Payment — PAID callback",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Webhook processed\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.equal('received');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reference_id\": \"ORD-2026-000001\",\n    \"transaction_id\": \"QPAY-SIM-ORD-TX-{{$timestamp}}\",\n    \"status\": \"PAID\",\n    \"amount\": \"74.770\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/webhook/qpay",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "webhook", "qpay"]
+            }
+          }
+        },
+        {
+          "name": "🔁 Simulate: Payment — FAILED callback",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Webhook received\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.equal('received');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reference_id\": \"{{qpayReferenceId}}\",\n    \"transaction_id\": \"QPAY-SIM-FAIL-{{$timestamp}}\",\n    \"status\": \"FAILED\",\n    \"amount\": \"50.000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/webhook/qpay",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "webhook", "qpay"]
+            }
+          }
+        },
+        {
+          "name": "✅ GET /payments/webhook/qpay — health check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 — webhook endpoint alive\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Service is active\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.equal('active');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/webhook/qpay",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "webhook", "qpay"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧪 TESTING — Security & Edge Cases",
+      "description": "Negative test cases: auth failures, authorization denials, invalid inputs, and edge cases. Use these to verify the API rejects bad requests properly.",
+      "item": [
+        {
+          "name": "401 — No token accessing protected endpoint",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 401 — unauthorized without token\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            }
+          }
+        },
+        {
+          "name": "401 — Login with wrong password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 401 — wrong password rejected\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{customerEmail}}\",\n    \"password\": \"WrongPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "401 — Login with non-existent email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 401 — unknown email rejected\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"nobody@notexist.com\",\n    \"password\": \"SomePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "409 — Register with duplicate email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 409 — duplicate email conflict\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Duplicate\",\n    \"lastName\": \"User\",\n    \"email\": \"{{customerEmail}}\",\n    \"password\": \"Customer123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "403 — Customer accessing admin endpoints",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 — customer denied admin access\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users?page=0&size=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "5" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "403 — Seller accessing admin endpoints",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 403 — seller denied admin access\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users?page=0&size=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "5" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "404 — Get non-existent product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 404 — product not found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/999999999",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "999999999"]
+            }
+          }
+        },
+        {
+          "name": "404 — Get non-existent order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 404 — order not found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/999999999",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "999999999"]
+            }
+          }
+        },
+        {
+          "name": "400 — Add item to cart with invalid product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 400 or 404 — invalid product ID rejected\", function () {",
+                  "    var status = pm.response.code;",
+                  "    pm.expect(status === 400 || status === 404).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"productId\": 999999999,\n    \"quantity\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "items"]
+            }
+          }
+        },
+        {
+          "name": "400 — Place order with empty cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 400 — empty cart order rejected\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"shippingAddressId\": \"{{addressId}}\",\n    \"walletPayment\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "400 — Place order with invalid coupon code",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 400 — invalid coupon rejected\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"shippingAddressId\": \"{{addressId}}\",\n    \"couponCode\": \"INVALID_CODES\",\n    \"walletPayment\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "400 — Place order with insufficient wallet balance",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 400 — insufficient wallet balance rejected\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"shippingAddressId\": \"{{addressId}}\",\n    \"walletPayment\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "400 — Cancel already-delivered order (not allowed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 400 — cannot cancel delivered order\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/cancel?reason=Changed%20mind",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "cancel"],
+              "query": [{ "key": "reason", "value": "Changed mind" }]
+            }
+          }
+        },
+        {
+          "name": "400 — Add review with invalid rating (out of range)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 400 — rating out of range rejected\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"productId\": \"{{productId}}\",\n    \"rating\": 10,\n    \"comment\": \"This is a test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏥 ADMIN — Categories Management",
+      "item": [
+        {
+          "name": "GET /admin/categories?page=0&size=20",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Save first category ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.content && jsonData.content.length > 0) {",
+                  "        pm.collectionVariables.set('categoryId', jsonData.content[0].id.toString());",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories?page=0&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /admin/categories — create category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201 or 200\", function () {",
+                  "    var status = pm.response.code;",
+                  "    pm.expect(status === 201 || status === 200).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test(\"Save new category ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.id) {",
+                  "        pm.collectionVariables.set('categoryId', jsonData.data.id.toString());",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test Category {{$timestamp}}\",\n    \"slug\": \"test-category-{{$timestamp}}\",\n    \"description\": \"Category for testing purposes\",\n    \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories"]
+            }
+          }
+        },
+        {
+          "name": "GET /admin/categories/{{categoryId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories", "{{categoryId}}"]
+            }
+          }
+        },
+        {
+          "name": "PUT /admin/categories/{{categoryId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Test Category\",\n    \"description\": \"Updated description via Postman\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories", "{{categoryId}}"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /admin/categories/{{categoryId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 or 204\", function () {",
+                  "    var status = pm.response.code;",
+                  "    pm.expect(status === 200 || status === 204).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories", "{{categoryId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏥 ADMIN — Orders Management",
+      "item": [
+        {
+          "name": "GET /admin/orders?page=0&size=20",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Save first order ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.content && jsonData.content.length > 0) {",
+                  "        pm.collectionVariables.set('orderId', jsonData.content[0].id.toString());",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders?page=0&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /admin/orders?status=PENDING",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders?status=PENDING&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders"],
+              "query": [
+                { "key": "status", "value": "PENDING" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /admin/orders/{{orderId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/{{orderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "{{orderId}}"]
+            }
+          }
+        },
+        {
+          "name": "PUT /admin/orders/{{orderId}}/status — confirm order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/{{orderId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "{{orderId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "PUT /admin/orders/{{orderId}}/status — ship order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"SHIPPED\",\n    \"trackingNumber\": \"TRACK-{{$timestamp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/{{orderId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "{{orderId}}", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛍️ CUSTOMER — Wishlist",
+      "item": [
+        {
+          "name": "GET /wishlist",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wishlist",
+              "host": ["{{baseUrl}}"],
+              "path": ["wishlist"]
+            }
+          }
+        },
+        {
+          "name": "POST /wishlist/{{productId}} — add to wishlist",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201 or 200\", function () {",
+                  "    var status = pm.response.code;",
+                  "    pm.expect(status === 201 || status === 200).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wishlist/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["wishlist", "{{productId}}"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /wishlist/{{productId}} — remove from wishlist",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 or 204\", function () {",
+                  "    var status = pm.response.code;",
+                  "    pm.expect(status === 200 || status === 204).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wishlist/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["wishlist", "{{productId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛍️ CUSTOMER — Reviews",
+      "item": [
+        {
+          "name": "GET /reviews/product/{{productId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reviews/product/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "product", "{{productId}}"]
+            }
+          }
+        },
+        {
+          "name": "POST /reviews — submit review",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201 or 200\", function () {",
+                  "    var status = pm.response.code;",
+                  "    pm.expect(status === 201 || status === 200).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"productId\": \"{{productId}}\",\n    \"rating\": 5,\n    \"comment\": \"Excellent product! Exactly as described. Fast delivery and great quality.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews"]
+            }
+          }
+        },
+        {
+          "name": "POST /reviews — submit 1-star review",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201 or 200\", function () {",
+                  "    var status = pm.response.code;",
+                  "    pm.expect(status === 201 || status === 200).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"productId\": \"{{productId}}\",\n    \"rating\": 1,\n    \"comment\": \"Product did not meet expectations. Would not recommend.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛍️ CUSTOMER — Coupons & Notifications",
+      "item": [
+        {
+          "name": "GET /coupons — list available coupons",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["coupons"]
+            }
+          }
+        },
+        {
+          "name": "POST /coupons/validate — validate coupon code",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 — coupon valid\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has discount info\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data).to.have.property('discountType');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"code\": \"WELCOME10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/coupons/validate",
+              "host": ["{{baseUrl}}"],
+              "path": ["coupons", "validate"]
+            }
+          }
+        },
+        {
+          "name": "GET /notifications",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications?page=0&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /notifications?isRead=false — unread only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications?isRead=false&page=0&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications"],
+              "query": [
+                { "key": "isRead", "value": "false" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔍 Search & Elasticsearch",
+      "item": [
+        {
+          "name": "GET /search/products?q=laptop",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is paginated\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('content');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/search/products?q=laptop&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["search", "products"],
+              "query": [
+                { "key": "q", "value": "laptop" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /search/products?q=&page=0&size=10 — empty query",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 — empty query returns all\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/search/products?q=&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["search", "products"],
+              "query": [
+                { "key": "q", "value": "" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /search/products?q=nonexistent123&page=0&size=10 — no results",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 — empty result set\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Results array is empty\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var content = jsonData.content || [];",
+                  "    pm.expect(content.length).to.equal(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/search/products?q=nonexistent123&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["search", "products"],
+              "query": [
+                { "key": "q", "value": "nonexistent123" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Actuator & Health Checks",
+      "item": [
+        {
+          "name": "GET /actuator/health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 — app is healthy\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Health status is UP\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.equal('UP');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{appUrl}}/actuator/health",
+              "host": ["{{appUrl}}"],
+              "path": ["actuator", "health"]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{appUrl}}/actuator/info",
+              "host": ["{{appUrl}}"],
+              "path": ["actuator", "info"]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/prometheus — metrics in Prometheus format",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 — Prometheus metrics available\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains JVM metrics\", function () {",
+                  "    var body = pm.response.text();",
+                  "    pm.expect(body).to.include('jvm_');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{appUrl}}/actuator/prometheus",
+              "host": ["{{appUrl}}"],
+              "path": ["actuator", "prometheus"]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics — available metrics list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Names list is returned\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('names');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{appUrl}}/actuator/metrics",
+              "host": ["{{appUrl}}"],
+              "path": ["actuator", "metrics"]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/http.server.requests",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{appUrl}}/actuator/metrics/http.server.requests",
+              "host": ["{{appUrl}}"],
+              "path": ["actuator", "metrics", "http.server.requests"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noon Homepage Architecture</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 20px; direction: ltr; }
+    h1 { color: #f5a623; }
+    h2 { color: #333; border-bottom: 2px solid #f5a623; padding-bottom: 6px; }
+    h3 { color: #555; margin-bottom: 4px; }
+    .section { background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 16px 0; padding: 16px 20px; }
+    .section-label { display: inline-block; background: #f5a623; color: #fff; font-size: 12px; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; font-weight: bold; }
+    .component { border-left: 3px solid #f5a623; margin: 8px 0 8px 16px; padding: 6px 12px; background: #fffdf5; }
+    .sub { border-left: 3px solid #ccc; margin: 4px 0 4px 28px; padding: 4px 10px; background: #fafafa; }
+    .leaf { color: #666; font-size: 13px; margin: 2px 0 2px 40px; }
+    code { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+    .note { color: #999; font-size: 12px; font-style: italic; }
+    .tag-badge { background: #333; color: #fff; border-radius: 4px; padding: 1px 6px; font-size: 11px; margin-right: 4px; }
+    .excluded { background: #ffe0e0; border: 1px dashed #f00; border-radius: 4px; padding: 8px 12px; color: #a00; margin: 8px 0; }
+  </style>
+</head>
+<body>
+
+<h1>🟡 Noon.com Egypt — Homepage Architecture</h1>
+<p class="note">Extracted sections: Main Header (Nav 1) → Secondary Navigation (Nav 2, mega menu excluded) → 10 Homepage Content Sections</p>
+
+<!-- ============================================================ -->
+<!--  SECTION 1: MAIN HEADER                                      -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 1</span>
+  <h2>Main Header <code>HeaderDesktop</code></h2>
+  <p class="note">Fixed top navigation bar</p>
+
+  <div class="component">
+    <h3>Logo</h3>
+    <div class="leaf">&lt;a id="btn_logo"&gt; &lt;img /&gt; (noon brand logo)</div>
+  </div>
+
+  <div class="component">
+    <h3>Delivery Location Selector</h3>
+    <div class="leaf">&lt;div class="DeliveryLocationSelector"&gt;</div>
+    <div class="sub">
+      <div class="leaf">📍 City label (e.g. "القاهرة • آخر")</div>
+      <div class="leaf">Dropdown trigger button</div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Search Bar <code>DesktopSiteSearch</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;input class="searchInput" /&gt; — animated placeholder (rotating search suggestions)</div>
+      <div class="leaf">&lt;button&gt; Search icon / submit</div>
+      <div class="leaf">&lt;div class="suggestions"&gt; — autocomplete dropdown</div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Language Selector</h3>
+    <div class="leaf">&lt;button&gt; Language toggle (AR / EN)</div>
+    <div class="leaf">&lt;img /&gt; Flag icon</div>
+  </div>
+
+  <div class="component">
+    <h3>User Menu</h3>
+    <div class="sub">
+      <div class="leaf">&lt;button class="loginTrigger"&gt; — Login / Account</div>
+      <div class="leaf">&lt;button&gt; Orders (الطلبيات)</div>
+      <div class="leaf">&lt;a class="wishlistLink"&gt; Wishlist / Favourites (المفضلة)</div>
+      <div class="leaf">&lt;a class="iconOnly"&gt; Cart / Basket icon</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SECTION 2: SECONDARY NAVIGATION (Category Nav Bar)          -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 2</span>
+  <h2>Secondary Navigation Bar <code>SiteNavigation</code></h2>
+  <p class="note">Horizontal scrollable category link bar — mega menu panels are excluded from our architecture</p>
+
+  <div class="component">
+    <h3>Navigation Scroll Handler <code>NavigationScrollHandler</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;button class="chevronWrapper"&gt; — Left scroll arrow</div>
+      <div class="leaf">&lt;ul class="wrapper"&gt; — List of category items</div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Category Nav Items <code>&lt;li&gt; × 13 categories</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;a&gt;&lt;span&gt; الإلكترونيات (Electronics)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; أزياء النساء (Women's Fashion)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; أزياء الرجال (Men's Fashion)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; أزياء الأطفال (Kids' Fashion)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; لوازم الجمال والبرفيوم (Beauty &amp; Perfume)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; لوازم البيت والأجهزة المنزلية (Home &amp; Appliances)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; البيبي (Baby)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; الألعاب (Toys)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; السوبرماركت (Supermarket)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; لوازم السيارات (Automotive)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; لوازم الصحة والتغذية (Health &amp; Nutrition)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; لوازم الرياضة (Sports)</div>
+      <div class="leaf">&lt;a&gt;&lt;span&gt; أدوات مكتبية والكتب (Office &amp; Books)</div>
+    </div>
+    <div class="excluded">⛔ Mega Menu <code>mainCategoryMenu / gridWrapper</code> — EXCLUDED from architecture (each &lt;li&gt; contains a hidden dropdown mega menu that is not included)</div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SECTION 3: PROMO STRIP BANNER                               -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 3</span>
+  <h2>Promo Strip Banner <code>BannerModuleStrip</code></h2>
+  <p class="note">Thin single-banner promotional strip (e.g. bank offers / installment offers)</p>
+
+  <div class="component">
+    <h3>Banner Container</h3>
+    <div class="sub">
+      <div class="leaf">&lt;a&gt; — Clickable banner link</div>
+      <div class="leaf">&lt;span class="wrapper"&gt; — Banner image wrapper</div>
+      <div class="leaf">&lt;img /&gt; — Promotional banner image</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SECTION 4: HERO BANNER SLIDER / AD CAROUSEL                 -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 4</span>
+  <h2>Hero Banner Slider <code>AdBannerSliderDesktop</code></h2>
+  <p class="note">Full-width auto-playing carousel of hero promotional banners</p>
+
+  <div class="component">
+    <h3>Swiper Viewport <code>swiperCover</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="viewport"&gt; — Slide viewport</div>
+      <div class="sub">
+        <div class="leaf">&lt;div class="container"&gt; — Slides track</div>
+        <div class="sub">
+          <div class="leaf">&lt;div class="bannerSlide"&gt; × N — Individual slides</div>
+          <div class="sub">
+            <div class="leaf">&lt;a&gt; — Link to offer / landing page</div>
+            <div class="leaf">&lt;img /&gt; — Full-width banner image</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Navigation Controls</h3>
+    <div class="leaf">&lt;button class="swiper-button-circle-left"&gt; — Previous slide arrow</div>
+    <div class="leaf">&lt;button class="swiper-button-circle-right"&gt; — Next slide arrow</div>
+    <div class="leaf">&lt;div class="pagination"&gt; — Dot indicators</div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SECTION 5: CATEGORY ICON SCROLLER                           -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 5</span>
+  <h2>Category Icon Scroller <code>BannerModuleScrollerDesktop</code></h2>
+  <p class="note">Horizontally scrollable row of category shortcut icons (e.g. عروض العيد, ستور السفر, خطط تقسيط)</p>
+
+  <div class="component">
+    <h3>Embla Scroll Container</h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="emblaContainer"&gt;</div>
+      <div class="sub">
+        <div class="leaf">&lt;div class="emblaSlide"&gt; × N — per category item</div>
+        <div class="sub">
+          <div class="leaf">&lt;a href="..."&gt; — Link to category/campaign</div>
+          <div class="leaf">&lt;img /&gt; — Category icon / illustration</div>
+          <div class="leaf">&lt;span&gt; — Category label text</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Scroll Controls</h3>
+    <div class="leaf">&lt;button class="disabled"&gt; — Left arrow (prev)</div>
+    <div class="leaf">&lt;button class="customNavigation"&gt; — Right arrow (next)</div>
+    <div class="leaf">&lt;div class="scrollBar"&gt; — Custom scrollbar drag handle</div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SECTION 6: DEALS / OFFERS GROUPED BLOCK                     -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 6</span>
+  <h2>Deals &amp; Offers Block <code>DefaultModulesRenderer (grouped)</code></h2>
+  <p class="note">Multi-module grouped section containing: "أشترى أكتر و بالك مرتاح" 2×2 banner grid + "شوف كل الخصومات" dynamic banners</p>
+
+  <div class="component">
+    <h3>Section Header <code>ModuleHeader</code></h3>
+    <div class="leaf">&lt;h2 class="desktop"&gt; — Section title: "أشترى أكتر و بالك مرتاح"</div>
+  </div>
+
+  <div class="component">
+    <h3>Banner Grid <code>BannerModuleStrip (2×2)</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="bannerRow"&gt; × 2 rows</div>
+      <div class="sub">
+        <div class="leaf">&lt;div class="bannerContainer"&gt; × 2 per row</div>
+        <div class="sub">
+          <div class="leaf">&lt;a&gt; — Clickable offer banner</div>
+          <div class="leaf">&lt;img /&gt; — Offer image</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Deals Scroller (Coupon / Brand deals) <code>BannerModuleScrollerDesktop</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="mediaWrapper"&gt; — Section image/icon</div>
+      <div class="leaf">&lt;div class="swiperContainer"&gt; — Scrollable deal items</div>
+      <div class="sub">
+        <div class="leaf">&lt;div class="emblaSlide"&gt; × N — Deal tiles</div>
+        <div class="sub">
+          <div class="leaf">&lt;div class="dealWrapper"&gt;</div>
+          <div class="leaf">&lt;a&gt; — Link to deal page</div>
+          <div class="leaf">&lt;img /&gt; — Deal banner image</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Section Header <code>ModuleHeader</code></h3>
+    <div class="leaf">&lt;h2 class="desktop"&gt; — Section title: "شوف كل الخصومات"</div>
+  </div>
+
+  <div class="component">
+    <h3>Dynamic Banner Block <code>DynamicBannerModule</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="dynamicBannerContainer"&gt; × N</div>
+      <div class="sub">
+        <div class="leaf">&lt;a&gt; — Clickable banner (e.g. كاوتش, نظارات الواقع الافتراضي)</div>
+        <div class="leaf">&lt;img /&gt; — Banner image</div>
+        <div class="leaf">&lt;span&gt; — Overlay label / discount text</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SECTION 7: BRAND / STORE FEATURE SECTION                    -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 7</span>
+  <h2>Brand Store Feature <code>ModuleHeader + ProductCarouselDesktopVirtualized</code></h2>
+  <p class="note">Branded section with header (e.g. DeFacto) + horizontal scrollable product carousel</p>
+
+  <div class="component">
+    <h3>Module Header <code>ModuleHeader</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="mediaWrapper"&gt; — Brand logo / banner image</div>
+      <div class="leaf">&lt;h2&gt; — Brand section title (e.g. "ستايلات العيد DeFacto")</div>
+      <div class="leaf">&lt;a class="shopNow"&gt; — "اشتري دلوقتي" CTA button</div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Product Carousel <code>ProductCarouselDesktopVirtualized</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="carouselContainer"&gt;</div>
+      <div class="sub">
+        <div class="leaf">&lt;div class="virtuosoViewport"&gt; — Virtual scroll viewport</div>
+        <div class="sub">
+          <div class="leaf">&lt;div class="itemsContainer"&gt;</div>
+          <div class="sub">
+            <div class="leaf">&lt;div class="carouselItem"&gt; × N — Product cards (see Product Card anatomy below)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SECTION 8: INSTALLMENT / PAYMENT PLANS BANNER               -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 8</span>
+  <h2>Payment Plans Banner <code>DynamicBannerModule</code></h2>
+  <p class="note">"توفير أكتر؟ شوف كل العروض" — horizontal row of bank installment plan cards</p>
+
+  <div class="component">
+    <h3>Section Header</h3>
+    <div class="leaf">&lt;h2&gt; "توفير أكتر؟ شوف كل العروض"</div>
+  </div>
+
+  <div class="component">
+    <h3>Bank Plan Cards</h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="dynamicBannerContainer"&gt; × N banks (Suez Canal Bank, Banque Misr, CIB, National Bank of Egypt, Sahoola, Halan, valU...)</div>
+      <div class="sub">
+        <div class="leaf">&lt;img /&gt; — Bank logo</div>
+        <div class="leaf">&lt;p&gt; — Installment plan label (e.g. "لحد 36 شهر")</div>
+        <div class="leaf">&lt;p&gt; — Discount/interest detail</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SECTION 9: SMART RECOMMENDATIONS (مقترحه لك)               -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 9</span>
+  <h2>Personalized Recommendations <code>ModuleHeader + ProductCarouselDesktopVirtualized</code></h2>
+  <p class="note">"مقترحه لك" — AI-driven personalised product carousel with filter tabs</p>
+
+  <div class="component">
+    <h3>Module Header</h3>
+    <div class="leaf">&lt;h2&gt; — "مقترحه لك" title</div>
+  </div>
+
+  <div class="component">
+    <h3>Filter Tabs Row</h3>
+    <div class="sub">
+      <div class="leaf">&lt;button&gt; — "أفضل المنتجات" tab</div>
+      <div class="leaf">&lt;button&gt; — "الستور الرسمي" tab</div>
+      <div class="leaf">&lt;button&gt; — Other category filters</div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Product Carousel <code>ProductCarouselDesktopVirtualized</code></h3>
+    <div class="leaf">Same structure as Section 7 product carousel — see Product Card anatomy below</div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  SECTION 10: PROMO OFFERS BANNER (عروض معمولة ليك)          -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Section 10</span>
+  <h2>Personalised Offer Banners <code>BannerModuleScrollerDesktop</code></h2>
+  <p class="note">"عروض معمولة ليك" — horizontally scrollable promotional offer banners (coupons, discounts)</p>
+
+  <div class="component">
+    <h3>Section Header</h3>
+    <div class="leaf">&lt;h2&gt; — "عروض معمولة ليك"</div>
+  </div>
+
+  <div class="component">
+    <h3>Offer Scroller</h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="emblaContainer"&gt;</div>
+      <div class="sub">
+        <div class="leaf">&lt;div class="emblaSlide"&gt; × N — Offer tiles</div>
+        <div class="sub">
+          <div class="leaf">&lt;a&gt; — Link to promo page</div>
+          <div class="leaf">&lt;img /&gt; — Offer banner (e.g. "شوف الكوبونات", coupon discount, buy 1 get 1)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  PRODUCT CARD ANATOMY (used in all carousels)                -->
+<!-- ============================================================ -->
+<div class="section" style="border-color:#f5a623; border-width:2px;">
+  <span class="section-label" style="background:#333;">🃏 Product Card Anatomy</span>
+  <h2>Product Card <code>carouselItem → productBoxLink</code></h2>
+  <p class="note">Used in all product carousel sections</p>
+
+  <div class="component">
+    <h3>Image Section <code>imageSection</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="slidesWrapper"&gt; — Multi-image slider (up to 3 images per product)</div>
+      <div class="sub">
+        <div class="leaf">&lt;div class="slide"&gt; × 3 — Product image slides</div>
+        <div class="sub">
+          <div class="leaf">&lt;div class="imageContainer"&gt;</div>
+          <div class="leaf">&lt;img class="productImage" /&gt;</div>
+        </div>
+        <div class="leaf">&lt;div class="paginationWrapper"&gt; — Slide dot indicators</div>
+        <div class="leaf">&lt;button class="prev"&gt; / &lt;button class="next"&gt; — Image navigation arrows</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Overlay Header <code>overlayHeader</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="tagsWrapper"&gt;</div>
+      <div class="sub">
+        <div class="leaf">&lt;div class="tagCover"&gt; — Product badge/tag</div>
+        <div class="sub">
+          <div class="leaf">&lt;span class="text"&gt; — e.g. "أفضل المنتجات" / "الستور الرسمي"</div>
+        </div>
+      </div>
+      <div class="leaf">&lt;button class="wishlistButton"&gt; — ♡ Save to wishlist icon</div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Overlay Footer <code>overlayFooter</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="actionsRow"&gt;</div>
+      <div class="sub">
+        <div class="leaf">&lt;button class="atcCta"&gt; — Add to Cart (+ icon)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Product Info <code>wrapper</code></h3>
+
+    <div class="sub">
+      <h4>Title</h4>
+      <div class="leaf">&lt;h2 class="title"&gt; — Product name (truncated)</div>
+    </div>
+
+    <div class="sub">
+      <h4>Rating <code>isRenderedOnNewProductBox</code></h4>
+      <div class="leaf">&lt;div class="starContainer"&gt; — Star rating visual (filled stars)</div>
+      <div class="leaf">&lt;div class="textCtr"&gt; — Numeric rating (e.g. "4.3")</div>
+      <div class="leaf">&lt;span class="countCtr"&gt; — Review count (e.g. "2.2K")</div>
+    </div>
+
+    <div class="sub">
+      <h4>Price Block <code>priceNudgesCtr</code></h4>
+      <div class="leaf">&lt;span class="currency"&gt; — Currency label "جنيه"</div>
+      <div class="leaf">&lt;strong class="amount"&gt; — Selling / discounted price</div>
+      <div class="leaf">&lt;span class="oldPrice strikeThrough"&gt; — Original price (strikethrough)</div>
+      <div class="leaf">&lt;span class="discount"&gt; — Discount percentage (e.g. "5%")</div>
+    </div>
+
+    <div class="sub">
+      <h4>Nudges / Badges <code>nudgesContainer</code></h4>
+      <div class="leaf">&lt;div class="nudge"&gt; × N — e.g.</div>
+      <div class="sub">
+        <div class="leaf">🏆 "#1 في [category]" — Best seller badge</div>
+        <div class="leaf">💸 "أقل سعر في 7 يوم" — Lowest price in 7 days</div>
+        <div class="leaf">🚚 "توصيل مجاني" — Free delivery</div>
+        <div class="leaf">⚡ "بتخلّص بسرعة" — Selling fast</div>
+        <div class="leaf">📦 "تم بيع +N مؤخرًا" — Recently sold count</div>
+        <div class="leaf">⚠️ "باقي N وحدات في المخزون" — Low stock warning</div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h4>Additional Info <code>additionalInfo</code></h4>
+      <div class="leaf">&lt;div class="supportDetailsRow"&gt; — e.g. FBN (Fulfilled by noon) indicator</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  FOOTER                                                       -->
+<!-- ============================================================ -->
+<div class="section">
+  <span class="section-label">Footer</span>
+  <h2>Footer <code>FooterDesktop</code></h2>
+
+  <div class="component">
+    <h3>Support Row <code>supportRow</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;p class="supportTitle"&gt; "نحن دائماً جاهزون لمساعدتك"</div>
+      <div class="leaf">&lt;a&gt; Help Center — help.noon.com</div>
+      <div class="leaf">&lt;a&gt; Email Support — egypt@noon.com</div>
+      <div class="leaf">&lt;a&gt; Phone Support — 16358</div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>Category Links Nav <code>navContainer</code></h3>
+    <div class="sub">
+      <div class="leaf">&lt;div class="categoryColumn"&gt; × 6 columns (Electronics, Fashion, Kitchen, Beauty, Kids, Top Brands)</div>
+      <div class="sub">
+        <div class="leaf">&lt;p class="categoryTitle"&gt; — Column heading</div>
+        <div class="leaf">&lt;a class="categoryLink"&gt; × N — Category links</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="component">
+    <h3>App Download &amp; Social</h3>
+    <div class="leaf">&lt;a&gt; App Store badge</div>
+    <div class="leaf">&lt;a&gt; Play Store badge</div>
+    <div class="leaf">Social media icons (links)</div>
+  </div>
+
+  <div class="component">
+    <h3>Legal / Links Bar</h3>
+    <div class="leaf">© 2026 noon — Careers, Warranty Policy, Sell With Us, Terms of Use, Privacy Policy</div>
+  </div>
+</div>
+
+</body>
+</html>

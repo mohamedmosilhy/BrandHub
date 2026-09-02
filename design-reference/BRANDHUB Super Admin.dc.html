@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #F6F7F9; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #d8d9e0; border: 3px solid transparent; background-clip: padding-box; border-radius: 99px; }
+  ::selection { background: #EEEDF9; }
+</style>
+</helmet>
+
+<div style="display: grid; grid-template-columns: 256px 1fr; height: 100vh; overflow: hidden; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #1A1A2E; font-size: 14px; background: #F6F7F9;">
+
+  <aside style="background: #fff; border-right: 1px solid #ECEDF1; display: flex; flex-direction: column; min-height: 0;">
+    <div style="display: flex; align-items: center; gap: 11px; height: 64px; padding: 0 20px; border-bottom: 1px solid #ECEDF1; flex-shrink: 0;">
+      <span style="width: 34px; height: 34px; border-radius: 9px; background: #1A1A2E; display: grid; place-items: center; color: #fff;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8.5 12 4l9 4.5v7L12 20l-9-4.5z"></path><path d="M3 8.5 12 13l9-4.5"></path><path d="M12 13v7"></path></svg>
+      </span>
+      <span style="font-weight: 800; font-size: 17px; letter-spacing: -.02em;">BRAND<span style="font-weight: 500; color: #9A9AAF;">HUB</span></span>
+    </div>
+
+    <div style="margin: 14px 16px 6px; padding: 11px 13px; border-radius: 11px; background: #1A1A2E; display: flex; align-items: center; gap: 10px;">
+      <span style="width: 30px; height: 30px; border-radius: 8px; background: #7F77DD; color: #fff; display: grid; place-items: center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3 4 6v6c0 4.6 3.4 8.2 8 9 4.6-.8 8-4.4 8-9V6z"></path></svg>
+      </span>
+      <span style="display: flex; flex-direction: column;">
+        <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .08em; color: #A9A5E6;">WORKSPACE</span>
+        <span style="font-size: 13px; font-weight: 700; color: #fff;">Super Admin</span>
+      </span>
+    </div>
+
+    <div style="padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;">
+      <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; padding: 12px 10px 6px;">WORKSPACE</span>
+      <sc-for list="{{ navOverview }}" as="n" hint-placeholder-count="1">
+        <button onClick="{{ n.go }}" style="display: flex; align-items: center; gap: 11px; padding: 10px 11px; border: 0; border-radius: 9px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: start; background: {{ n.bg }}; color: {{ n.fg }};" style-hover="background: #F3F3F7;">
+          <span style="width: 18px; display: grid; place-items: center;">{{ n.mark }}</span>
+          <span style="flex: 1;">{{ n.label }}</span>
+          <sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; background: #FCF2DC; color: #C98A12; border-radius: 99px; padding: 2px 7px;">{{ n.count }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+      <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; padding: 16px 10px 6px;">CATALOG</span>
+      <sc-for list="{{ navCatalog }}" as="n" hint-placeholder-count="4">
+        <button onClick="{{ n.go }}" style="display: flex; align-items: center; gap: 11px; padding: 10px 11px; border: 0; border-radius: 9px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: start; background: {{ n.bg }}; color: {{ n.fg }};" style-hover="background: #F3F3F7;">
+          <span style="width: 18px; display: grid; place-items: center;">{{ n.mark }}</span>
+          <span style="flex: 1;">{{ n.label }}</span>
+          <sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; background: #FCF2DC; color: #C98A12; border-radius: 99px; padding: 2px 7px;">{{ n.count }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+      <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; padding: 16px 10px 6px;">FINANCE</span>
+      <sc-for list="{{ navFinance }}" as="n" hint-placeholder-count="2">
+        <button onClick="{{ n.go }}" style="display: flex; align-items: center; gap: 11px; padding: 10px 11px; border: 0; border-radius: 9px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: start; background: {{ n.bg }}; color: {{ n.fg }};" style-hover="background: #F3F3F7;">
+          <span style="width: 18px; display: grid; place-items: center;">{{ n.mark }}</span>
+          <span style="flex: 1;">{{ n.label }}</span>
+          <sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; background: #FCF2DC; color: #C98A12; border-radius: 99px; padding: 2px 7px;">{{ n.count }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+      <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; color: #9A9AAF; padding: 16px 10px 6px;">PLATFORM</span>
+      <sc-for list="{{ navPlatform }}" as="n" hint-placeholder-count="3">
+        <button onClick="{{ n.go }}" style="display: flex; align-items: center; gap: 11px; padding: 10px 11px; border: 0; border-radius: 9px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: start; background: {{ n.bg }}; color: {{ n.fg }};" style-hover="background: #F3F3F7;">
+          <span style="width: 18px; display: grid; place-items: center;">{{ n.mark }}</span>
+          <span style="flex: 1;">{{ n.label }}</span>
+          <sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; background: #FCF2DC; color: #C98A12; border-radius: 99px; padding: 2px 7px;">{{ n.count }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: auto; padding: 14px; border-top: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+      <span style="width: 34px; height: 34px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 12px; font-weight: 800;">SA</span>
+      <span style="display: flex; flex-direction: column; min-width: 0;">
+        <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap;">Salim Al Rashdi</span>
+        <span style="font-size: 10.5px; color: #9A9AAF; white-space: nowrap;">Super Admin</span>
+      </span>
+    </div>
+  </aside>
+
+  <div style="display: flex; flex-direction: column; min-width: 0; min-height: 0;">
+    <header style="height: 64px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 14px; padding: 0 22px;">
+      <span style="font-size: 15px; font-weight: 800;">{{ viewTitle }}</span>
+      <span style="font-size: 12px; color: #9A9AAF;">{{ viewSub }}</span>
+      <button onClick="{{ primaryAction }}" style="margin-left: auto; border: 0; border-radius: 9px; padding: 10px 16px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; white-space: nowrap;" style-hover="background: #6860CC;">{{ primaryLabel }}</button>
+    </header>
+
+    <main style="flex: 1; overflow-y: auto; padding: 24px; min-height: 0;">
+
+      <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden; max-width: 1250px;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+            <input value="{{ search }}" onChange="{{ onSearch }}" placeholder="Search order, customer or seller" style="flex: 1; max-width: 300px; height: 38px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;" style-focus="border-color: #7F77DD;">
+            <sc-for list="{{ orderFilters }}" as="f" hint-placeholder-count="5">
+              <button onClick="{{ f.pick }}" style="height: 34px; padding: 0 13px; border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+            </sc-for>
+            <span style="margin-left: auto; font-size: 12px; color: #9A9AAF;">{{ orderCount }}</span>
+          </div>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #FAFAFB;">
+                <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">ORDER</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">CUSTOMER</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">SELLER</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">ITEMS</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">TOTAL</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">PAYMENT</th>
+                <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ orderRows }}" as="o" hint-placeholder-count="7">
+                <tr style="border-top: 1px solid #ECEDF1;" style-hover="background: #FAFAFE;">
+                  <td style="padding: 13px 18px;">
+                    <span style="display: flex; flex-direction: column; gap: 2px;">
+                      <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ o.code }}</span>
+                      <span style="font-size: 10.5px; color: #9A9AAF;">{{ o.date }}</span>
+                    </span>
+                  </td>
+                  <td style="padding: 13px 12px; font-size: 12.5px;">{{ o.customer }}</td>
+                  <td style="padding: 13px 12px; font-size: 12.5px; color: #5A5A72;">{{ o.seller }}</td>
+                  <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ o.items }}</td>
+                  <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ o.total }}</td>
+                  <td style="padding: 13px 12px;">
+                    <span style="display: inline-flex; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 5px 11px; background: {{ o.payBg }}; color: {{ o.payFg }};">{{ o.payment }}</span>
+                  </td>
+                  <td style="padding: 13px 18px;">
+                    <span style="display: inline-flex; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 5px 11px; background: {{ o.stBg }}; color: {{ o.stFg }};">{{ o.status }}</span>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCoupons }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 1fr 320px; gap: 16px; max-width: 1200px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+            <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; font-size: 13.5px; font-weight: 800;">Active and past coupons</div>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #FAFAFB;">
+                  <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">CODE</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">DISCOUNT</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">MIN SPEND</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">USED</th>
+                  <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">EXPIRES</th>
+                  <th style="text-align: end; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">STATE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ couponRows }}" as="c" hint-placeholder-count="6">
+                  <tr style="border-top: 1px solid #ECEDF1;" style-hover="background: #FAFAFE;">
+                    <td style="padding: 13px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 700;">{{ c.code }}</td>
+                    <td style="padding: 13px 12px; font-size: 12.5px;">{{ c.discount }}</td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ c.min }}</td>
+                    <td style="padding: 13px 12px;">
+                      <span style="display: flex; flex-direction: column; gap: 5px; min-width: 96px;">
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px;">{{ c.used }}</span>
+                        <span style="height: 4px; border-radius: 99px; background: #ECEDF1; overflow: hidden;">
+                          <span style="display: block; height: 100%; width: {{ c.pct }}; background: #7F77DD;"></span>
+                        </span>
+                      </span>
+                    </td>
+                    <td style="padding: 13px 12px; font-size: 12px; color: #5A5A72;">{{ c.expires }}</td>
+                    <td style="padding: 13px 18px; text-align: end;">
+                      <button onClick="{{ c.toggle }}" style="border: 1px solid {{ c.border }}; border-radius: 99px; padding: 5px 12px; background: {{ c.bg }}; color: {{ c.fg }}; font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer;">{{ c.state }}</button>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 13px; align-self: start;">
+            <span style="font-size: 13.5px; font-weight: 800;">New coupon</span>
+            <sc-for list="{{ couponFields }}" as="f" hint-placeholder-count="5">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 11.5px; font-weight: 600; color: #5A5A72;">{{ f.label }}</span>
+                <input placeholder="{{ f.placeholder }}" style="height: 40px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;" style-focus="border-color: #7F77DD;">
+              </div>
+            </sc-for>
+            <button onClick="{{ createCoupon }}" style="height: 42px; border: 0; border-radius: 10px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Create coupon</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isReviews }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 14px; max-width: 1050px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 16px 18px; display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 13.5px; font-weight: 800;">Review moderation</span>
+            <sc-for list="{{ reviewFilters }}" as="f" hint-placeholder-count="3">
+              <button onClick="{{ f.pick }}" style="height: 34px; padding: 0 13px; border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+            </sc-for>
+            <span style="margin-left: auto; font-size: 12px; color: #9A9AAF;">{{ reviewCount }}</span>
+          </div>
+          <sc-for list="{{ reviewRows }}" as="r" hint-placeholder-count="5">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; gap: 16px;">
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 9px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="width: 32px; height: 32px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 11.5px; font-weight: 800;">{{ r.initials }}</span>
+                  <span style="font-size: 13px; font-weight: 700;">{{ r.author }}</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #C98A12;">{{ r.stars }}</span>
+                  <span style="font-size: 11px; color: #9A9AAF;">{{ r.date }}</span>
+                  <span style="font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ r.stBg }}; color: {{ r.stFg }};">{{ r.status }}</span>
+                </div>
+                <span style="font-size: 12.5px; color: #3A3A52; line-height: 1.7;">{{ r.body }}</span>
+                <span style="font-size: 11.5px; color: #9A9AAF;">{{ r.product }}</span>
+                <sc-if value="{{ r.flagged }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size: 11.5px; font-weight: 600; color: #D64545;">{{ r.flagReason }}</span>
+                </sc-if>
+              </div>
+              <div style="width: 190px; flex-shrink: 0; display: flex; flex-direction: column; gap: 9px; justify-content: center;">
+                <button onClick="{{ r.approve }}" style="height: 36px; border: 0; border-radius: 9px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Publish</button>
+                <button onClick="{{ r.hide }}" style="height: 36px; border: 1px solid #ECEDF1; border-radius: 9px; background: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="border-color: #C9C6EE;">Hide</button>
+                <button onClick="{{ r.remove }}" style="height: 36px; border: 1px solid #F3D4D4; border-radius: 9px; background: #fff; color: #D64545; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="background: #FCEAEA;">Delete</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 1200px;">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+            <sc-for list="{{ overviewKpis }}" as="k" hint-placeholder-count="4">
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 12px; font-weight: 600; color: #5A5A72;">{{ k.label }}</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; letter-spacing: -.02em;">{{ k.value }}</span>
+                <span style="font-size: 11px; color: {{ k.tone }};">{{ k.sub }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 360px; gap: 16px;">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 16px;">
+              <div style="display: flex; align-items: baseline; gap: 10px;">
+                <span style="font-size: 13.5px; font-weight: 800;">Gross sales · last 12 weeks</span>
+                <span style="font-size: 11.5px; color: #9A9AAF;">OMR, weekly</span>
+              </div>
+              <div style="display: flex; align-items: flex-end; gap: 10px; height: 180px;">
+                <sc-for list="{{ salesBars }}" as="b" hint-placeholder-count="12">
+                  <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; justify-content: flex-end; height: 100%;">
+                    <span style="width: 100%; border-radius: 6px 6px 0 0; height: {{ b.h }}; background: {{ b.bg }};"></span>
+                    <span style="font-size: 9.5px; color: #9A9AAF;">{{ b.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+              <span style="font-size: 13.5px; font-weight: 800;">Needs attention</span>
+              <sc-for list="{{ attention }}" as="a" hint-placeholder-count="5">
+                <button onClick="{{ a.go }}" style="display: flex; align-items: center; gap: 11px; padding: 11px 12px; border: 1px solid #ECEDF1; border-radius: 12px; background: #fff; font-family: inherit; cursor: pointer; text-align: start;" style-hover="border-color: #C9C6EE;">
+                  <span style="width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 800; background: {{ a.tint }}; color: {{ a.fg }};">{{ a.count }}</span>
+                  <span style="flex: 1; font-size: 12.5px; font-weight: 600; color: #1A1A2E;">{{ a.label }}</span>
+                  <span style="font-size: 12px; color: #C9C9D4;">›</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+            <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; font-size: 13.5px; font-weight: 800;">Operational summary</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr);">
+              <sc-for list="{{ opsSummary }}" as="o" hint-placeholder-count="6">
+                <div style="padding: 16px 18px; border-bottom: 1px solid #ECEDF1; border-right: 1px solid #ECEDF1; display: flex; flex-direction: column; gap: 5px;">
+                  <span style="font-size: 11.5px; color: #9A9AAF;">{{ o.label }}</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700;">{{ o.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isProducts }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden; max-width: 1250px;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+            <input value="{{ search }}" onChange="{{ onSearch }}" placeholder="Search products, SKU or seller" style="flex: 1; max-width: 320px; height: 38px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;" style-focus="border-color: #7F77DD;">
+            <sc-for list="{{ productFilters }}" as="f" hint-placeholder-count="4">
+              <button onClick="{{ f.pick }}" style="height: 34px; padding: 0 13px; border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+            </sc-for>
+            <span style="margin-left: auto; font-size: 12px; color: #9A9AAF;">{{ productCount }}</span>
+          </div>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #FAFAFB;">
+                <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF; letter-spacing: .04em;">PRODUCT</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">SELLER</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">CATEGORY</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">PRICE</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">STOCK</th>
+                <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ productRows }}" as="p" hint-placeholder-count="7">
+                <tr style="border-top: 1px solid #ECEDF1;" style-hover="background: #FAFAFE;">
+                  <td style="padding: 13px 18px; display: flex; align-items: center; gap: 11px;">
+                    <span style="width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; overflow: hidden; background: {{ p.tone }};">{{ p.imgEl }}</span>
+                    <span style="display: flex; flex-direction: column; gap: 2px;">
+                      <span style="font-size: 12.5px; font-weight: 600;">{{ p.name }}</span>
+                      <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #9A9AAF;">{{ p.sku }}</span>
+                    </span>
+                  </td>
+                  <td style="padding: 13px 12px; font-size: 12.5px; color: #5A5A72;">{{ p.seller }}</td>
+                  <td style="padding: 13px 12px; font-size: 12.5px; color: #5A5A72;">{{ p.category }}</td>
+                  <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ p.price }}</td>
+                  <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: {{ p.stockFg }};">{{ p.stock }}</td>
+                  <td style="padding: 13px 18px;">
+                    <span style="display: inline-flex; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 5px 11px; background: {{ p.statusBg }}; color: {{ p.statusFg }};">{{ p.status }}</span>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCategories }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 1fr 340px; gap: 16px; max-width: 1200px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: center;">
+              <span style="flex: 1; font-size: 13.5px; font-weight: 800;">Storefront categories</span>
+              <button onClick="{{ refresh }}" style="border: 1px solid #ECEDF1; border-radius: 8px; background: #fff; padding: 7px 13px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;" style-hover="border-color: #C9C6EE;">Refresh</button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+              <sc-for list="{{ categoryCards }}" as="c" hint-placeholder-count="6">
+                <div style="border: 1px solid #ECEDF1; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column;">
+                  <div style="height: 92px; display: grid; place-items: center; background: {{ c.tone }};">{{ c.imgEl }}</div>
+                  <div style="padding: 11px 12px 13px; display: flex; flex-direction: column; gap: 6px;">
+                    <span style="font-size: 12.5px; font-weight: 700;">{{ c.name }}</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #9A9AAF;">{{ c.slug }}</span>
+                    <div style="display: flex; align-items: center; gap: 8px; padding-top: 2px;">
+                      <span style="font-size: 10.5px; font-weight: 700; border-radius: 99px; padding: 3px 9px; background: {{ c.stBg }}; color: {{ c.stFg }};">{{ c.status }}</span>
+                      <span style="font-size: 10.5px; color: #9A9AAF;">{{ c.count }}</span>
+                      <button onClick="{{ c.replace }}" style="margin-left: auto; border: 0; background: none; font-family: inherit; font-size: 11px; font-weight: 700; color: #7F77DD; cursor: pointer;">Replace image</button>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 13px; align-self: start;">
+            <span style="font-size: 13.5px; font-weight: 800;">New category</span>
+            <sc-for list="{{ categoryFields }}" as="f" hint-placeholder-count="3">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 11.5px; font-weight: 600; color: #5A5A72;">{{ f.label }}</span>
+                <input placeholder="{{ f.placeholder }}" style="height: 40px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;" style-focus="border-color: #7F77DD;">
+              </div>
+            </sc-for>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 11.5px; font-weight: 600; color: #5A5A72;">Description</span>
+              <textarea rows="3" placeholder="Shown on the category hero" style="border: 1px solid #ECEDF1; border-radius: 9px; padding: 10px 12px; font-family: inherit; font-size: 12.5px; outline: none; resize: vertical;" style-focus="border-color: #7F77DD;"></textarea>
+            </div>
+            <div style="border: 1.5px dashed #DEDFE6; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+              <span style="font-size: 12px; font-weight: 700; color: #5A5A72;">Category image</span>
+              <span style="font-size: 11px; color: #9A9AAF;">PNG or JPG · 1200×800</span>
+            </div>
+            <button onClick="{{ toggleCatActive }}" style="display: flex; align-items: center; gap: 9px; background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit;">
+              <span style="width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; color: #fff; font-size: 11px; border: 1.5px solid {{ catActiveBd }}; background: {{ catActiveBg }};">{{ catActiveMark }}</span>
+              <span style="font-size: 12.5px; color: #1A1A2E;">Active on storefront</span>
+            </button>
+            <button onClick="{{ saveCategory }}" style="height: 42px; border: 0; border-radius: 10px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Create category</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isProdApprovals }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 14px; max-width: 1100px;">
+          <sc-for list="{{ productRequests }}" as="r" hint-placeholder-count="4">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; gap: 16px;">
+              <span style="width: 74px; height: 74px; border-radius: 12px; display: grid; place-items: center; overflow: hidden; flex-shrink: 0; background: {{ r.tone }};">{{ r.imgEl }}</span>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 14px; font-weight: 800;">{{ r.name }}</span>
+                  <span style="font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ r.stBg }}; color: {{ r.stFg }};">{{ r.status }}</span>
+                </div>
+                <div style="display: flex; gap: 22px; flex-wrap: wrap;">
+                  <sc-for list="{{ r.facts }}" as="f" hint-placeholder-count="4">
+                    <span style="display: flex; flex-direction: column; gap: 3px;">
+                      <span style="font-size: 10.5px; color: #9A9AAF;">{{ f.label }}</span>
+                      <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ f.value }}</span>
+                    </span>
+                  </sc-for>
+                </div>
+                <span style="font-size: 12px; color: #5A5A72; line-height: 1.65;">{{ r.note }}</span>
+              </div>
+              <div style="width: 250px; flex-shrink: 0; display: flex; flex-direction: column; gap: 9px;">
+                <textarea rows="3" placeholder="Admin note or rejection reason" style="border: 1px solid #ECEDF1; border-radius: 9px; padding: 9px 11px; font-family: inherit; font-size: 12px; outline: none; resize: none;" style-focus="border-color: #7F77DD;"></textarea>
+                <div style="display: flex; gap: 9px;">
+                  <button onClick="{{ r.approve }}" style="flex: 1; height: 38px; border: 0; border-radius: 9px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Approve</button>
+                  <button onClick="{{ r.reject }}" style="flex: 1; height: 38px; border: 1px solid #F3D4D4; border-radius: 9px; background: #fff; color: #D64545; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="background: #FCEAEA;">Reject</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isAccApprovals }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; max-width: 1100px;">
+          <sc-for list="{{ sellerRequests }}" as="r" hint-placeholder-count="4">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 13px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="width: 42px; height: 42px; border-radius: 11px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 13px; font-weight: 800;">{{ r.initials }}</span>
+                <span style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                  <span style="font-size: 13.5px; font-weight: 800;">{{ r.store }}</span>
+                  <span style="font-size: 11.5px; color: #9A9AAF;">{{ r.owner }}</span>
+                </span>
+                <span style="font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ r.stBg }}; color: {{ r.stFg }};">{{ r.status }}</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <sc-for list="{{ r.facts }}" as="f" hint-placeholder-count="4">
+                  <span style="display: flex; flex-direction: column; gap: 3px; padding: 9px 11px; background: #FAFAFB; border-radius: 10px;">
+                    <span style="font-size: 10.5px; color: #9A9AAF;">{{ f.label }}</span>
+                    <span style="font-size: 12px; font-weight: 600;">{{ f.value }}</span>
+                  </span>
+                </sc-for>
+              </div>
+              <input placeholder="Audit note" style="height: 38px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12px; outline: none;" style-focus="border-color: #7F77DD;">
+              <div style="display: flex; gap: 9px;">
+                <button onClick="{{ r.approve }}" style="flex: 1; height: 38px; border: 0; border-radius: 9px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Approve account</button>
+                <button onClick="{{ r.reject }}" style="flex: 1; height: 38px; border: 1px solid #F3D4D4; border-radius: 9px; background: #fff; color: #D64545; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;" style-hover="background: #FCEAEA;">Reject</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isFinance }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 1200px;">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+            <sc-for list="{{ financeKpis }}" as="k" hint-placeholder-count="4">
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 12px; font-weight: 600; color: #5A5A72;">{{ k.label }}</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; letter-spacing: -.02em;">{{ k.value }}</span>
+                <span style="font-size: 11px; color: #9A9AAF;">{{ k.sub }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 320px; gap: 16px;">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+              <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; font-size: 13.5px; font-weight: 800;">Monthly ledger</div>
+              <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: #FAFAFB;">
+                    <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">MONTH</th>
+                    <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">GROSS</th>
+                    <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">COMMISSION</th>
+                    <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">PAYOUTS</th>
+                    <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">REFUNDS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <sc-for list="{{ ledger }}" as="l" hint-placeholder-count="6">
+                    <tr style="border-top: 1px solid #ECEDF1;">
+                      <td style="padding: 12px 18px; font-size: 12.5px; font-weight: 600;">{{ l.month }}</td>
+                      <td style="padding: 12px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ l.gross }}</td>
+                      <td style="padding: 12px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1F9D62;">{{ l.commission }}</td>
+                      <td style="padding: 12px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ l.payouts }}</td>
+                      <td style="padding: 12px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #D64545;">{{ l.refunds }}</td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 10px; align-self: start;">
+              <span style="font-size: 13.5px; font-weight: 800;">Workflows</span>
+              <sc-for list="{{ financeLinks }}" as="f" hint-placeholder-count="4">
+                <button onClick="{{ f.go }}" style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #ECEDF1; border-radius: 12px; background: #fff; font-family: inherit; cursor: pointer; text-align: start;" style-hover="border-color: #C9C6EE;">
+                  <span style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                    <span style="font-size: 12.5px; font-weight: 700;">{{ f.label }}</span>
+                    <span style="font-size: 11px; color: #9A9AAF;">{{ f.meta }}</span>
+                  </span>
+                  <span style="font-size: 12px; color: #C9C9D4;">›</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isReturns }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden; max-width: 1250px;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 13.5px; font-weight: 800;">Return tickets</span>
+            <span style="font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: #FCF2DC; color: #C98A12;">{{ returnsPending }}</span>
+            <button onClick="{{ refresh }}" style="margin-left: auto; border: 1px solid #ECEDF1; border-radius: 8px; background: #fff; padding: 7px 13px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;" style-hover="border-color: #C9C6EE;">Refresh</button>
+          </div>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #FAFAFB;">
+                <th style="text-align: start; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">TICKET</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">ORDER</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">CUSTOMER</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">REASON</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">REFUND</th>
+                <th style="text-align: start; padding: 11px 12px; font-size: 11px; font-weight: 700; color: #9A9AAF;">STATUS</th>
+                <th style="text-align: end; padding: 11px 18px; font-size: 11px; font-weight: 700; color: #9A9AAF;">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ returnRows }}" as="r" hint-placeholder-count="6">
+                <tr style="border-top: 1px solid #ECEDF1;" style-hover="background: #FAFAFE;">
+                  <td style="padding: 13px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;">{{ r.no }}</td>
+                  <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #5A5A72;">{{ r.order }}</td>
+                  <td style="padding: 13px 12px; font-size: 12.5px;">{{ r.customer }}</td>
+                  <td style="padding: 13px 12px; font-size: 12.5px; color: #5A5A72;">{{ r.reason }}</td>
+                  <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">{{ r.refund }}</td>
+                  <td style="padding: 13px 12px;">
+                    <span style="display: inline-flex; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 5px 11px; background: {{ r.stBg }}; color: {{ r.stFg }};">{{ r.status }}</span>
+                  </td>
+                  <td style="padding: 13px 18px; text-align: end;">
+                    <sc-if value="{{ r.pending }}" hint-placeholder-val="{{ true }}">
+                      <span style="display: inline-flex; gap: 8px;">
+                        <button onClick="{{ r.approve }}" style="border: 0; border-radius: 8px; padding: 7px 13px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Approve</button>
+                        <button onClick="{{ r.reject }}" style="border: 1px solid #F3D4D4; border-radius: 8px; padding: 7px 13px; background: #fff; color: #D64545; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer;" style-hover="background: #FCEAEA;">Reject</button>
+                      </span>
+                    </sc-if>
+                    <sc-if value="{{ r.settled }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size: 11.5px; color: #9A9AAF;">{{ r.note }}</span>
+                    </sc-if>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCreateUser }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 1fr 320px; gap: 16px; max-width: 1050px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 9px;">
+              <span style="font-size: 11.5px; font-weight: 700; color: #5A5A72;">User role</span>
+              <div style="display: flex; gap: 9px; flex-wrap: wrap;">
+                <sc-for list="{{ newUserRoles }}" as="r" hint-placeholder-count="5">
+                  <button onClick="{{ r.pick }}" style="height: 38px; padding: 0 15px; border-radius: 9px; font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; border: 1px solid {{ r.border }}; background: {{ r.bg }}; color: {{ r.fg }};">{{ r.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="height: 1px; background: #ECEDF1;"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <sc-for list="{{ newUserFields }}" as="f" hint-placeholder-count="6">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <span style="font-size: 11.5px; font-weight: 600; color: #5A5A72;">{{ f.label }}</span>
+                  <input type="{{ f.type }}" placeholder="{{ f.placeholder }}" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;" style-focus="border-color: #7F77DD;">
+                </div>
+              </sc-for>
+            </div>
+            <div style="display: flex; gap: 10px; padding-top: 4px;">
+              <button onClick="{{ createUser }}" style="height: 44px; padding: 0 22px; border: 0; border-radius: 10px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Create user</button>
+              <button style="height: 44px; padding: 0 22px; border: 1px solid #ECEDF1; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #C9C6EE;">Cancel</button>
+            </div>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 11px; align-self: start;">
+            <span style="font-size: 13.5px; font-weight: 800;">{{ newUserRole }} access</span>
+            <sc-for list="{{ newUserAccess }}" as="a" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; gap: 9px;">
+                <span style="width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; font-size: 11px; background: {{ a.bg }}; color: {{ a.fg }};">{{ a.mark }}</span>
+                <span style="font-size: 12px; color: {{ a.textFg }};">{{ a.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isAds }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 1fr 340px; gap: 16px; max-width: 1150px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center;">
+              <span style="flex: 1; font-size: 13.5px; font-weight: 800;">Announcement marquee</span>
+              <button onClick="{{ restoreAds }}" style="border: 1px solid #ECEDF1; border-radius: 8px; background: #fff; padding: 7px 13px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;" style-hover="border-color: #C9C6EE;">Restore defaults</button>
+            </div>
+            <sc-for list="{{ adRows }}" as="a" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #ECEDF1; border-radius: 11px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9A9AAF;">{{ a.n }}</span>
+                <input value="{{ a.text }}" onChange="{{ a.edit }}" style="flex: 1; height: 34px; border: 1px solid transparent; border-radius: 8px; padding: 0 10px; font-family: inherit; font-size: 12.5px; outline: none; background: #FAFAFB;" style-focus="border-color: #7F77DD;">
+                <button onClick="{{ a.up }}" style="width: 30px; height: 30px; border: 1px solid #ECEDF1; border-radius: 8px; background: #fff; cursor: pointer; font-family: inherit; color: #5A5A72;" style-hover="border-color: #C9C6EE;">↑</button>
+                <button onClick="{{ a.down }}" style="width: 30px; height: 30px; border: 1px solid #ECEDF1; border-radius: 8px; background: #fff; cursor: pointer; font-family: inherit; color: #5A5A72;" style-hover="border-color: #C9C6EE;">↓</button>
+                <button onClick="{{ a.remove }}" style="width: 30px; height: 30px; border: 1px solid #F3D4D4; border-radius: 8px; background: #fff; cursor: pointer; font-family: inherit; color: #D64545;" style-hover="background: #FCEAEA;">✕</button>
+              </div>
+            </sc-for>
+            <div style="display: flex; gap: 10px; padding-top: 4px;">
+              <input value="{{ adDraft }}" onChange="{{ onAdDraft }}" placeholder="New announcement text" style="flex: 1; height: 42px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;" style-focus="border-color: #7F77DD;">
+              <button onClick="{{ addAd }}" style="height: 42px; padding: 0 18px; border: 0; border-radius: 9px; background: #1A1A2E; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;">Add</button>
+              <button onClick="{{ saveAds }}" style="height: 42px; padding: 0 18px; border: 0; border-radius: 9px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Save</button>
+            </div>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px; align-self: start;">
+            <span style="font-size: 13.5px; font-weight: 800;">Storefront preview</span>
+            <div style="border-radius: 12px; overflow: hidden; border: 1px solid #ECEDF1;">
+              <div style="background: #1A1A2E; color: #fff; padding: 11px 14px; font-size: 11.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ adPreview }}</div>
+              <div style="height: 74px; background: #FAFAFB; display: grid; place-items: center; font-size: 11px; color: #9A9AAF;">Storefront header</div>
+            </div>
+            <span style="font-size: 11.5px; color: #9A9AAF; line-height: 1.65;">Messages rotate every six seconds in the order listed.</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isOffer }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 1fr 360px; gap: 16px; max-width: 1150px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+            <span style="font-size: 13.5px; font-weight: 800;">Exclusive offer block</span>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 11.5px; font-weight: 600; color: #5A5A72;">Offer title</span>
+              <input value="{{ offerTitle }}" onChange="{{ onOfferTitle }}" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;" style-focus="border-color: #7F77DD;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 11.5px; font-weight: 600; color: #5A5A72;">Offer copy</span>
+              <textarea rows="3" value="{{ offerCopy }}" onChange="{{ onOfferCopy }}" style="border: 1px solid #ECEDF1; border-radius: 9px; padding: 10px 12px; font-family: inherit; font-size: 12.5px; outline: none; resize: vertical;" style-focus="border-color: #7F77DD;"></textarea>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 11.5px; font-weight: 600; color: #5A5A72;">Featured product</span>
+                <input value="A2 Series wireless headphones" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;" style-focus="border-color: #7F77DD;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 11.5px; font-weight: 600; color: #5A5A72;">Countdown ends</span>
+                <input value="31 Aug 2026 · 23:59" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 9px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;" style-focus="border-color: #7F77DD;">
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <sc-for list="{{ offerToggles }}" as="o" hint-placeholder-count="3">
+                <button onClick="{{ o.toggle }}" style="display: flex; align-items: center; gap: 10px; background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit;">
+                  <span style="width: 36px; height: 21px; border-radius: 99px; padding: 2px; display: flex; justify-content: {{ o.justify }}; background: {{ o.track }};">
+                    <span style="width: 17px; height: 17px; border-radius: 99px; background: #fff;"></span>
+                  </span>
+                  <span style="font-size: 12.5px; color: #1A1A2E;">{{ o.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="display: flex; gap: 10px; padding-top: 4px;">
+              <button onClick="{{ saveOffer }}" style="height: 44px; padding: 0 22px; border: 0; border-radius: 10px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Save offer</button>
+              <button onClick="{{ resetOffer }}" style="height: 44px; padding: 0 22px; border: 1px solid #ECEDF1; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #C9C6EE;">Reset to default</button>
+            </div>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px; align-self: start;">
+            <span style="font-size: 13.5px; font-weight: 800;">Preview</span>
+            <div style="border-radius: 14px; padding: 20px; background: linear-gradient(150deg, #1A1A2E 0%, #4A4470 100%); color: #fff; display: flex; flex-direction: column; gap: 10px;">
+              <span style="font-size: 10.5px; font-weight: 700; letter-spacing: .1em; color: #A9A5E6;">EXCLUSIVE</span>
+              <span style="font-size: 18px; font-weight: 800; line-height: 1.3;">{{ offerTitle }}</span>
+              <span style="font-size: 12px; color: rgba(255,255,255,.72); line-height: 1.65;">{{ offerCopy }}</span>
+              <div style="display: flex; gap: 8px; padding-top: 6px;">
+                <sc-for list="{{ countdown }}" as="c" hint-placeholder-count="4">
+                  <span style="flex: 1; background: rgba(255,255,255,.1); border-radius: 10px; padding: 9px 6px; display: flex; flex-direction: column; align-items: center; gap: 3px;">
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700;">{{ c.value }}</span>
+                    <span style="font-size: 9px; color: rgba(255,255,255,.55);">{{ c.label }}</span>
+                  </span>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isNotifications }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden; max-width: 1000px;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 13.5px; font-weight: 800;">Platform notifications</span>
+            <span style="font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: #EEEDF9; color: #7F77DD;">{{ unreadLabel }}</span>
+            <button onClick="{{ markAllRead }}" style="margin-left: auto; border: 1px solid #ECEDF1; border-radius: 8px; background: #fff; padding: 7px 13px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;" style-hover="border-color: #C9C6EE;">Mark all read</button>
+            <button onClick="{{ refresh }}" style="border: 1px solid #ECEDF1; border-radius: 8px; background: #fff; padding: 7px 13px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;" style-hover="border-color: #C9C6EE;">Refresh</button>
+          </div>
+          <sc-for list="{{ notificationRows }}" as="n" hint-placeholder-count="6">
+            <div onClick="{{ n.read }}" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #ECEDF1; cursor: pointer; background: {{ n.bg }};" style-hover="background: #FAFAFE;">
+              <span style="width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; font-size: 12px; font-weight: 800; background: {{ n.tint }}; color: {{ n.fg }};">{{ n.mark }}</span>
+              <span style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                <span style="font-size: 12.5px; font-weight: {{ n.weight }};">{{ n.title }}</span>
+                <span style="font-size: 11.5px; color: #9A9AAF; line-height: 1.6;">{{ n.body }}</span>
+              </span>
+              <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                <span style="font-size: 11px; color: #9A9AAF; white-space: nowrap;">{{ n.time }}</span>
+                <sc-if value="{{ n.unread }}" hint-placeholder-val="{{ false }}">
+                  <span style="width: 7px; height: 7px; border-radius: 99px; background: #7F77DD;"></span>
+                </sc-if>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPayouts }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 1200px;">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+            <sc-for list="{{ payoutKpis }}" as="k" hint-placeholder-count="4">
+              <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 12px; font-weight: 600; color: #5A5A72;">{{ k.label }}</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; letter-spacing: -.02em;">{{ k.value }}</span>
+                <span style="font-size: 11px; color: #9A9AAF;">{{ k.sub }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+            <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center;">
+              <span style="font-size: 13.5px; font-weight: 800;">Seller payouts · August 2026</span>
+              <span style="margin-left: auto; font-size: 11.5px; color: #9A9AAF;">Amounts calculated from delivered orders minus platform commission</span>
+            </div>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #FAFAFB;">
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">SELLER</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">ORDERS</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">GROSS</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">COMMISSION</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">PAYOUT</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">IBAN</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">STATUS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ payouts }}" as="p" hint-placeholder-count="6">
+                  <tr style="border-top: 1px solid #ECEDF1;">
+                    <td style="padding: 13px 18px;">
+                      <span style="display: flex; align-items: center; gap: 10px;">
+                        <span style="width: 32px; height: 32px; border-radius: 8px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 11px; font-weight: 800;">{{ p.initials }}</span>
+                        <span style="display: flex; flex-direction: column; gap: 2px;">
+                          <span style="font-size: 12.5px; font-weight: 700;">{{ p.name }}</span>
+                          <span style="font-size: 10.5px; color: #9A9AAF;">{{ p.bank }}</span>
+                        </span>
+                      </span>
+                    </td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">{{ p.orders }}</td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">{{ p.gross }}</td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #D64545;">{{ p.commission }}</td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;">{{ p.payout }}</td>
+                    <td style="padding: 13px 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #5A5A72;">{{ p.iban }}</td>
+                    <td style="padding: 13px 18px;">
+                      <sc-if value="{{ p.paid }}" hint-placeholder-val="{{ false }}">
+                        <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 5px 11px; background: #E6F6EE; color: #1F9D62;">
+                          <span style="width: 6px; height: 6px; border-radius: 99px; background: currentColor;"></span>Paid
+                        </span>
+                      </sc-if>
+                      <sc-if value="{{ p.unpaid }}" hint-placeholder-val="{{ true }}">
+                        <button onClick="{{ p.pay }}" style="border: 0; border-radius: 8px; padding: 7px 14px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap;" style-hover="background: #6860CC;">Pay seller</button>
+                      </sc-if>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isWallets }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 360px 1fr; gap: 16px; max-width: 1200px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-size: 13.5px; font-weight: 800;">Find a customer</span>
+            <div style="display: flex; align-items: center; gap: 8px; background: #F3F3F7; border-radius: 9px; height: 40px; padding: 0 13px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A9AAF" stroke-width="1.9"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+              <input value="{{ search }}" onChange="{{ onSearch }}" placeholder="Name, email or phone" style="flex: 1; border: 0; outline: none; background: transparent; font-family: inherit; font-size: 12.5px; min-width: 0;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <sc-for list="{{ customers }}" as="cu" hint-placeholder-count="5">
+                <button onClick="{{ cu.pick }}" style="display: flex; align-items: center; gap: 11px; padding: 10px; border: 1px solid {{ cu.border }}; border-radius: 11px; background: {{ cu.bg }}; cursor: pointer; font-family: inherit; text-align: start;" style-hover="border-color: #C9C6EE;">
+                  <span style="width: 32px; height: 32px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 11px; font-weight: 800;">{{ cu.initials }}</span>
+                  <span style="flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                    <span style="font-size: 12.5px; font-weight: 700;">{{ cu.name }}</span>
+                    <span style="font-size: 10.5px; color: #9A9AAF;">{{ cu.email }}</span>
+                  </span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;">{{ cu.balance }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 18px;">
+              <span style="width: 56px; height: 56px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 19px; font-weight: 800;">{{ selected.initials }}</span>
+              <span style="display: flex; flex-direction: column; gap: 4px;">
+                <span style="font-size: 15px; font-weight: 800;">{{ selected.name }}</span>
+                <span style="font-size: 11.5px; color: #9A9AAF;">{{ selected.email }} · {{ selected.phone }}</span>
+              </span>
+              <span style="margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 3px;">
+                <span style="font-size: 10.5px; color: #9A9AAF;">Wallet balance</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700;">{{ selected.balance }}</span>
+              </span>
+              <button onClick="{{ openCredit }}" style="border: 0; border-radius: 9px; padding: 11px 17px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; white-space: nowrap;" style-hover="background: #6860CC;">Credit wallet</button>
+            </div>
+            <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+              <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; font-size: 13.5px; font-weight: 800;">Transactions</div>
+              <sc-for list="{{ transactions }}" as="tx" hint-placeholder-count="6">
+                <div style="display: flex; align-items: center; gap: 14px; padding: 13px 18px; border-bottom: 1px solid #F1F1F5;">
+                  <span style="width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 13px; background: {{ tx.tint }}; color: {{ tx.fg }};">{{ tx.mark }}</span>
+                  <span style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 12.5px; font-weight: 600;">{{ tx.label }}</span>
+                    <span style="font-size: 10.5px; color: #9A9AAF;">{{ tx.meta }}</span>
+                  </span>
+                  <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: {{ tx.fg }};">{{ tx.amount }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isUsers }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden; max-width: 1200px;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px; background: #F3F3F7; border-radius: 9px; height: 38px; padding: 0 13px; width: 280px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A9AAF" stroke-width="1.9"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+              <input value="{{ search }}" onChange="{{ onSearch }}" placeholder="Search users" style="flex: 1; border: 0; outline: none; background: transparent; font-family: inherit; font-size: 12.5px; min-width: 0;">
+            </div>
+            <div style="margin-left: auto; display: flex; gap: 7px;">
+              <sc-for list="{{ roleFilters }}" as="f" hint-placeholder-count="5">
+                <button onClick="{{ f.pick }}" style="border: 1px solid {{ f.border }}; border-radius: 99px; padding: 6px 13px; font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap; background: {{ f.bg }}; color: {{ f.fg }};">{{ f.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #FAFAFB;">
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">USER</th>
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">ROLE</th>
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">JOINED</th>
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">STATUS</th>
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ users }}" as="u" hint-placeholder-count="7">
+                <tr style="border-top: 1px solid #ECEDF1;">
+                  <td style="padding: 12px 18px;">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                      <span style="width: 32px; height: 32px; border-radius: 99px; background: #EEEDF9; color: #7F77DD; display: grid; place-items: center; font-size: 11px; font-weight: 800;">{{ u.initials }}</span>
+                      <span style="display: flex; flex-direction: column; gap: 2px;">
+                        <span style="font-size: 12.5px; font-weight: 700;">{{ u.name }}</span>
+                        <span style="font-size: 10.5px; color: #9A9AAF;">{{ u.email }}</span>
+                      </span>
+                    </span>
+                  </td>
+                  <td style="padding: 12px;">
+                    <span style="font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ u.roleBg }}; color: {{ u.roleFg }};">{{ u.role }}</span>
+                  </td>
+                  <td style="padding: 12px; font-size: 12px; color: #5A5A72;">{{ u.joined }}</td>
+                  <td style="padding: 12px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; border-radius: 99px; padding: 4px 10px; background: {{ u.statusBg }}; color: {{ u.statusFg }};">
+                      <span style="width: 6px; height: 6px; border-radius: 99px; background: currentColor;"></span>{{ u.status }}
+                    </span>
+                  </td>
+                  <td style="padding: 12px 18px;">
+                    <span style="display: flex; gap: 6px;">
+                      <button onClick="{{ u.edit }}" style="border: 1px solid #ECEDF1; border-radius: 8px; padding: 6px 11px; background: #fff; font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">Edit</button>
+                      <button onClick="{{ u.reset }}" style="border: 1px solid #ECEDF1; border-radius: 8px; padding: 6px 11px; background: #fff; font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer;" style-hover="border-color: #7F77DD;">Reset password</button>
+                      <button onClick="{{ u.block }}" style="border: 1px solid #ECEDF1; border-radius: 8px; padding: 6px 11px; background: #fff; font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer; color: {{ u.blockFg }};" style-hover="border-color: #D64545;">{{ u.blockLabel }}</button>
+                    </span>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRoles }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden; max-width: 1100px;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; display: flex; align-items: center;">
+            <span style="font-size: 13.5px; font-weight: 800;">Roles and permissions</span>
+            <span style="margin-left: auto; font-size: 11.5px; color: #9A9AAF;">Click a cell to grant or revoke</span>
+          </div>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #FAFAFB;">
+                <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 12px 18px;">PERMISSION</th>
+                <sc-for list="{{ roleCols }}" as="rc" hint-placeholder-count="5">
+                  <th style="text-align: center; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 12px 8px;">{{ rc.label }}</th>
+                </sc-for>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ permRows }}" as="row" hint-placeholder-count="8">
+                <tr style="border-top: 1px solid #ECEDF1;">
+                  <td style="padding: 11px 18px; font-size: 12.5px; font-weight: 600;">{{ row.label }}</td>
+                  <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="5">
+                    <td style="padding: 11px 8px; text-align: center;">
+                      <button onClick="{{ cell.toggle }}" style="width: 26px; height: 26px; border-radius: 7px; border: 1px solid {{ cell.border }}; background: {{ cell.bg }}; color: {{ cell.fg }}; font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer; line-height: 1;">{{ cell.mark }}</button>
+                    </td>
+                  </sc-for>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isShipping }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: 1fr 320px; gap: 16px; max-width: 1150px;">
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; overflow: hidden;">
+            <div style="padding: 14px 18px; border-bottom: 1px solid #ECEDF1; font-size: 13.5px; font-weight: 800;">Shipping rates</div>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #FAFAFB;">
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">AREA</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">GOVERNORATE</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">PRICE</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 12px;">ETA</th>
+                  <th style="text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: #9A9AAF; padding: 11px 18px;">ACTIVE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ rates }}" as="r" hint-placeholder-count="7">
+                  <tr style="border-top: 1px solid #ECEDF1;">
+                    <td style="padding: 12px 18px; font-size: 12.5px; font-weight: 600;">{{ r.area }}</td>
+                    <td style="padding: 12px; font-size: 12px; color: #5A5A72;">{{ r.gov }}</td>
+                    <td style="padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 600;">{{ r.price }}</td>
+                    <td style="padding: 12px; font-size: 12px; color: #5A5A72;">{{ r.eta }}</td>
+                    <td style="padding: 12px 18px;">
+                      <button onClick="{{ r.toggle }}" style="width: 42px; height: 24px; border-radius: 99px; border: 0; cursor: pointer; padding: 3px; display: flex; justify-content: {{ r.justify }}; background: {{ r.trackBg }};">
+                        <span style="width: 18px; height: 18px; border-radius: 99px; background: #fff; display: block;"></span>
+                      </button>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div style="background: #fff; border: 1px solid #ECEDF1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px; align-self: flex-start;">
+            <span style="font-size: 13.5px; font-weight: 800;">Add shipping rate</span>
+            <sc-for list="{{ rateFields }}" as="f" hint-placeholder-count="4">
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">{{ f.label }}</span>
+                <input placeholder="{{ f.placeholder }}" style="height: 40px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 12px; font-family: inherit; font-size: 12.5px; outline: none;">
+              </label>
+            </sc-for>
+            <button onClick="{{ addRate }}" style="height: 42px; border: 0; border-radius: 10px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; text-align: left; padding: 0 14px;" style-hover="background: #6860CC;">Save rate</button>
+          </div>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <sc-if value="{{ payModalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position: fixed; inset: 0; background: rgba(26,26,46,.45); display: grid; place-items: center; z-index: 60;">
+      <div style="width: 460px; background: #fff; border-radius: 18px; box-shadow: 0 14px 40px rgba(26,26,46,.24); overflow: hidden;">
+        <div style="padding: 18px 22px; border-bottom: 1px solid #ECEDF1; display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 15px; font-weight: 800;">Pay seller</span>
+          <span style="font-size: 12px; color: #9A9AAF;">{{ payTarget.name }} · {{ payTarget.bank }}</span>
+        </div>
+        <div style="padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="background: #FAFAFB; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+            <sc-for list="{{ payRows }}" as="pr" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; font-size: 12px;">
+                <span style="color: #5A5A72;">{{ pr.label }}</span>
+                <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-weight: 700;">{{ pr.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Transfer reference</span>
+            <input placeholder="e.g. BM-TRF-99120" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: inherit; font-size: 12.5px; outline: none;">
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Payout proof</span>
+            <span style="border: 1.5px dashed #C9C6EE; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 6px; background: #FAFAFE; cursor: pointer;">
+              <span style="font-size: 18px;">⬆</span>
+              <span style="font-size: 11.5px; font-weight: 700; color: #7F77DD;">Upload transfer receipt</span>
+              <span style="font-size: 10.5px; color: #9A9AAF;">PNG or JPG, up to 5 MB</span>
+            </span>
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Notes</span>
+            <textarea placeholder="Optional note kept on the payout record" style="min-height: 64px; resize: none; border: 1px solid #ECEDF1; border-radius: 10px; padding: 10px 13px; font-family: inherit; font-size: 12.5px; outline: none;"></textarea>
+          </label>
+        </div>
+        <div style="padding: 16px 22px; border-top: 1px solid #ECEDF1; display: flex; gap: 10px;">
+          <button onClick="{{ closeModal }}" style="flex: 1; height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;">Cancel</button>
+          <button onClick="{{ confirmPay }}" style="flex: 1; height: 42px; border: 0; border-radius: 10px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Confirm payout</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ creditModalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position: fixed; inset: 0; background: rgba(26,26,46,.45); display: grid; place-items: center; z-index: 60;">
+      <div style="width: 420px; background: #fff; border-radius: 18px; box-shadow: 0 14px 40px rgba(26,26,46,.24); overflow: hidden;">
+        <div style="padding: 18px 22px; border-bottom: 1px solid #ECEDF1; display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 15px; font-weight: 800;">Credit customer wallet</span>
+          <span style="font-size: 12px; color: #9A9AAF;">{{ selected.name }} · balance {{ selected.balance }}</span>
+        </div>
+        <div style="padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Amount (OMR)</span>
+            <input placeholder="0.000" style="height: 46px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; outline: none;">
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Reason</span>
+            <select style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 11px; font-family: inherit; font-size: 12.5px; background: #fff; outline: none;">
+              <option>Goodwill credit</option>
+              <option>Refund — return approved</option>
+              <option>Refund — failed delivery</option>
+              <option>Campaign credit</option>
+            </select>
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: #5A5A72;">Reference</span>
+            <input placeholder="Ticket or order number" style="height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; padding: 0 13px; font-family: inherit; font-size: 12.5px; outline: none;">
+          </label>
+        </div>
+        <div style="padding: 16px 22px; border-top: 1px solid #ECEDF1; display: flex; gap: 10px;">
+          <button onClick="{{ closeModal }}" style="flex: 1; height: 42px; border: 1px solid #ECEDF1; border-radius: 10px; background: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;">Cancel</button>
+          <button onClick="{{ confirmCredit }}" style="flex: 1; height: 42px; border: 0; border-radius: 10px; background: #7F77DD; color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;" style-hover="background: #6860CC;">Credit wallet</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; right: 24px; bottom: 24px; background: #1A1A2E; color: #fff; border-radius: 12px; padding: 13px 18px; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 9px; z-index: 70;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FE3B8" stroke-width="2.4"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>
+      {{ toast }}
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:940}}">
+const PAYOUTS = [
+  { name: 'A2 Official Store', initials: 'A2', bank: 'Bank Muscat', orders: 184, gross: '12,480.000', commission: '1,872.000', payout: '10,608.000', iban: 'OM12 0018 •••• 4402' },
+  { name: 'Muscat Home Goods', initials: 'MH', bank: 'NBO', orders: 96, gross: '6,240.500', commission: '936.075', payout: '5,304.425', iban: 'OM55 0021 •••• 7719' },
+  { name: 'Layali Beauty', initials: 'LB', bank: 'Bank Dhofar', orders: 142, gross: '4,910.200', commission: '736.530', payout: '4,173.670', iban: 'OM33 0044 •••• 1180' },
+  { name: 'Gulf Tech Traders', initials: 'GT', bank: 'Sohar International', orders: 58, gross: '3,120.000', commission: '468.000', payout: '2,652.000', iban: 'OM77 0090 •••• 6634' },
+  { name: 'Nizwa Crafts', initials: 'NC', bank: 'Bank Muscat', orders: 41, gross: '1,845.750', commission: '276.860', payout: '1,568.890', iban: 'OM12 0018 •••• 2251' },
+  { name: 'Salalah Fresh', initials: 'SF', bank: 'NBO', orders: 33, gross: '1,204.000', commission: '180.600', payout: '1,023.400', iban: 'OM55 0021 •••• 3390' },
+];
+
+const CUSTOMERS = [
+  { name: 'Amal Al Balushi', initials: 'AB', email: 'amal.b@mail.om', phone: '+968 9123 4477', balance: 'OMR 24.750' },
+  { name: 'Hamad Al Maqbali', initials: 'HM', email: 'hamad.m@mail.om', phone: '+968 9440 2216', balance: 'OMR 0.000' },
+  { name: 'Reem Al Shehhi', initials: 'RS', email: 'reem.s@mail.om', phone: '+968 9902 8814', balance: 'OMR 112.300' },
+  { name: 'Talal Al Hinai', initials: 'TH', email: 'talal.h@mail.om', phone: '+968 9711 3390', balance: 'OMR 8.500' },
+  { name: 'Dana Al Kindi', initials: 'DK', email: 'dana.k@mail.om', phone: '+968 9288 6001', balance: 'OMR 47.900' },
+];
+
+const USERS = [
+  { name: 'Salim Al Rashdi', initials: 'SA', email: 'salim@brandhub.om', role: 'Super Admin', joined: 'Jan 2024', blocked: false },
+  { name: 'Mona Al Zadjali', initials: 'MA', email: 'mona@brandhub.om', role: 'Support', joined: 'Mar 2024', blocked: false },
+  { name: 'Yaqoub Al Saidi', initials: 'YS', email: 'yaqoub@brandhub.om', role: 'Support', joined: 'Jun 2024', blocked: false },
+  { name: 'A2 Official Store', initials: 'A2', email: 'ops@a2store.om', role: 'Seller', joined: 'Feb 2024', blocked: false },
+  { name: 'Said Al Harthy', initials: 'SH', email: 'said.h@brandhub.om', role: 'Delivery', joined: 'Sep 2024', blocked: false },
+  { name: 'Amal Al Balushi', initials: 'AB', email: 'amal.b@mail.om', role: 'Customer', joined: 'Mar 2024', blocked: false },
+  { name: 'Gulf Tech Traders', initials: 'GT', email: 'sales@gulftech.om', role: 'Seller', joined: 'Nov 2024', blocked: true },
+];
+
+const ROLE_TINT = {
+  'Super Admin': { bg: '#1A1A2E', fg: '#fff' }, Admin: { bg: '#EEEDF9', fg: '#7F77DD' },
+  Support: { bg: '#E7F0FC', fg: '#2A6FDB' }, Seller: { bg: '#FCF2DC', fg: '#C98A12' },
+  Delivery: { bg: '#E6F6EE', fg: '#1F9D62' }, Customer: { bg: '#F1F1F5', fg: '#5A5A72' },
+};
+
+const ROLE_COLS = ['Super Admin', 'Admin', 'Support', 'Seller', 'Delivery'];
+const PERMS = [
+  ['Create and edit products', [1, 1, 0, 0, 0]],
+  ['Approve seller product requests', [1, 1, 0, 0, 0]],
+  ['Approve seller accounts', [1, 0, 0, 0, 0]],
+  ['Manage orders and assignment', [1, 1, 0, 0, 0]],
+  ['Credit customer wallets', [1, 0, 0, 0, 0]],
+  ['Pay seller payouts', [1, 0, 0, 0, 0]],
+  ['Handle support tickets', [1, 1, 1, 0, 0]],
+  ['Update delivery status', [1, 1, 0, 0, 1]],
+];
+
+const RATES = [
+  { area: 'Muscat — Al Khoud', gov: 'Muscat', price: 'OMR 1.000', eta: '24 h', on: true },
+  { area: 'Muscat — Qurum', gov: 'Muscat', price: 'OMR 1.000', eta: '24 h', on: true },
+  { area: 'Seeb', gov: 'Muscat', price: 'OMR 1.500', eta: '24 h', on: true },
+  { area: 'Sohar', gov: 'North Batinah', price: 'OMR 2.500', eta: '2 days', on: true },
+  { area: 'Nizwa', gov: 'Ad Dakhiliyah', price: 'OMR 2.500', eta: '2 days', on: true },
+  { area: 'Salalah', gov: 'Dhofar', price: 'OMR 4.000', eta: '3 days', on: false },
+  { area: 'Khasab', gov: 'Musandam', price: 'OMR 5.500', eta: '4 days', on: false },
+];
+
+const TONES = ['#EEEDF9', '#FCEEF3', '#E6F6EE', '#FCF2DC', '#E7F0FC'];
+
+const CATALOG = [
+  { name: 'A2 Series wireless headphones', sku: 'A2-HD-0114', img: 'assets/p1.jpg', seller: 'A2 Official Store', category: 'Electronics', price: 'OMR 38.900', stock: 142, status: 'Live' },
+  { name: 'AMOLED sports smartwatch', sku: 'A2-WT-0231', img: 'assets/p2.jpg', seller: 'A2 Official Store', category: 'Electronics', price: 'OMR 24.500', stock: 68, status: 'Live' },
+  { name: 'Pro gaming controller', sku: 'GT-GM-0902', img: 'assets/p3.jpg', seller: 'Gulf Tech Traders', category: 'Gaming', price: 'OMR 19.750', stock: 0, status: 'Out of stock' },
+  { name: 'Oud Al Layl eau de parfum', sku: 'LB-PF-0455', img: 'assets/p4.jpg', seller: 'Layali Beauty', category: 'Beauty', price: 'OMR 31.000', stock: 24, status: 'Live' },
+  { name: 'Handwoven Nizwa basket', sku: 'NC-HM-0077', img: 'assets/p5.jpg', seller: 'Nizwa Crafts', category: 'Home', price: 'OMR 12.400', stock: 9, status: 'Low stock' },
+  { name: 'Ceramic pour-over set', sku: 'MH-HM-0310', img: 'assets/p6.jpg', seller: 'Muscat Home Goods', category: 'Home', price: 'OMR 16.900', stock: 51, status: 'Live' },
+  { name: 'Dhofar honey · 500 g', sku: 'SF-FD-0021', img: 'assets/p7.jpg', seller: 'Salalah Fresh', category: 'Grocery', price: 'OMR 9.200', stock: 0, status: 'Hidden' },
+];
+
+const CATEGORY_DEFS = [
+  { name: 'Electronics', slug: 'electronics', img: 'assets/p1.jpg', count: '318 products', active: true },
+  { name: 'Gaming', slug: 'gaming', img: 'assets/p3.jpg', count: '96 products', active: true },
+  { name: 'Beauty', slug: 'beauty', img: 'assets/p4.jpg', count: '204 products', active: true },
+  { name: 'Home', slug: 'home-living', img: 'assets/p5.jpg', count: '271 products', active: true },
+  { name: 'Grocery', slug: 'grocery', img: 'assets/p7.jpg', count: '58 products', active: false },
+  { name: 'Fashion', slug: 'fashion', img: 'assets/p8.jpg', count: '412 products', active: true },
+];
+
+const PROD_REQUESTS = [
+  { name: 'Noise-cancelling earbuds Pro', seller: 'A2 Official Store', img: 'assets/p2.jpg', price: 'OMR 27.900', pct: '82%', tax: '5% VAT', sub: '21 Aug 2026', note: 'Two colour options, 40 units per variant. Images supplied at 2000×2000.' },
+  { name: 'Frankincense gift box', seller: 'Nizwa Crafts', img: 'assets/p5.jpg', price: 'OMR 14.500', pct: '85%', tax: 'Exempt', sub: '20 Aug 2026', note: 'Seasonal item, requests express eligibility for Muscat only.' },
+  { name: 'Mechanical keyboard 75%', seller: 'Gulf Tech Traders', img: 'assets/p3.jpg', price: 'OMR 33.000', pct: '80%', tax: '5% VAT', sub: '19 Aug 2026', note: 'Duplicate of an existing listing — check before approving.' },
+  { name: 'Rosewater toner 200 ml', seller: 'Layali Beauty', img: 'assets/p4.jpg', price: 'OMR 6.750', pct: '84%', tax: '5% VAT', sub: '18 Aug 2026', note: 'Batch expiry documentation attached.' },
+];
+
+const SELLER_REQUESTS = [
+  { store: 'Barka Organics', owner: 'Huda Al Farsi', initials: 'BO', cr: 'CR 1284471', bank: 'Bank Muscat', cat: 'Grocery', applied: '21 Aug 2026' },
+  { store: 'Sur Marine Supply', owner: 'Khalid Al Araimi', initials: 'SM', cr: 'CR 1190228', bank: 'NBO', cat: 'Outdoors', applied: '20 Aug 2026' },
+  { store: 'Ibri Dates House', owner: 'Fatma Al Rawahi', initials: 'ID', cr: 'CR 1345009', bank: 'Bank Dhofar', cat: 'Grocery', applied: '19 Aug 2026' },
+  { store: 'Muttrah Print Co', owner: 'Nasser Al Lawati', initials: 'MP', cr: 'CR 1099317', bank: 'Sohar International', cat: 'Stationery', applied: '17 Aug 2026' },
+];
+
+const RETURNS = [
+  { no: 'RT-0231', order: 'BH-283740', customer: 'Amal Al Balushi', reason: 'Arrived damaged', refund: 'OMR 15.200' },
+  { no: 'RT-0230', order: 'BH-281550', customer: 'Talal Al Hinai', reason: 'Wrong size', refund: 'OMR 27.000' },
+  { no: 'RT-0229', order: 'BH-279902', customer: 'Reem Al Shehhi', reason: 'Not as described', refund: 'OMR 38.900' },
+  { no: 'RT-0228', order: 'BH-278410', customer: 'Dana Al Kindi', reason: 'Changed mind', refund: 'OMR 9.200' },
+  { no: 'RT-0227', order: 'BH-277330', customer: 'Hamad Al Maqbali', reason: 'Late delivery', refund: 'OMR 12.400' },
+  { no: 'RT-0226', order: 'BH-276018', customer: 'Amal Al Balushi', reason: 'Missing item', refund: 'OMR 6.750' },
+];
+
+const DEFAULT_ADS = [
+  'Free delivery on orders over OMR 20 across Muscat',
+  'Hub Express — same-day delivery, order before 2 PM',
+  'Eid offers live now: up to 40% off electronics',
+];
+
+const NOTIFS = [
+  { mark: '⚑', tint: '#FCF2DC', fg: '#C98A12', title: '6 seller payouts are due this cycle', body: 'Payout run closes 31 August. Four sellers have complete bank details.', time: '12 min ago' },
+  { mark: '↺', tint: '#FCEAEA', fg: '#D64545', title: 'Return ticket RT-0231 waiting on approval', body: 'Damaged item, refund OMR 15.200 requested by Amal Al Balushi.', time: '48 min ago' },
+  { mark: '✓', tint: '#E6F6EE', fg: '#1F9D62', title: 'Barka Organics submitted a seller application', body: 'CR verified automatically. Bank details pending review.', time: '3 h ago' },
+  { mark: '▤', tint: '#EEEDF9', fg: '#7F77DD', title: '4 product requests awaiting approval', body: 'Oldest request has been pending for 4 days.', time: 'Yesterday' },
+  { mark: '⇢', tint: '#E7F0FC', fg: '#2A6FDB', title: 'Salalah shipping area disabled', body: 'No courier capacity reported for Dhofar this week.', time: '2 days ago' },
+  { mark: '◍', tint: '#F1F1F5', fg: '#5A5A72', title: 'Monthly finance report generated', body: 'July ledger closed with OMR 4,470 commission.', time: '3 days ago' },
+];
+
+const SA_ORDERS = [
+  { code: 'BH-284193', date: '15 Aug 2026', customer: 'Amal Al Balushi', seller: 'A2 Official Store', items: 2, total: 'OMR 38.900', payment: 'Paid', status: 'Out for delivery' },
+  { code: 'BH-283740', date: '11 Aug 2026', customer: 'Amal Al Balushi', seller: 'Layali Beauty', items: 4, total: 'OMR 64.200', payment: 'Paid', status: 'Delivered' },
+  { code: 'BH-283012', date: '10 Aug 2026', customer: 'Reem Al Shehhi', seller: 'Gulf Tech Traders', items: 1, total: 'OMR 19.750', payment: 'Failed', status: 'Cancelled' },
+  { code: 'BH-282011', date: '29 Jul 2026', customer: 'Dana Al Kindi', seller: 'Nizwa Crafts', items: 1, total: 'OMR 15.200', payment: 'Refunded', status: 'Returned' },
+  { code: 'BH-281550', date: '18 Jul 2026', customer: 'Talal Al Hinai', seller: 'A2 Official Store', items: 3, total: 'OMR 27.000', payment: 'Paid', status: 'Delivered' },
+  { code: 'BH-280774', date: '14 Jul 2026', customer: 'Hamad Al Maqbali', seller: 'Muscat Home Goods', items: 2, total: 'OMR 16.900', payment: 'Pending', status: 'Processing' },
+  { code: 'BH-279902', date: '02 Jul 2026', customer: 'Noura Al Siyabi', seller: 'Salalah Fresh', items: 5, total: 'OMR 9.200', payment: 'Paid', status: 'Delivered' },
+];
+const SA_PAY = {
+  Paid: { bg: '#E6F6EE', fg: '#1F9D62' }, Pending: { bg: '#FCF2DC', fg: '#C98A12' },
+  Failed: { bg: '#FCEAEA', fg: '#D64545' }, Refunded: { bg: '#EEEDF9', fg: '#7F77DD' },
+};
+const SA_ST = {
+  'Out for delivery': { bg: '#E7F0FC', fg: '#2A6FDB' }, Delivered: { bg: '#E6F6EE', fg: '#1F9D62' },
+  Processing: { bg: '#FCF2DC', fg: '#C98A12' }, Returned: { bg: '#EEEDF9', fg: '#7F77DD' },
+  Cancelled: { bg: '#FCEAEA', fg: '#D64545' },
+};
+
+const COUPONS = [
+  { code: 'EID40', discount: '40% off', min: 'OMR 20.000', used: 412, cap: 500, expires: '31 Aug 2026', on: true },
+  { code: 'WELCOME10', discount: 'OMR 10.000 off', min: 'OMR 35.000', used: 188, cap: 1000, expires: 'No expiry', on: true },
+  { code: 'FREESHIP', discount: 'Free delivery', min: 'OMR 15.000', used: 964, cap: 1000, expires: '15 Sep 2026', on: true },
+  { code: 'BEAUTY15', discount: '15% off beauty', min: 'OMR 12.000', used: 77, cap: 300, expires: '30 Sep 2026', on: false },
+  { code: 'RAMADAN25', discount: '25% off', min: 'OMR 25.000', used: 500, cap: 500, expires: 'Expired', on: false },
+  { code: 'HUBEXPRESS', discount: 'OMR 2.000 off express', min: 'OMR 10.000', used: 233, cap: 800, expires: '01 Oct 2026', on: true },
+];
+
+const REVIEWS = [
+  { author: 'Amal Al Balushi', initials: 'AB', rating: 5, date: '15 Aug 2026', product: 'A2 Series wireless headphones', body: 'Sound is clean and the battery lasted a full week of commuting. Delivery took one day to Al Khoud.', status: 'Published', flagReason: null },
+  { author: 'Hamad Al Maqbali', initials: 'HM', rating: 2, date: '14 Aug 2026', product: 'Pro gaming controller', body: 'The left stick drifted after two weeks. Seller has not replied to my message yet.', status: 'Pending', flagReason: null },
+  { author: 'Anonymous', initials: 'AN', rating: 1, date: '13 Aug 2026', product: 'Oud Al Layl eau de parfum', body: 'Terrible seller, do not buy from this store ever, call me on 9xxx to hear the full story.', status: 'Flagged', flagReason: 'Flagged: contact details and seller abuse' },
+  { author: 'Reem Al Shehhi', initials: 'RS', rating: 4, date: '12 Aug 2026', product: 'Ceramic pour-over set', body: 'Beautiful ceramic, packaged carefully. The filter holder is smaller than I expected.', status: 'Published', flagReason: null },
+  { author: 'Dana Al Kindi', initials: 'DK', rating: 5, date: '11 Aug 2026', product: 'Handwoven Nizwa basket', body: 'Exactly as pictured and the weave is tight. I ordered a second one for my sister.', status: 'Pending', flagReason: null },
+];
+
+class Component extends DCLogic {
+  state = {
+    view: 'overview', search: '', customer: 0, roleFilter: 'All',
+    paid: [], blocked: ['Gulf Tech Traders'], perms: PERMS.map(p => p[1].slice()),
+    ratesOn: RATES.map(r => r.on), payIndex: null, creditOpen: false, toast: null,
+    prodFilter: 'All', catActive: true, newRole: 'Support',
+    prodDecisions: {}, sellerDecisions: {}, returnDecisions: {},
+    orderFilter: 'All', couponOff: ['BEAUTY15', 'RAMADAN25'], reviewFilter: 'All', reviewActs: {},
+    ads: DEFAULT_ADS.slice(), adDraft: '', notifRead: [],
+    offerTitle: 'Eid weekend: 40% off A2 audio',
+    offerCopy: 'One product, one weekend, one price. Stock is limited to 200 units across Oman.',
+    offerFlags: [true, true, false],
+  };
+
+  pic(src, style) { return React.createElement('img', { src: src, alt: '', style: style }); }
+
+  flash(msg) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg });
+    this._t = setTimeout(() => this.setState({ toast: null }), 2200);
+  }
+
+  renderVals() {
+    const s = this.state, on = '#7F77DD';
+    const meta = {
+      overview: ['Platform overview', 'Everything across BRANDHUB today', 'Export report'],
+      orders: ['Orders', 'Every order across the platform', 'Export orders'],
+      coupons: ['Coupons', 'Discount codes and usage', 'Create coupon'],
+      reviews: ['Reviews', 'Moderate customer reviews', 'Export reviews'],
+      products: ['Products', 'Every listing across all sellers', 'Add product'],
+      categories: ['Categories', 'Storefront taxonomy and imagery', 'New category'],
+      prodApprovals: ['Seller product approvals', 'Requests waiting on review', 'Approve all clear'],
+      accApprovals: ['Seller account approvals', 'New store registrations', 'Export applications'],
+      finance: ['Finance', 'Commission, payouts and refunds', 'Close the month'],
+      returns: ['Return tickets', 'Refund requests from customers', 'Export returns'],
+      createUser: ['Create user', 'Add a platform user manually', 'Invite by email'],
+      ads: ['Ads and announcements', 'The storefront marquee', 'Save ads'],
+      offer: ['Exclusive offer', 'The featured offer block', 'Save offer'],
+      notifications: ['Notifications', 'Platform activity feed', 'Mark all read'],
+      payouts: ['Seller payouts', 'Calculated from delivered orders', 'Export payout run'],
+      wallets: ['Customer wallets', 'Manual credits and refunds', 'Export transactions'],
+      users: ['User management', 'Roles, access and account state', 'Create user'],
+      roles: ['Roles and permissions', 'Who can do what across the platform', 'Create role'],
+      shipping: ['Shipping rates', 'Areas served and delivery pricing', 'Add area'],
+    };
+    const m = meta[s.view];
+
+    const q = s.search.trim().toLowerCase();
+    const selected = CUSTOMERS[s.customer];
+
+    let userList = USERS;
+    if (s.roleFilter !== 'All') userList = userList.filter(u => u.role === s.roleFilter);
+    if (q && s.view === 'users') userList = userList.filter(u => (u.name + ' ' + u.email).toLowerCase().indexOf(q) >= 0);
+
+    const payTarget = s.payIndex != null ? PAYOUTS[s.payIndex] : PAYOUTS[0];
+
+    let saOrders = SA_ORDERS;
+    if (s.orderFilter !== 'All') saOrders = saOrders.filter(o => o.status === s.orderFilter);
+    if (q && s.view === 'orders') saOrders = saOrders.filter(o => (o.code + ' ' + o.customer + ' ' + o.seller).toLowerCase().indexOf(q) >= 0);
+    const reviewList = s.reviewFilter === 'All' ? REVIEWS : REVIEWS.filter(r => r.status === s.reviewFilter);
+
+    let catalogList = CATALOG;
+    if (s.prodFilter !== 'All') catalogList = catalogList.filter(p => p.status === s.prodFilter);
+    if (q && s.view === 'products') catalogList = catalogList.filter(p => (p.name + ' ' + p.sku + ' ' + p.seller).toLowerCase().indexOf(q) >= 0);
+
+    return {
+      viewTitle: m[0], viewSub: m[1], primaryLabel: m[2],
+      primaryAction: () => this.flash(m[2] + ' — demo action'),
+      isPayouts: s.view === 'payouts', isWallets: s.view === 'wallets', isUsers: s.view === 'users',
+      isRoles: s.view === 'roles', isShipping: s.view === 'shipping',
+      isOverview: s.view === 'overview', isProducts: s.view === 'products', isCategories: s.view === 'categories',
+      isProdApprovals: s.view === 'prodApprovals', isAccApprovals: s.view === 'accApprovals',
+      isFinance: s.view === 'finance', isReturns: s.view === 'returns', isCreateUser: s.view === 'createUser',
+      isAds: s.view === 'ads', isOffer: s.view === 'offer', isNotifications: s.view === 'notifications',
+      isOrders: s.view === 'orders', isCoupons: s.view === 'coupons', isReviews: s.view === 'reviews',
+      refresh: () => this.flash('Refreshed'),
+
+      orderFilters: ['All', 'Processing', 'Out for delivery', 'Delivered', 'Returned', 'Cancelled'].map(f => ({
+        label: f, pick: () => this.setState({ orderFilter: f }),
+        bg: s.orderFilter === f ? '#EEEDF9' : '#fff',
+        fg: s.orderFilter === f ? on : '#5A5A72',
+        border: s.orderFilter === f ? '#C9C6EE' : '#ECEDF1',
+      })),
+      orderCount: saOrders.length + ' of ' + SA_ORDERS.length + ' orders',
+      orderRows: saOrders.map(o => ({
+        code: o.code, date: o.date, customer: o.customer, seller: o.seller,
+        items: String(o.items), total: o.total,
+        payment: o.payment, payBg: SA_PAY[o.payment].bg, payFg: SA_PAY[o.payment].fg,
+        status: o.status, stBg: SA_ST[o.status].bg, stFg: SA_ST[o.status].fg,
+      })),
+
+      couponRows: COUPONS.map(c => {
+        const active = s.couponOff.indexOf(c.code) < 0;
+        return {
+          code: c.code, discount: c.discount, min: c.min,
+          used: c.used + ' / ' + c.cap, pct: Math.round(c.used / c.cap * 100) + '%',
+          expires: c.expires,
+          state: active ? 'Active' : 'Paused',
+          bg: active ? '#E6F6EE' : '#F1F1F5', fg: active ? '#1F9D62' : '#5A5A72',
+          border: active ? '#CCEBDA' : '#E4E4EA',
+          toggle: () => this.setState(st => ({
+            couponOff: active ? st.couponOff.concat(c.code) : st.couponOff.filter(x => x !== c.code),
+          })),
+        };
+      }),
+      couponFields: [
+        { label: 'Code', placeholder: 'SUMMER20' },
+        { label: 'Discount', placeholder: '20% or OMR 5.000' },
+        { label: 'Minimum spend', placeholder: 'OMR 20.000' },
+        { label: 'Usage cap', placeholder: '500' },
+        { label: 'Expires', placeholder: '30 Sep 2026' },
+      ],
+      createCoupon: () => this.flash('Coupon created'),
+
+      reviewFilters: ['All', 'Pending', 'Flagged'].map(f => ({
+        label: f, pick: () => this.setState({ reviewFilter: f }),
+        bg: s.reviewFilter === f ? '#EEEDF9' : '#fff',
+        fg: s.reviewFilter === f ? on : '#5A5A72',
+        border: s.reviewFilter === f ? '#C9C6EE' : '#ECEDF1',
+      })),
+      reviewCount: reviewList.length + ' of ' + REVIEWS.length + ' reviews',
+      reviewRows: reviewList.map(r => {
+        const act = s.reviewActs[r.author + r.date];
+        const status = act === 'p' ? 'Published' : (act === 'h' ? 'Hidden' : (act === 'd' ? 'Deleted' : r.status));
+        const tone = status === 'Published' ? { bg: '#E6F6EE', fg: '#1F9D62' }
+          : status === 'Flagged' ? { bg: '#FCEAEA', fg: '#D64545' }
+          : status === 'Hidden' || status === 'Deleted' ? { bg: '#F1F1F5', fg: '#5A5A72' }
+          : { bg: '#FCF2DC', fg: '#C98A12' };
+        const key = r.author + r.date;
+        const set = v => () => { this.setState(st => ({ reviewActs: Object.assign({}, st.reviewActs, { [key]: v }) })); this.flash('Review ' + (v === 'p' ? 'published' : v === 'h' ? 'hidden' : 'deleted')); };
+        return {
+          author: r.author, initials: r.initials, date: r.date, product: r.product, body: r.body,
+          stars: '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating),
+          status, stBg: tone.bg, stFg: tone.fg,
+          flagged: !!r.flagReason, flagReason: r.flagReason,
+          approve: set('p'), hide: set('h'), remove: set('d'),
+        };
+      }),
+
+      overviewKpis: [
+        { label: 'Gross sales · MTD', value: 'OMR 96,420', sub: '+12.4% vs July', tone: '#1F9D62' },
+        { label: 'Orders · MTD', value: '2,184', sub: '68 today', tone: '#9A9AAF' },
+        { label: 'Active sellers', value: '46', sub: '4 applications pending', tone: '#C98A12' },
+        { label: 'Commission earned', value: 'OMR 14,463', sub: '15% average rate', tone: '#9A9AAF' },
+      ],
+      salesBars: [42, 55, 48, 61, 58, 72, 66, 80, 74, 88, 82, 96].map((v, i) => ({
+        h: Math.round(v / 96 * 100) + '%', label: 'W' + (i + 1),
+        bg: i === 11 ? '#7F77DD' : '#DEDCF4',
+      })),
+      attention: [
+        { label: 'Product requests to review', count: '4', tint: '#EEEDF9', fg: '#7F77DD', go: () => this.setState({ view: 'prodApprovals' }) },
+        { label: 'Seller applications', count: '4', tint: '#FCF2DC', fg: '#C98A12', go: () => this.setState({ view: 'accApprovals' }) },
+        { label: 'Return tickets pending', count: '6', tint: '#FCEAEA', fg: '#D64545', go: () => this.setState({ view: 'returns' }) },
+        { label: 'Payouts due this cycle', count: '6', tint: '#E6F6EE', fg: '#1F9D62', go: () => this.setState({ view: 'payouts' }) },
+        { label: 'Areas without a courier', count: '2', tint: '#E7F0FC', fg: '#2A6FDB', go: () => this.setState({ view: 'shipping' }) },
+      ],
+      opsSummary: [
+        { label: 'Orders in delivery', value: '184' }, { label: 'Delivered today', value: '61' },
+        { label: 'Average basket', value: 'OMR 44.150' }, { label: 'Open support tickets', value: '23' },
+        { label: 'Wallet liability', value: 'OMR 8,940' }, { label: 'Products live', value: '1,359' },
+      ],
+
+      productFilters: ['All', 'Live', 'Low stock', 'Hidden'].map(f => ({
+        label: f, pick: () => this.setState({ prodFilter: f }),
+        bg: s.prodFilter === f ? '#EEEDF9' : '#fff',
+        fg: s.prodFilter === f ? on : '#5A5A72',
+        border: s.prodFilter === f ? '#C9C6EE' : '#ECEDF1',
+      })),
+      productCount: catalogList.length + ' of ' + CATALOG.length + ' products',
+      productRows: catalogList.map((p, i) => ({
+        name: p.name, sku: p.sku, seller: p.seller, category: p.category, price: p.price,
+        stock: p.stock === 0 ? '0' : String(p.stock),
+        stockFg: p.stock === 0 ? '#D64545' : (p.stock < 12 ? '#C98A12' : '#1A1A2E'),
+        tone: TONES[i % TONES.length],
+        imgEl: this.pic(p.img, { width: '82%', height: '82%', objectFit: 'contain' }),
+        status: p.status,
+        statusBg: p.status === 'Live' ? '#E6F6EE' : (p.status === 'Low stock' ? '#FCF2DC' : (p.status === 'Hidden' ? '#F1F1F5' : '#FCEAEA')),
+        statusFg: p.status === 'Live' ? '#1F9D62' : (p.status === 'Low stock' ? '#C98A12' : (p.status === 'Hidden' ? '#5A5A72' : '#D64545')),
+      })),
+
+      categoryCards: CATEGORY_DEFS.map((c, i) => ({
+        name: c.name, slug: '/' + c.slug, count: c.count, tone: TONES[i % TONES.length],
+        imgEl: this.pic(c.img, { width: '58%', height: '74%', objectFit: 'contain', mixBlendMode: 'multiply' }),
+        status: c.active ? 'Active' : 'Inactive',
+        stBg: c.active ? '#E6F6EE' : '#F1F1F5', stFg: c.active ? '#1F9D62' : '#5A5A72',
+        replace: () => this.flash('Image replaced for ' + c.name),
+      })),
+      categoryFields: [
+        { label: 'Name', placeholder: 'e.g. Outdoors' },
+        { label: 'Slug', placeholder: 'outdoors' },
+        { label: 'Parent category', placeholder: 'None' },
+      ],
+      catActiveBd: s.catActive ? '#7F77DD' : '#DEDFE6', catActiveBg: s.catActive ? '#7F77DD' : '#fff',
+      catActiveMark: s.catActive ? '✓' : '',
+      toggleCatActive: () => this.setState(st => ({ catActive: !st.catActive })),
+      saveCategory: () => this.flash('Category created'),
+
+      productRequests: PROD_REQUESTS.map((r, i) => {
+        const d = s.prodDecisions[r.name];
+        return {
+          name: r.name, note: r.note, tone: TONES[i % TONES.length],
+          imgEl: this.pic(r.img, { width: '80%', height: '80%', objectFit: 'contain' }),
+          status: d === 'a' ? 'Approved' : (d === 'r' ? 'Rejected' : 'Pending review'),
+          stBg: d === 'a' ? '#E6F6EE' : (d === 'r' ? '#FCEAEA' : '#FCF2DC'),
+          stFg: d === 'a' ? '#1F9D62' : (d === 'r' ? '#D64545' : '#C98A12'),
+          facts: [
+            { label: 'Seller', value: r.seller }, { label: 'Sale price', value: r.price },
+            { label: 'Seller share', value: r.pct }, { label: 'Tax', value: r.tax },
+            { label: 'Submitted', value: r.sub },
+          ],
+          approve: () => { this.setState(st => ({ prodDecisions: Object.assign({}, st.prodDecisions, { [r.name]: 'a' }) })); this.flash('Approved ' + r.name); },
+          reject: () => { this.setState(st => ({ prodDecisions: Object.assign({}, st.prodDecisions, { [r.name]: 'r' }) })); this.flash('Rejected ' + r.name); },
+        };
+      }),
+
+      sellerRequests: SELLER_REQUESTS.map(r => {
+        const d = s.sellerDecisions[r.store];
+        return {
+          store: r.store, owner: r.owner, initials: r.initials,
+          status: d === 'a' ? 'Approved' : (d === 'r' ? 'Rejected' : 'Pending'),
+          stBg: d === 'a' ? '#E6F6EE' : (d === 'r' ? '#FCEAEA' : '#FCF2DC'),
+          stFg: d === 'a' ? '#1F9D62' : (d === 'r' ? '#D64545' : '#C98A12'),
+          facts: [
+            { label: 'Commercial record', value: r.cr }, { label: 'Bank', value: r.bank },
+            { label: 'Main category', value: r.cat }, { label: 'Applied', value: r.applied },
+          ],
+          approve: () => { this.setState(st => ({ sellerDecisions: Object.assign({}, st.sellerDecisions, { [r.store]: 'a' }) })); this.flash('Approved ' + r.store); },
+          reject: () => { this.setState(st => ({ sellerDecisions: Object.assign({}, st.sellerDecisions, { [r.store]: 'r' }) })); this.flash('Rejected ' + r.store); },
+        };
+      }),
+
+      financeKpis: [
+        { label: 'Commission · MTD', value: 'OMR 14,463', sub: 'across 2,184 orders' },
+        { label: 'Payable to sellers', value: 'OMR 25,330', sub: '6 sellers this cycle' },
+        { label: 'Refunds issued', value: 'OMR 1,842', sub: '31 return tickets' },
+        { label: 'Wallet liability', value: 'OMR 8,940', sub: '612 funded wallets' },
+      ],
+      ledger: [
+        { month: 'August 2026', gross: '96,420.000', commission: '14,463.000', payouts: '25,330.000', refunds: '1,842.000' },
+        { month: 'July 2026', gross: '85,760.000', commission: '12,864.000', payouts: '18,940.000', refunds: '2,105.000' },
+        { month: 'June 2026', gross: '79,310.000', commission: '11,896.500', payouts: '21,470.000', refunds: '1,530.000' },
+        { month: 'May 2026', gross: '74,120.000', commission: '11,118.000', payouts: '19,880.000', refunds: '1,980.000' },
+        { month: 'April 2026', gross: '68,940.000', commission: '10,341.000', payouts: '17,240.000', refunds: '1,412.000' },
+        { month: 'March 2026', gross: '71,505.000', commission: '10,725.750', payouts: '18,010.000', refunds: '1,688.000' },
+      ],
+      financeLinks: [
+        { label: 'Seller payouts', meta: '6 due · OMR 25,330', go: () => this.setState({ view: 'payouts' }) },
+        { label: 'Customer wallets', meta: 'Credits and refunds', go: () => this.setState({ view: 'wallets' }) },
+        { label: 'Return tickets', meta: '6 pending refunds', go: () => this.setState({ view: 'returns' }) },
+        { label: 'Shipping rates', meta: '7 areas · 2 disabled', go: () => this.setState({ view: 'shipping' }) },
+      ],
+
+      returnsPending: RETURNS.filter(r => !s.returnDecisions[r.no]).length + ' pending',
+      returnRows: RETURNS.map(r => {
+        const d = s.returnDecisions[r.no];
+        return {
+          no: r.no, order: r.order, customer: r.customer, reason: r.reason, refund: r.refund,
+          status: d === 'a' ? 'Refunded' : (d === 'r' ? 'Rejected' : 'Pending'),
+          stBg: d === 'a' ? '#E6F6EE' : (d === 'r' ? '#FCEAEA' : '#FCF2DC'),
+          stFg: d === 'a' ? '#1F9D62' : (d === 'r' ? '#D64545' : '#C98A12'),
+          pending: !d, settled: !!d,
+          note: d === 'a' ? 'Wallet credited' : 'Reason logged',
+          approve: () => { this.setState(st => ({ returnDecisions: Object.assign({}, st.returnDecisions, { [r.no]: 'a' }) })); this.flash('Refund approved for ' + r.no); },
+          reject: () => { this.setState(st => ({ returnDecisions: Object.assign({}, st.returnDecisions, { [r.no]: 'r' }) })); this.flash('Return ' + r.no + ' rejected'); },
+        };
+      }),
+
+      newUserRoles: ['Admin', 'Support', 'Seller', 'Delivery', 'Customer'].map(r => ({
+        label: r, pick: () => this.setState({ newRole: r }),
+        bg: s.newRole === r ? '#EEEDF9' : '#fff',
+        fg: s.newRole === r ? on : '#5A5A72',
+        border: s.newRole === r ? '#C9C6EE' : '#ECEDF1',
+      })),
+      newUserFields: [
+        { label: 'First name', placeholder: 'Mona', type: 'text' },
+        { label: 'Last name', placeholder: 'Al Zadjali', type: 'text' },
+        { label: 'Email', placeholder: 'mona@brandhub.om', type: 'text' },
+        { label: 'Phone', placeholder: '+968 9xxx xxxx', type: 'text' },
+        { label: 'Password', placeholder: 'Minimum 10 characters', type: 'password' },
+        { label: 'Confirm password', placeholder: 'Repeat password', type: 'password' },
+      ],
+      newUserRole: s.newRole,
+      newUserAccess: (() => {
+        const ci = ROLE_COLS.indexOf(s.newRole);
+        return PERMS.map(p => {
+          const granted = ci >= 0 && p[1][ci] === 1;
+          return {
+            label: p[0], mark: granted ? '✓' : '·',
+            bg: granted ? '#EEEDF9' : '#F1F1F5', fg: granted ? '#7F77DD' : '#C9C9D4',
+            textFg: granted ? '#1A1A2E' : '#9A9AAF',
+          };
+        });
+      })(),
+      createUser: () => this.flash(s.newRole + ' user created'),
+
+      adRows: s.ads.map((text, i) => ({
+        n: String(i + 1).padStart(2, '0'), text,
+        edit: e => this.setState(st => { const a = st.ads.slice(); a[i] = e.target.value; return { ads: a }; }),
+        up: () => this.setState(st => { if (i === 0) return null; const a = st.ads.slice(); const x = a[i - 1]; a[i - 1] = a[i]; a[i] = x; return { ads: a }; }),
+        down: () => this.setState(st => { if (i === st.ads.length - 1) return null; const a = st.ads.slice(); const x = a[i + 1]; a[i + 1] = a[i]; a[i] = x; return { ads: a }; }),
+        remove: () => this.setState(st => ({ ads: st.ads.filter((_, j) => j !== i) })),
+      })),
+      adDraft: s.adDraft,
+      onAdDraft: e => this.setState({ adDraft: e.target.value }),
+      addAd: () => {
+        if (!s.adDraft.trim()) { this.flash('Write the announcement first'); return; }
+        this.setState(st => ({ ads: st.ads.concat(st.adDraft.trim()), adDraft: '' }));
+      },
+      saveAds: () => this.flash('Announcements saved'),
+      restoreAds: () => this.setState({ ads: DEFAULT_ADS.slice() }),
+      adPreview: s.ads[0] || 'No announcements',
+
+      offerTitle: s.offerTitle, offerCopy: s.offerCopy,
+      onOfferTitle: e => this.setState({ offerTitle: e.target.value }),
+      onOfferCopy: e => this.setState({ offerCopy: e.target.value }),
+      offerToggles: ['Show countdown timer', 'Highlight on the app home', 'Dark background style'].map((label, i) => ({
+        label,
+        track: s.offerFlags[i] ? '#7F77DD' : '#DEDFE6',
+        justify: s.offerFlags[i] ? 'flex-end' : 'flex-start',
+        toggle: () => this.setState(st => { const f = st.offerFlags.slice(); f[i] = !f[i]; return { offerFlags: f }; }),
+      })),
+      countdown: [{ value: '08', label: 'DAYS' }, { value: '14', label: 'HRS' }, { value: '52', label: 'MIN' }, { value: '09', label: 'SEC' }],
+      saveOffer: () => this.flash('Exclusive offer saved'),
+      resetOffer: () => this.setState({
+        offerTitle: 'Eid weekend: 40% off A2 audio',
+        offerCopy: 'One product, one weekend, one price. Stock is limited to 200 units across Oman.',
+        offerFlags: [true, true, false],
+      }),
+
+      unreadLabel: NOTIFS.filter(n => s.notifRead.indexOf(n.title) < 0).length + ' unread',
+      markAllRead: () => this.setState({ notifRead: NOTIFS.map(n => n.title) }),
+      notificationRows: NOTIFS.map(n => {
+        const unread = s.notifRead.indexOf(n.title) < 0;
+        return {
+          mark: n.mark, tint: n.tint, fg: n.fg, title: n.title, body: n.body, time: n.time,
+          unread, bg: unread ? '#FAFAFE' : '#fff', weight: unread ? '800' : '600',
+          read: () => this.setState(st => ({ notifRead: st.notifRead.concat(n.title) })),
+        };
+      }),
+
+      navOverview: [
+        ['overview', 'Overview', '◈', null],
+        ['notifications', 'Notifications', '⚑', String(NOTIFS.filter(n => s.notifRead.indexOf(n.title) < 0).length)],
+      ].map(n => ({
+        label: n[1], mark: n[2], count: n[3],
+        bg: s.view === n[0] ? '#EEEDF9' : 'transparent', fg: s.view === n[0] ? on : '#3A3A52',
+        go: () => this.setState({ view: n[0], search: '' }),
+      })),
+      navCatalog: [
+        ['products', 'Products', '▤', null],
+        ['categories', 'Categories', '▦', null],
+        ['orders', 'Orders', '☰', null],
+        ['reviews', 'Reviews', '★', '2'],
+        ['coupons', 'Coupons', '%', null],
+        ['prodApprovals', 'Product approvals', '✓', '4'],
+        ['accApprovals', 'Seller approvals', '☑', '4'],
+        ['ads', 'Ads', '◇', null],
+        ['offer', 'Exclusive offer', '★', null],
+      ].map(n => ({
+        label: n[1], mark: n[2], count: n[3],
+        bg: s.view === n[0] ? '#EEEDF9' : 'transparent', fg: s.view === n[0] ? on : '#3A3A52',
+        go: () => this.setState({ view: n[0], search: '' }),
+      })),
+      navFinance: [
+        ['finance', 'Finance overview', '◑', null],
+        ['payouts', 'Seller payouts', '﷼', '6'],
+        ['wallets', 'Customer wallets', '◍', null],
+        ['returns', 'Return tickets', '↺', '6'],
+      ].map(n => ({
+        label: n[1], mark: n[2], count: n[3],
+        bg: s.view === n[0] ? '#EEEDF9' : 'transparent', fg: s.view === n[0] ? on : '#3A3A52',
+        go: () => this.setState({ view: n[0], search: '' }),
+      })),
+      navPlatform: [
+        ['users', 'Users', '☺', null],
+        ['createUser', 'Create user', '＋', null],
+        ['roles', 'Roles and permissions', '⚿', null],
+        ['shipping', 'Shipping rates', '⇢', null],
+      ].map(n => ({
+        label: n[1], mark: n[2], count: n[3],
+        bg: s.view === n[0] ? '#EEEDF9' : 'transparent', fg: s.view === n[0] ? on : '#3A3A52',
+        go: () => this.setState({ view: n[0], search: '' }),
+      })),
+
+      payoutKpis: [
+        { label: 'Payable this cycle', value: 'OMR 25,330', sub: '6 sellers · closes 31 Aug' },
+        { label: 'Paid this month', value: 'OMR 18,940', sub: '11 transfers' },
+        { label: 'Platform commission', value: 'OMR 4,470', sub: '15% average' },
+        { label: 'On hold', value: 'OMR 1,204', sub: 'Salalah Fresh · docs pending' },
+      ],
+      payouts: PAYOUTS.map((p, i) => {
+        const paid = s.paid.indexOf(p.name) >= 0;
+        return Object.assign({}, p, {
+          paid: paid, unpaid: !paid,
+          pay: () => this.setState({ payIndex: i }),
+        });
+      }),
+      payModalOpen: s.payIndex != null,
+      payTarget,
+      payRows: [
+        { label: 'Orders included', value: String(payTarget.orders) },
+        { label: 'Gross sales', value: 'OMR ' + payTarget.gross },
+        { label: 'Commission (15%)', value: '− OMR ' + payTarget.commission },
+        { label: 'Payout amount', value: 'OMR ' + payTarget.payout },
+      ],
+      confirmPay: () => {
+        this.setState(st => ({ paid: st.paid.concat(PAYOUTS[st.payIndex].name), payIndex: null }));
+        this.flash('Payout recorded for ' + payTarget.name);
+      },
+
+      search: s.search,
+      onSearch: e => this.setState({ search: e.target.value }),
+      customers: CUSTOMERS.filter(cu => !q || (cu.name + ' ' + cu.email).toLowerCase().indexOf(q) >= 0).map((cu, i) => ({
+        name: cu.name, initials: cu.initials, email: cu.email, balance: cu.balance,
+        bg: CUSTOMERS[s.customer] === cu ? '#FAFAFE' : '#fff',
+        border: CUSTOMERS[s.customer] === cu ? '#C9C6EE' : '#ECEDF1',
+        pick: () => this.setState({ customer: CUSTOMERS.indexOf(cu) }),
+      })),
+      selected,
+      transactions: [
+        { mark: '+', tint: '#E6F6EE', fg: '#1F9D62', label: 'Wallet top-up', meta: 'Paymob · 14 Aug 2026', amount: '+50.000' },
+        { mark: '−', tint: '#FCEAEA', fg: '#D64545', label: 'Order #BH-283740', meta: '11 Aug 2026', amount: '−64.200' },
+        { mark: '+', tint: '#E6F6EE', fg: '#1F9D62', label: 'Refund · return RT-0231', meta: '29 Jul 2026', amount: '+15.200' },
+        { mark: '+', tint: '#EEEDF9', fg: '#7F77DD', label: 'Goodwill credit', meta: 'Support · TK-4102', amount: '+5.000' },
+        { mark: '−', tint: '#FCEAEA', fg: '#D64545', label: 'Order #BH-281550', meta: '18 Jul 2026', amount: '−27.000' },
+      ],
+      openCredit: () => this.setState({ creditOpen: true }),
+      creditModalOpen: s.creditOpen,
+      confirmCredit: () => { this.setState({ creditOpen: false }); this.flash('Wallet credited for ' + selected.name); },
+
+      roleFilters: ['All', 'Admin', 'Support', 'Seller', 'Delivery'].map(f => ({
+        label: f, pick: () => this.setState({ roleFilter: f }),
+        bg: s.roleFilter === f ? '#EEEDF9' : '#fff',
+        fg: s.roleFilter === f ? on : '#5A5A72',
+        border: s.roleFilter === f ? '#C9C6EE' : '#ECEDF1',
+      })),
+      users: userList.map(u => {
+        const blocked = s.blocked.indexOf(u.name) >= 0;
+        return {
+          name: u.name, initials: u.initials, email: u.email, role: u.role, joined: u.joined,
+          roleBg: ROLE_TINT[u.role].bg, roleFg: ROLE_TINT[u.role].fg,
+          status: blocked ? 'Blocked' : 'Active',
+          statusBg: blocked ? '#FCEAEA' : '#E6F6EE', statusFg: blocked ? '#D64545' : '#1F9D62',
+          blockLabel: blocked ? 'Unblock' : 'Block', blockFg: blocked ? '#1F9D62' : '#D64545',
+          edit: () => this.flash('Editing ' + u.name),
+          reset: () => this.flash('Password reset link sent to ' + u.email),
+          block: () => {
+            this.setState(st => ({ blocked: blocked ? st.blocked.filter(b => b !== u.name) : st.blocked.concat(u.name) }));
+            this.flash((blocked ? 'Unblocked ' : 'Blocked ') + u.name);
+          },
+        };
+      }),
+
+      roleCols: ROLE_COLS.map(label => ({ label })),
+      permRows: PERMS.map((p, ri) => ({
+        label: p[0],
+        cells: ROLE_COLS.map((_, ci) => {
+          const granted = s.perms[ri][ci] === 1;
+          return {
+            mark: granted ? '✓' : '',
+            bg: granted ? '#EEEDF9' : '#fff',
+            fg: granted ? '#7F77DD' : '#C9C9D4',
+            border: granted ? '#C9C6EE' : '#ECEDF1',
+            toggle: () => this.setState(st => {
+              const next = st.perms.map(r => r.slice());
+              next[ri][ci] = next[ri][ci] ? 0 : 1;
+              return { perms: next };
+            }),
+          };
+        }),
+      })),
+
+      rates: RATES.map((r, i) => ({
+        area: r.area, gov: r.gov, price: r.price, eta: r.eta,
+        trackBg: s.ratesOn[i] ? '#7F77DD' : '#DEDFE6',
+        justify: s.ratesOn[i] ? 'flex-end' : 'flex-start',
+        toggle: () => this.setState(st => {
+          const next = st.ratesOn.slice(); next[i] = !next[i]; return { ratesOn: next };
+        }),
+      })),
+      rateFields: [
+        { label: 'Area', placeholder: 'e.g. Barka' },
+        { label: 'Governorate', placeholder: 'e.g. South Batinah' },
+        { label: 'Price (OMR)', placeholder: '2.000' },
+        { label: 'Delivery window', placeholder: '2 days' },
+      ],
+      addRate: () => this.flash('Shipping rate saved'),
+
+      closeModal: () => this.setState({ payIndex: null, creditOpen: false }),
+      toast: s.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>
