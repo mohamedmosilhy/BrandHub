@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon, Text } from '@presentation/components/primitives';
 import { useTheme } from '@presentation/theme';
@@ -19,7 +20,8 @@ type ToastContextValue = { showToast: (toast: ToastMessage) => void };
 const ToastContext = createContext<ToastContextValue | null>(null);
 
 export function Toast({ message, tone = 'info' }: ToastMessage) {
-  const { theme } = useTheme();
+  const { theme, direction } = useTheme();
+  const insets = useSafeAreaInsets();
   const color =
     tone === 'success'
       ? theme.colors.success
@@ -37,10 +39,21 @@ export function Toast({ message, tone = 'info' }: ToastMessage) {
         {
           backgroundColor: theme.colors.ink,
           borderRadius: theme.radius.md,
-          bottom: theme.spacing.x6,
+          bottom:
+            insets.bottom +
+            theme.mobile.tabBar.paddingTop +
+            theme.mobile.tabBar.pillHeight +
+            theme.mobile.tabBar.gap +
+            theme.fontSizes.micro * theme.lineHeights.arabic +
+            theme.mobile.tabBar.paddingBottom +
+            theme.mobile.toastOffset,
           boxShadow: theme.shadows.lg.boxShadow,
-          gap: theme.spacing.x2,
-          padding: theme.spacing.x4,
+          direction,
+          end: theme.mobile.toastInsetX,
+          gap: theme.mobile.gapTight,
+          paddingHorizontal: theme.spacing.x4,
+          paddingVertical: theme.mobile.gapRow,
+          start: theme.mobile.toastInsetX,
           zIndex: theme.zIndices.toast,
         },
       ]}
@@ -87,7 +100,6 @@ export function useToast(): ToastContextValue {
 const styles = StyleSheet.create({
   toast: {
     alignItems: 'center',
-    alignSelf: 'center',
     flexDirection: 'row',
     position: 'absolute',
   },

@@ -28,7 +28,17 @@ describe('BRANDHUB theme tokens', () => {
     expect(Object.values(spacing)).toEqual([
       4, 8, 12, 16, 20, 24, 32, 40, 44, 48, 64, 80,
     ]);
-    expect(Object.values(radius)).toEqual([6, 10, 16, 24, 9999]);
+    expect(radius).toMatchObject({
+      sm: 6,
+      md: 10,
+      field: 12,
+      control: 14,
+      cta: 15,
+      lg: 16,
+      pill: 16,
+      xl: 24,
+      full: 9999,
+    });
     expect(Object.keys(shadows)).toEqual(['sm', 'md', 'lg', 'card']);
   });
 

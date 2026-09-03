@@ -14,6 +14,7 @@ import {
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 
 import {
   BrandTabBar,
@@ -26,6 +27,7 @@ import {
 } from '@presentation/features/auth';
 import { AccountScreen, ShellScreen } from '@presentation/features/navigation';
 import { OnboardingScreen } from '@presentation/features/onboarding';
+import { useTheme } from '@presentation/theme';
 
 import { useContainer } from '@app/di';
 
@@ -381,36 +383,39 @@ function AuthNavigator() {
 }
 
 export function AppNavigator() {
+  const { direction } = useTheme();
   const status = useSessionStore((state) => state.status);
   const onboardingComplete = useSessionStore(
     (state) => state.onboardingComplete,
   );
   if (status === 'loading') return null;
   return (
-    <NavigationContainer ref={navigationRef} linking={linking}>
-      <Root.Navigator
-        key={onboardingComplete ? 'main' : 'auth'}
-        initialRouteName={onboardingComplete ? 'Main' : 'Auth'}
-        screenOptions={screenOptions}
-      >
-        <Root.Screen name="Auth" component={AuthNavigator} />
-        <Root.Screen name="Main" component={MainTabs} />
-        <Root.Group
-          screenOptions={{ headerShown: false, presentation: 'modal' }}
+    <View style={{ direction, flex: 1 }}>
+      <NavigationContainer ref={navigationRef} linking={linking}>
+        <Root.Navigator
+          key={onboardingComplete ? 'main' : 'auth'}
+          initialRouteName={onboardingComplete ? 'Main' : 'Auth'}
+          screenOptions={screenOptions}
         >
-          <Root.Screen name="Checkout" component={CheckoutRoute} />
-          <Root.Screen name="OrderConfirmation" component={RootGatedRoute} />
-          <Root.Screen name="PaymentResult" component={RootGatedRoute} />
-        </Root.Group>
-        <Root.Group
-          screenOptions={{
-            headerShown: false,
-            presentation: 'transparentModal',
-          }}
-        >
-          <Root.Screen name="FilterSheet" component={GenericRoute} />
-        </Root.Group>
-      </Root.Navigator>
-    </NavigationContainer>
+          <Root.Screen name="Auth" component={AuthNavigator} />
+          <Root.Screen name="Main" component={MainTabs} />
+          <Root.Group
+            screenOptions={{ headerShown: false, presentation: 'modal' }}
+          >
+            <Root.Screen name="Checkout" component={CheckoutRoute} />
+            <Root.Screen name="OrderConfirmation" component={RootGatedRoute} />
+            <Root.Screen name="PaymentResult" component={RootGatedRoute} />
+          </Root.Group>
+          <Root.Group
+            screenOptions={{
+              headerShown: false,
+              presentation: 'transparentModal',
+            }}
+          >
+            <Root.Screen name="FilterSheet" component={GenericRoute} />
+          </Root.Group>
+        </Root.Navigator>
+      </NavigationContainer>
+    </View>
   );
 }

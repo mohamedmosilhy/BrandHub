@@ -1,28 +1,52 @@
 import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   Text as NativeText,
   type StyleProp,
   type TextStyle,
 } from 'react-native';
 
-import { useTheme } from '@presentation/theme';
+import {
+  textEnd,
+  textStart,
+  useTheme,
+  writingDirection,
+} from '@presentation/theme';
 
 export type TextVariant =
-  'display' | 'h1' | 'h2' | 'h3' | 'bodyLg' | 'body' | 'sm' | 'xs';
-export type TextWeight = 'regular' | 'medium' | 'semibold' | 'bold';
+  | 'display'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'bodyLg'
+  | 'body'
+  | 'sm'
+  | 'xs'
+  | 'xxs'
+  | 'micro';
+export type TextWeight =
+  'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold';
+
+/**
+ * `start`/`end` follow the reading direction; `auto` is a synonym for `start`. Physical
+ * alignment is deliberately not offered — it does not mirror.
+ */
+export type TextAlign = 'auto' | 'start' | 'end' | 'center' | 'justify';
 
 export type TextProps = {
   children: ReactNode;
   variant?: TextVariant;
   weight?: TextWeight;
   color?: string | undefined;
-  align?: 'auto' | 'center' | 'justify';
+  align?: TextAlign;
+  /** Latin-only runs — prices, phone numbers, emails — that must stay LTR inside Arabic. */
+  latin?: boolean;
   numberOfLines?: number | undefined;
   accessibilityLabel?: string | undefined;
   style?: StyleProp<TextStyle> | undefined;
   testID?: string | undefined;
 };
+
+const HEADINGS = new Set<TextVariant>(['display', 'h1', 'h2', 'h3']);
 
 export function Text({
   children,
@@ -30,19 +54,25 @@ export function Text({
   weight = 'regular',
   color,
   align = 'auto',
+  latin = false,
   numberOfLines,
   accessibilityLabel,
   style,
   testID,
 }: TextProps) {
-  const { i18n } = useTranslation();
   const { theme, isRTL } = useTheme();
-  const arabic = i18n.language === 'ar';
+  // A latin run keeps the Latin face and LTR order even when the app is Arabic.
+  const arabic = isRTL && !latin;
   const fontSize = theme.fontSizes[variant];
   const fontFamily = theme.fontFamilies[arabic ? 'arabic' : 'latin'][weight];
-  const lineHeight = Math.ceil(
-    fontSize * (arabic ? theme.lineHeights.arabic : theme.lineHeights.normal),
-  );
+  const multiplier = HEADINGS.has(variant)
+    ? arabic
+      ? theme.lineHeights.arabicTight
+      : theme.lineHeights.tight
+    : arabic
+      ? theme.lineHeights.arabic
+      : theme.lineHeights.normal;
+  const runRTL = latin ? false : isRTL;
 
   return (
     <NativeText
@@ -55,9 +85,16 @@ export function Text({
           color: color ?? theme.colors.textPrimary,
           fontFamily,
           fontSize,
-          lineHeight,
-          textAlign: align,
-          writingDirection: isRTL ? 'rtl' : 'ltr',
+          lineHeight: Math.ceil(fontSize * multiplier),
+          // Resolved explicitly: `auto` leaves Arabic left-aligned whenever the native RTL
+          // flag has not been applied, which is every Expo Go session. See theme/direction.
+          textAlign:
+            align === 'center' || align === 'justify'
+              ? align
+              : align === 'end'
+                ? textEnd(runRTL)
+                : textStart(runRTL),
+          writingDirection: writingDirection(runRTL),
         },
         style,
       ]}

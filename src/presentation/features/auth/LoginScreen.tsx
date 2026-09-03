@@ -1,7 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { StatusBar } from 'expo-status-bar';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { z } from 'zod';
 
 import {
@@ -21,9 +29,8 @@ import {
   SegmentedControl,
 } from '@presentation/components/controls';
 import { useToast } from '@presentation/components/feedback';
-import { Screen, ScreenHeader } from '@presentation/components/layout';
-import { Pressable, Text } from '@presentation/components/primitives';
-import { spacing, useTheme } from '@presentation/theme';
+import { Icon, Pressable, Text } from '@presentation/components/primitives';
+import { mobile, radius, spacing, useTheme } from '@presentation/theme';
 
 export type AuthMode = 'signin' | 'signup';
 type Fields = {
@@ -54,7 +61,7 @@ export function LoginScreen({
   onAuthenticated,
 }: LoginScreenProps) {
   const { t } = useTranslation();
-  const { theme } = useTheme();
+  const { theme, direction } = useTheme();
   const { showToast } = useToast();
   const schema = z
     .object({
@@ -144,154 +151,234 @@ export function LoginScreen({
   }
 
   return (
-    <Screen
-      keyboardAware
+    <SafeAreaView
       accessibilityLabel={t(mode === 'signup' ? 'signUp' : 'signIn')}
+      edges={['top', 'bottom']}
+      style={[
+        styles.safe,
+        { backgroundColor: theme.colors.surface, direction },
+      ]}
     >
-      <ScreenHeader title="" backLabel={t('back')} onBack={onBack} />
-      <View style={styles.heading}>
-        <Text variant="h2" weight="bold">
-          {t(signingUp ? 'authCreateTitle' : 'authWelcomeBack')}
-        </Text>
-        <Text color={theme.colors.textSecondary} variant="sm">
-          {t(signingUp ? 'authSignUpSubtitle' : 'authSignInSubtitle')}
-        </Text>
-      </View>
-      <SegmentedControl
-        accessibilityLabel={t('signIn')}
-        value={mode}
-        options={[
-          { label: t('signIn'), value: 'signin' },
-          { label: t('signUp'), value: 'signup' },
-        ]}
-        onChange={(value) => setValue('mode', value as AuthMode)}
-      />
-      <Text variant="sm" weight="semibold">
-        {t('accountType')}
-      </Text>
-      <SegmentedControl
-        accessibilityLabel={t('accountType')}
-        value={accountType}
-        options={[
-          { label: t('accCustomer'), value: 'customer' },
-          { label: t('accSeller'), value: 'seller' },
-        ]}
-        onChange={(value) => setValue('accountType', value as AccountType)}
-      />
-      {signingUp ? (
-        <Controller
-          control={control}
-          name="name"
-          render={({ field }) => (
-            <Input
-              label={t(accountType === 'seller' ? 'storeName' : 'fullName')}
-              onChangeText={field.onChange}
-              value={field.value}
-              {...(errors.name?.message ? { error: errors.name.message } : {})}
-            />
-          )}
-        />
-      ) : null}
-      <Controller
-        control={control}
-        name="email"
-        render={({ field }) => (
-          <Input
-            label={t('email')}
-            keyboardType="email-address"
-            placeholder="name@example.com"
-            onChangeText={field.onChange}
-            value={field.value}
-            {...(errors.email?.message ? { error: errors.email.message } : {})}
-            testID="auth-email"
-          />
-        )}
-      />
-      {signingUp ? (
-        <Controller
-          control={control}
-          name="phone"
-          render={({ field }) => (
-            <Input
-              label={`${t('phone')} (+968)`}
-              keyboardType="phone-pad"
-              onChangeText={field.onChange}
-              value={field.value}
-              {...(errors.phone?.message
-                ? { error: errors.phone.message }
-                : {})}
-            />
-          )}
-        />
-      ) : null}
-      <Controller
-        control={control}
-        name="password"
-        render={({ field }) => (
-          <PasswordInput
-            label={t('password')}
-            onChangeText={field.onChange}
-            value={field.value}
-            {...(errors.password?.message
-              ? { error: errors.password.message }
-              : {})}
-            testID="auth-password"
-          />
-        )}
-      />
-      <View style={styles.formMeta}>
-        <Checkbox
-          label={t('remember')}
-          selected={remember}
-          onPress={() => setValue('remember', !remember)}
-        />
-        <Pressable accessibilityLabel={t('forgot')}>
-          <Text color={theme.colors.accentHover} variant="sm" weight="semibold">
-            {t('forgot')}
-          </Text>
-        </Pressable>
-      </View>
-      {signingUp && accountType === 'seller' ? (
-        <View
-          style={{
-            backgroundColor: theme.colors.warningLight,
-            borderRadius: theme.radius.md,
-            padding: theme.spacing.x3,
-          }}
+      <StatusBar style="dark" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.safe}
+      >
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <Text color={theme.colors.warningAccessible} variant="sm">
-            {t('sellerPending')}
-          </Text>
-        </View>
-      ) : null}
-      {errors.root?.message ? (
-        <Text
-          accessibilityLabel={errors.root.message}
-          color={theme.colors.dangerAccessible}
-          variant="sm"
-        >
-          {errors.root.message}
-        </Text>
-      ) : null}
-      <Button
-        fullWidth
-        loading={isSubmitting}
-        label={t(signingUp ? 'createAccount' : 'signIn')}
-        onPress={() => void handleSubmit(submit)()}
-        testID="auth-submit"
-      />
-      <Button
-        fullWidth
-        label={t('usePhoneInstead')}
-        variant="secondary"
-        onPress={onUsePhone}
-      />
-      <Pressable accessibilityLabel={t('adminLogin')} style={styles.admin}>
-        <Text color={theme.colors.textSecondary} variant="sm" weight="semibold">
-          {t('adminLogin')}
-        </Text>
-      </Pressable>
-    </Screen>
+          <View style={styles.authHeader}>
+            <Pressable
+              accessibilityLabel={t('back')}
+              onPress={onBack}
+              style={styles.backAction}
+            >
+              <Icon name="arrow-back" />
+            </Pressable>
+          </View>
+          <View style={styles.heading}>
+            <Text variant="h1" weight="extrabold">
+              {t(signingUp ? 'authCreateTitle' : 'authWelcomeBack')}
+            </Text>
+            <Text color={theme.colors.textMuted} variant="xs">
+              {t(signingUp ? 'authSignUpSubtitle' : 'authSignInSubtitle')}
+            </Text>
+          </View>
+          <View style={styles.modeSwitch}>
+            <SegmentedControl
+              accessibilityLabel={t('signIn')}
+              value={mode}
+              options={[
+                { label: t('signIn'), value: 'signin' },
+                { label: t('signUp'), value: 'signup' },
+              ]}
+              onChange={(value) => setValue('mode', value as AuthMode)}
+            />
+          </View>
+          <View style={styles.accountType}>
+            <Text
+              color={theme.colors.textSecondary}
+              variant="xxs"
+              weight="bold"
+            >
+              {t('accountType')}
+            </Text>
+            <SegmentedControl
+              accessibilityLabel={t('accountType')}
+              appearance="outline"
+              value={accountType}
+              options={[
+                { label: t('accCustomer'), value: 'customer' },
+                { label: t('accSeller'), value: 'seller' },
+              ]}
+              onChange={(value) =>
+                setValue('accountType', value as AccountType)
+              }
+            />
+          </View>
+          <View style={styles.form}>
+            {signingUp ? (
+              <Controller
+                control={control}
+                name="name"
+                render={({ field }) => (
+                  <Input
+                    label={t(
+                      accountType === 'seller' ? 'storeName' : 'fullName',
+                    )}
+                    onChangeText={field.onChange}
+                    value={field.value}
+                    {...(errors.name?.message
+                      ? { error: errors.name.message }
+                      : {})}
+                  />
+                )}
+              />
+            ) : null}
+            <Controller
+              control={control}
+              name="email"
+              render={({ field }) => (
+                <Input
+                  inputDirection="ltr"
+                  label={t('email')}
+                  keyboardType="email-address"
+                  placeholder="name@example.com"
+                  onChangeText={field.onChange}
+                  value={field.value}
+                  {...(errors.email?.message
+                    ? { error: errors.email.message }
+                    : {})}
+                  testID="auth-email"
+                />
+              )}
+            />
+            {signingUp ? (
+              <Controller
+                control={control}
+                name="phone"
+                render={({ field }) => (
+                  <Input
+                    accessibilityLabel={`${t('phone')} (+968)`}
+                    inputDirection="ltr"
+                    label={t('phone')}
+                    keyboardType="phone-pad"
+                    placeholder="+968 9xxx xxxx"
+                    onChangeText={field.onChange}
+                    value={field.value}
+                    {...(errors.phone?.message
+                      ? { error: errors.phone.message }
+                      : {})}
+                  />
+                )}
+              />
+            ) : null}
+            <Controller
+              control={control}
+              name="password"
+              render={({ field }) => (
+                <PasswordInput
+                  label={t('password')}
+                  onChangeText={field.onChange}
+                  value={field.value}
+                  {...(errors.password?.message
+                    ? { error: errors.password.message }
+                    : {})}
+                  testID="auth-password"
+                />
+              )}
+            />
+            <View style={styles.formMeta}>
+              <Checkbox
+                label={t('remember')}
+                selected={remember}
+                onPress={() => setValue('remember', !remember)}
+              />
+              <Pressable
+                accessibilityLabel={t('forgot')}
+                compact
+                compactSize={spacing.x5}
+              >
+                <Text
+                  color={theme.colors.accentHover}
+                  variant="xs"
+                  weight="bold"
+                >
+                  {t('forgot')}
+                </Text>
+              </Pressable>
+            </View>
+            {signingUp && accountType === 'seller' ? (
+              <View
+                style={[
+                  styles.sellerNote,
+                  {
+                    backgroundColor: theme.colors.warningLight,
+                    borderRadius: theme.radius.field,
+                  },
+                ]}
+              >
+                <Text color={theme.colors.warningAccessible} variant="xxs">
+                  {t('sellerPending')}
+                </Text>
+              </View>
+            ) : null}
+            {errors.root?.message ? (
+              <Text
+                accessibilityLabel={errors.root.message}
+                color={theme.colors.dangerAccessible}
+                variant="xs"
+              >
+                {errors.root.message}
+              </Text>
+            ) : null}
+            <Button
+              fullWidth
+              loading={isSubmitting}
+              label={t(signingUp ? 'createAccount' : 'signIn')}
+              onPress={() => void handleSubmit(submit)()}
+              style={styles.submit}
+              testID="auth-submit"
+            />
+            <View style={styles.divider}>
+              <View
+                style={[styles.line, { backgroundColor: theme.colors.border }]}
+              />
+              <Text color={theme.colors.textMuted} variant="xxs">
+                {t('or')}
+              </Text>
+              <View
+                style={[styles.line, { backgroundColor: theme.colors.border }]}
+              />
+            </View>
+            <Button
+              fullWidth
+              label={t('sendOtp')}
+              size="md"
+              variant="secondary"
+              onPress={onUsePhone}
+            />
+            <Pressable
+              accessibilityLabel={t('adminLogin')}
+              compact
+              compactSize={spacing.x5}
+              style={styles.admin}
+            >
+              <Text
+                align="center"
+                color={theme.colors.textSecondary}
+                variant="xs"
+                weight="bold"
+              >
+                {t('adminLogin')}
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -302,11 +389,47 @@ function errorMessage(code: string, t: (key: string) => string): string {
 }
 
 const styles = StyleSheet.create({
-  admin: { alignSelf: 'center' },
+  accountType: {
+    gap: spacing.x3,
+    marginHorizontal: mobile.auth.gutter,
+    marginTop: mobile.auth.sectionTop,
+  },
+  admin: { alignSelf: 'center', paddingTop: mobile.gapHairline },
+  authHeader: {
+    height: mobile.auth.headerHeight,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.x4,
+  },
+  backAction: { alignItems: 'center', justifyContent: 'center' },
+  content: { flexGrow: 1, paddingBottom: mobile.auth.screenBottom },
+  divider: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.x3,
+    marginVertical: mobile.gapHairline,
+  },
+  form: {
+    gap: spacing.x3,
+    paddingHorizontal: mobile.auth.gutter,
+    paddingTop: mobile.auth.sectionTop,
+  },
   formMeta: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  heading: { gap: spacing.x1 },
+  heading: {
+    gap: mobile.gapHairline,
+    paddingBottom: mobile.auth.sectionTop,
+    paddingHorizontal: mobile.auth.gutter,
+    paddingTop: spacing.x1,
+  },
+  line: { flex: 1, height: 1 },
+  modeSwitch: { marginHorizontal: mobile.auth.gutter },
+  safe: { flex: 1 },
+  sellerNote: {
+    paddingHorizontal: mobile.auth.notePaddingX,
+    paddingVertical: spacing.x3,
+  },
+  submit: { borderRadius: radius.control, marginTop: spacing.x1 },
 });

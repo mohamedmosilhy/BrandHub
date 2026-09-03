@@ -140,6 +140,7 @@ export type SegmentedControlProps = {
   accessibilityLabel: string;
   options: readonly Choice[];
   value: string;
+  appearance?: 'track' | 'outline';
   onChange?: (value: string) => void;
 };
 
@@ -147,6 +148,7 @@ export function SegmentedControl({
   accessibilityLabel,
   options,
   value,
+  appearance = 'track',
   onChange,
 }: SegmentedControlProps) {
   const { theme } = useTheme();
@@ -157,9 +159,14 @@ export function SegmentedControl({
       style={[
         styles.segmented,
         {
-          backgroundColor: theme.colors.background,
-          borderRadius: theme.radius.md,
-          padding: theme.spacing.x1,
+          backgroundColor:
+            appearance === 'track'
+              ? theme.colors.background
+              : theme.colors.transparent,
+          borderRadius: theme.radius.field,
+          gap: appearance === 'outline' ? theme.mobile.gapItem : 0,
+          padding:
+            appearance === 'track' ? theme.mobile.segmentTrackPadding : 0,
         },
       ]}
     >
@@ -175,16 +182,35 @@ export function SegmentedControl({
             {
               backgroundColor:
                 option.value === value
-                  ? theme.colors.surface
+                  ? appearance === 'outline'
+                    ? theme.colors.accentLight
+                    : theme.colors.surface
                   : theme.colors.transparent,
-              borderRadius: theme.radius.sm,
+              borderColor:
+                appearance === 'outline'
+                  ? option.value === value
+                    ? theme.colors.accent
+                    : theme.colors.border
+                  : theme.colors.transparent,
+              borderRadius:
+                appearance === 'outline' ? theme.radius.field : theme.radius.md,
+              borderWidth: appearance === 'outline' ? 1.5 : 0,
+              height:
+                appearance === 'outline'
+                  ? theme.layout.minimumTouchTarget
+                  : theme.mobile.segmentHeight,
               paddingHorizontal: theme.spacing.x3,
             },
           ]}
         >
           <Text
-            variant="sm"
-            weight={option.value === value ? 'semibold' : 'regular'}
+            color={
+              appearance === 'track' && option.value !== value
+                ? theme.colors.textMuted
+                : theme.colors.textPrimary
+            }
+            variant="xs"
+            weight="bold"
           >
             {option.label}
           </Text>
@@ -235,6 +261,8 @@ function Mark({ label, selected, onPress, kind }: MarkProps) {
       accessibilityLabel={label}
       accessibilityRole={kind}
       accessibilityState={{ checked: selected }}
+      compact
+      compactSize={theme.mobile.checkboxSize}
       onPress={onPress}
       style={styles.markRow}
     >
@@ -249,20 +277,22 @@ function Mark({ label, selected, onPress, kind }: MarkProps) {
             : theme.colors.borderStrong,
           borderRadius: kind === 'radio' ? theme.radius.full : theme.radius.sm,
           borderWidth: 1,
-          height: theme.iconSizes.md,
+          height: theme.mobile.checkboxSize,
           justifyContent: 'center',
-          width: theme.iconSizes.md,
+          width: theme.mobile.checkboxSize,
         }}
       >
         {selected ? (
           <Icon
             name="check"
             color={theme.colors.textInverse}
-            size={theme.iconSizes.sm}
+            size={theme.iconSizes.xs}
           />
         ) : null}
       </View>
-      <Text>{label}</Text>
+      <Text color={theme.colors.textSecondary} variant="xs">
+        {label}
+      </Text>
     </Pressable>
   );
 }

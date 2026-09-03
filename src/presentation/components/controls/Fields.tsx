@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   StyleSheet,
@@ -8,7 +8,13 @@ import {
 } from 'react-native';
 
 import { Icon, Pressable, Text } from '@presentation/components/primitives';
-import { spacing, useTheme } from '@presentation/theme';
+import {
+  mobile,
+  spacing,
+  textStart,
+  useTheme,
+  writingDirection,
+} from '@presentation/theme';
 
 export type InputProps = {
   label: string;
@@ -21,8 +27,10 @@ export type InputProps = {
   multiline?: boolean;
   numberOfLines?: number;
   keyboardType?: KeyboardTypeOptions;
+  inputDirection?: 'locale' | 'ltr';
   onChangeText?: (value: string) => void;
   testID?: string;
+  trailing?: ReactNode;
 };
 
 export function Input({
@@ -36,54 +44,66 @@ export function Input({
   multiline = false,
   numberOfLines,
   keyboardType,
+  inputDirection = 'locale',
   onChangeText,
   testID,
+  trailing,
 }: InputProps) {
-  const { i18n } = useTranslation();
   const { theme, isRTL } = useTheme();
-  const arabic = i18n.language === 'ar';
+  const runRTL = inputDirection === 'locale' && isRTL;
+  const arabic = runRTL;
   return (
     <View style={styles.field}>
-      <Text variant="sm" weight="medium">
+      <Text variant="xxs" weight="bold">
         {label}
       </Text>
-      <TextInput
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="text"
-        accessibilityState={{ disabled }}
-        editable={!disabled}
-        keyboardType={keyboardType}
-        multiline={multiline}
-        numberOfLines={numberOfLines}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={theme.colors.textSubtleAccessible}
-        secureTextEntry={secureTextEntry}
-        testID={testID}
-        value={value}
+      <View
         style={[
-          styles.input,
+          styles.inputShell,
           {
             backgroundColor: disabled
               ? theme.colors.background
-              : theme.colors.surface,
+              : theme.colors.surfaceField,
             borderColor: error
               ? theme.colors.dangerAccessible
-              : theme.colors.borderStrong,
-            borderRadius: theme.radius.md,
-            color: theme.colors.textPrimary,
-            fontFamily: theme.fontFamilies[arabic ? 'arabic' : 'latin'].regular,
-            fontSize: theme.fontSizes.body,
-            minHeight: multiline
-              ? theme.spacing.x20
-              : theme.layout.minimumTouchTarget,
-            paddingHorizontal: theme.spacing.x3,
-            paddingVertical: theme.spacing.x2,
-            textAlign: 'auto',
-            writingDirection: isRTL ? 'rtl' : 'ltr',
+              : theme.colors.border,
+            borderRadius: theme.radius.field,
+            minHeight: multiline ? theme.spacing.x20 : theme.mobile.fieldHeight,
           },
         ]}
-      />
+      >
+        <TextInput
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole="text"
+          accessibilityState={{ disabled }}
+          editable={!disabled}
+          keyboardType={keyboardType}
+          multiline={multiline}
+          numberOfLines={numberOfLines}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          placeholderTextColor={theme.colors.textMuted}
+          secureTextEntry={secureTextEntry}
+          testID={testID}
+          value={value}
+          style={[
+            styles.input,
+            {
+              color: theme.colors.textPrimary,
+              fontFamily:
+                theme.fontFamilies[arabic ? 'arabic' : 'latin'].regular,
+              fontSize: theme.fontSizes.sm,
+              minHeight: multiline
+                ? theme.spacing.x20
+                : theme.mobile.fieldHeight - 2,
+              paddingHorizontal: theme.mobile.gapSection,
+              textAlign: textStart(runRTL),
+              writingDirection: writingDirection(runRTL),
+            },
+          ]}
+        />
+        {trailing ? <View style={styles.trailing}>{trailing}</View> : null}
+      </View>
       {error ? (
         <Text
           accessibilityLabel={error}
@@ -107,11 +127,12 @@ export function PasswordInput({
 }) {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
-  const { theme } = useTheme();
   return (
-    <View>
-      <Input {...props} secureTextEntry={!visible} />
-      <View style={[styles.passwordAction, { marginTop: theme.spacing.x2 }]}>
+    <Input
+      {...props}
+      inputDirection="ltr"
+      secureTextEntry={!visible}
+      trailing={
         <Pressable
           accessibilityLabel={
             visible
@@ -119,6 +140,8 @@ export function PasswordInput({
               : (showPasswordLabel ?? t('showPassword'))
           }
           onPress={() => setVisible((current) => !current)}
+          compact
+          compactSize={mobile.iconButtonSize}
           style={styles.iconAction}
           testID="password-visibility-toggle"
         >
@@ -127,8 +150,8 @@ export function PasswordInput({
             testID={visible ? 'password-visible-icon' : 'password-hidden-icon'}
           />
         </Pressable>
-      </View>
-    </View>
+      }
+    />
   );
 }
 
@@ -151,10 +174,20 @@ export function SearchField({ label = 'Search', ...props }: SearchFieldProps) {
 }
 
 const styles = StyleSheet.create({
-  field: { gap: spacing.x1 },
+  field: { gap: mobile.gapHairline },
   iconAction: { alignItems: 'center', justifyContent: 'center' },
-  input: { borderWidth: 1 },
-  passwordAction: { position: 'absolute', end: 0 },
+  input: { flex: 1, paddingVertical: 0 },
+  inputShell: {
+    alignItems: 'center',
+    borderWidth: 1,
+    flexDirection: 'row',
+    overflow: 'hidden',
+  },
   searchField: { position: 'relative' },
   searchIcon: { position: 'absolute', end: 0, zIndex: 1 },
+  trailing: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginEnd: spacing.x2,
+  },
 });

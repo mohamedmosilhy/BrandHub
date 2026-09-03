@@ -1,4 +1,5 @@
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   Icon,
@@ -6,7 +7,7 @@ import {
   Pressable,
   Text,
 } from '@presentation/components/primitives';
-import { useTheme } from '@presentation/theme';
+import { mobile, useTheme } from '@presentation/theme';
 
 export type NavigationTab = Readonly<{
   key: string;
@@ -24,7 +25,8 @@ export function BrandTabBar({
   activeIndex: number;
   onPress: (index: number) => void;
 }) {
-  const { theme } = useTheme();
+  const { theme, direction } = useTheme();
+  const insets = useSafeAreaInsets();
   return (
     <View
       accessibilityRole="tablist"
@@ -33,7 +35,10 @@ export function BrandTabBar({
         {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.border,
-          minHeight: theme.spacing.x20,
+          direction,
+          paddingBottom: theme.mobile.tabBar.paddingBottom + insets.bottom,
+          paddingHorizontal: theme.mobile.tabBar.paddingX,
+          paddingTop: theme.mobile.tabBar.paddingTop,
         },
       ]}
     >
@@ -45,23 +50,25 @@ export function BrandTabBar({
             accessibilityLabel={tab.label}
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
+            compact
+            compactSize={theme.mobile.tabBar.pillHeight}
             onPress={() => onPress(index)}
             style={styles.tab}
           >
             <View
               style={[
                 styles.icon,
-                Platform.OS === 'android' && active
+                active
                   ? {
                       backgroundColor: theme.colors.accentLight,
-                      borderRadius: theme.radius.full,
-                      paddingHorizontal: theme.spacing.x4,
+                      borderRadius: theme.mobile.tabBar.pillRadius,
                     }
                   : undefined,
               ]}
             >
               <Icon
                 name={tab.icon}
+                size={theme.mobile.tabBar.iconSize}
                 color={
                   active ? theme.colors.accent : theme.colors.textSecondary
                 }
@@ -72,16 +79,18 @@ export function BrandTabBar({
                     alignItems: 'center',
                     backgroundColor: theme.colors.pink,
                     borderRadius: theme.radius.full,
-                    minWidth: theme.spacing.x5,
+                    height: theme.mobile.tabBar.badgeSize,
+                    minWidth: theme.mobile.tabBar.badgeSize,
                     paddingHorizontal: theme.spacing.x1,
                     position: 'absolute',
                     end: -theme.spacing.x2,
-                    top: -theme.spacing.x1,
+                    top: -2,
                   }}
                 >
                   <Text
                     color={theme.colors.textInverse}
-                    variant="xs"
+                    latin
+                    variant="micro"
                     weight="bold"
                   >
                     {tab.badge}
@@ -91,8 +100,8 @@ export function BrandTabBar({
             </View>
             <Text
               color={active ? theme.colors.accent : theme.colors.textSecondary}
-              variant="xs"
-              weight={active ? 'semibold' : 'regular'}
+              variant="micro"
+              weight="semibold"
             >
               {tab.label}
             </Text>
@@ -105,6 +114,11 @@ export function BrandTabBar({
 
 const styles = StyleSheet.create({
   bar: { borderTopWidth: 1, flexDirection: 'row' },
-  icon: { alignItems: 'center', justifyContent: 'center' },
-  tab: { alignItems: 'center', flex: 1, justifyContent: 'center' },
+  icon: {
+    alignItems: 'center',
+    height: mobile.tabBar.pillHeight,
+    justifyContent: 'center',
+    width: mobile.tabBar.pillWidth,
+  },
+  tab: { alignItems: 'center', flex: 1, gap: mobile.tabBar.gap },
 });

@@ -1,4 +1,20 @@
-/** Exact React Native port of the approved BRANDHUB `tokens.css`. */
+/**
+ * BRANDHUB design tokens.
+ *
+ * Two scales exist in the reference and they are not interchangeable.
+ *
+ * `design-reference/uploads/BRAND HUB (6)/tokens.css` states in its own header that it is
+ * "Storefront only (not dashboard / not app)" and its type scale is explicitly labelled
+ * "Fluid type scale (desktop)" — 40/32/24/18/16/15/13/12 px. Porting that scale into a
+ * 404 pt-wide phone makes every heading roughly a third too large and every gutter too wide.
+ *
+ * The mobile scale lives in `design-reference/BRANDHUB App.dc.html`, the customer app
+ * prototype. Colour, gradient, shadow, motion and z-index tokens are shared between the two
+ * and are ported verbatim; typography, spacing geometry and radii below are read off the app
+ * prototype. The desktop scale is retained under `reference` so token parity with `tokens.css`
+ * stays verifiable.
+ */
+
 export const colors = {
   accent: '#7F77DD',
   accentHover: '#6860CC',
@@ -14,6 +30,8 @@ export const colors = {
   background: '#F5F5F7',
   surface: '#FFFFFF',
   surfaceRaised: '#FAFAFA',
+  /** Input fill in the app prototype. */
+  surfaceField: '#FAFAFE',
   border: '#E8E8EC',
   borderStrong: '#D0D0D8',
   textPrimary: '#1A1A2E',
@@ -28,6 +46,12 @@ export const colors = {
   dangerLight: '#FDEAEA',
   transparent: 'transparent',
   rating: '#F5B544',
+  /** Onboarding sits on ink; these are the prototype's on-dark values. */
+  onDarkPrimary: 'rgba(255, 255, 255, 0.92)',
+  onDarkSecondary: 'rgba(255, 255, 255, 0.72)',
+  onDarkMuted: 'rgba(255, 255, 255, 0.45)',
+  onDarkBorder: 'rgba(255, 255, 255, 0.18)',
+  onDarkSurface: 'rgba(255, 255, 255, 0.07)',
   textSubtleAccessible: '#686879',
   pinkAccessible: '#9D3155',
   successAccessible: '#0F6B45',
@@ -55,8 +79,24 @@ export const gradients = {
     end: { x: 0, y: 1 },
     css: 'linear-gradient(180deg, transparent 40%, rgba(26,26,46,0.75) 100%)',
   },
+  /** The app prototype's onboarding hero scrim: .25 → .55 → solid ink. */
+  onboardingHero: {
+    colors: [
+      'rgba(26, 26, 46, 0.25)',
+      'rgba(26, 26, 46, 0.55)',
+      colors.ink,
+    ] as const,
+    locations: [0, 0.55, 1] as const,
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+    css: 'linear-gradient(180deg, rgba(26,26,46,.25) 0%, rgba(26,26,46,.55) 55%, #1A1A2E 100%)',
+  },
 } as const;
 
+/**
+ * The 4 pt scale shared with the storefront. The app prototype also uses 6, 7, 9, 10, 11, 13,
+ * 14, 18, 22 and 26 pt steps, which live in `mobile` below rather than being rounded away.
+ */
 export const spacing = {
   x1: 4,
   x2: 8,
@@ -72,15 +112,100 @@ export const spacing = {
   x20: 80,
 } as const;
 
+/**
+ * Geometry read directly off `design-reference/BRANDHUB App.dc.html`. Every value here is a
+ * measurement from that prototype, not a derivation.
+ */
+export const mobile = {
+  /** `padding: 12px 16px` / `20px 16px` on every app screen body. */
+  screenPaddingX: 16,
+  screenPaddingY: 20,
+  /** `gap` values, most to least common in the prototype. */
+  gapSection: 14,
+  gapItem: 10,
+  gapTight: 7,
+  gapRow: 12,
+  gapMicro: 4,
+  gapHairline: 6,
+  onboarding: {
+    heroHeight: 384,
+    copyInsetStart: 26,
+    copyBottom: 34,
+    actionPaddingX: 24,
+    actionPaddingTop: 26,
+    actionPaddingBottom: 34,
+  },
+  auth: {
+    gutter: 22,
+    sectionTop: 18,
+    headerHeight: 50,
+    screenBottom: 28,
+    notePaddingX: 13,
+  },
+  /** `height: 46px` — every text input and the home search pill. */
+  fieldHeight: 46,
+  /** `height: 50px` primary CTA, `48px` secondary, `38px` compact. */
+  buttonHeight: { sm: 38, md: 48, lg: 50 },
+  /** `padding: 7px 13px; border-radius: 99px` filter and trending chips. */
+  chipHeight: 32,
+  chipPaddingX: 13,
+  /** `height: 36px` auth mode switch segments inside a `padding: 4px` track. */
+  segmentHeight: 36,
+  segmentTrackPadding: 4,
+  checkboxSize: 18,
+  /** `padding: 12px 16px` back-arrow header row. */
+  headerHeight: 46,
+  /** `padding: 14px` card interiors, `border-radius: 14px`. */
+  cardPadding: 14,
+  /** `padding: 3px 9px` status and discount badges. */
+  badgePaddingX: 9,
+  badgePaddingY: 3,
+  /** Circular icon actions: wishlist heart, quantity steppers. */
+  iconButtonSize: 34,
+  /** `padding: 9px 6px 6px` around five equal columns. */
+  tabBar: {
+    paddingTop: 9,
+    paddingBottom: 6,
+    paddingX: 6,
+    /** `width: 54px; height: 30px; border-radius: 16px` active pill. */
+    pillWidth: 54,
+    pillHeight: 30,
+    pillRadius: 16,
+    iconSize: 22,
+    gap: 4,
+    /** `min-width: 17px; height: 17px` cart count. */
+    badgeSize: 17,
+  },
+  /** Toast floats `bottom: 118px` in the prototype — above the tab bar, not behind it. */
+  toastInsetX: 20,
+  toastOffset: 22,
+  avatarSize: { sm: 28, md: 34, lg: 44 },
+} as const;
+
 export const layout = {
   containerMax: 1280,
-  containerPadding: spacing.x6,
-  headerHeight: spacing.x16,
+  containerPadding: mobile.screenPaddingX,
+  headerHeight: mobile.headerHeight,
   subnavHeight: spacing.x11,
+  /** WCAG 2.2 AA target size. Controls smaller than this widen with `hitSlop`. */
   minimumTouchTarget: spacing.x11,
 } as const;
 
-export const radius = { sm: 6, md: 10, lg: 16, xl: 24, full: 9999 } as const;
+/**
+ * `sm`/`md`/`lg`/`xl`/`full` are the storefront radii. `field`, `control`, `cta` and `pill` are
+ * the app prototype's 12/14/15/16 px radii, which the storefront scale cannot express.
+ */
+export const radius = {
+  sm: 6,
+  md: 10,
+  field: 12,
+  control: 14,
+  cta: 15,
+  lg: 16,
+  pill: 16,
+  xl: 24,
+  full: 9999,
+} as const;
 
 export const fontFamilies = {
   arabic: {
@@ -88,16 +213,36 @@ export const fontFamilies = {
     medium: 'NotoKufiArabic_500Medium',
     semibold: 'NotoKufiArabic_600SemiBold',
     bold: 'NotoKufiArabic_700Bold',
+    extrabold: 'NotoKufiArabic_800ExtraBold',
   },
   latin: {
     regular: 'PlusJakartaSans_400Regular',
     medium: 'PlusJakartaSans_500Medium',
     semibold: 'PlusJakartaSans_600SemiBold',
     bold: 'PlusJakartaSans_700Bold',
+    extrabold: 'PlusJakartaSans_800ExtraBold',
   },
 } as const;
 
+/**
+ * The app prototype's scale. Its four most-used sizes are 11.5, 12.5, 12 and 11 px; headings
+ * top out at 26 px for the wordmark and 22 px for a page title.
+ */
 export const fontSizes = {
+  display: 26,
+  h1: 22,
+  h2: 20,
+  h3: 17,
+  bodyLg: 15,
+  body: 13,
+  sm: 12.5,
+  xs: 11.5,
+  xxs: 10.5,
+  micro: 10,
+} as const;
+
+/** The desktop storefront scale from `tokens.css`, kept for parity checks. */
+export const referenceFontSizes = {
   display: 40,
   h1: 32,
   h2: 24,
@@ -108,14 +253,27 @@ export const fontSizes = {
   xs: 12,
 } as const;
 
-export const lineHeights = { tight: 1.2, normal: 1.55, arabic: 1.75 } as const;
+/**
+ * Arabic body copy uses 1.75 (D16). Arabic headings use 1.4: at 20–26 px the body multiplier
+ * opens gaps the prototype does not have, while anything under 1.35 clips Noto Kufi descenders.
+ */
+export const lineHeights = {
+  tight: 1.2,
+  normal: 1.55,
+  arabic: 1.75,
+  arabicTight: 1.4,
+} as const;
+
 export const fontWeights = {
   regular: '400',
   medium: '500',
   semibold: '600',
   bold: '700',
+  extrabold: '800',
 } as const;
-export const iconSizes = { sm: 16, md: 24, lg: 32 } as const;
+
+/** The prototype draws inline SVG at 21–22 px in chrome and 16–17 px inline. */
+export const iconSizes = { xs: 14, sm: 17, md: 22, lg: 28 } as const;
 
 export const shadows = {
   sm: {
@@ -161,10 +319,12 @@ export const theme = {
   colors,
   gradients,
   spacing,
+  mobile,
   layout,
   radius,
   fontFamilies,
   fontSizes,
+  referenceFontSizes,
   lineHeights,
   fontWeights,
   iconSizes,
@@ -178,3 +338,4 @@ export type Theme = typeof theme;
 export type Colors = typeof colors;
 export type Spacing = typeof spacing;
 export type Radius = typeof radius;
+export type MobileGeometry = typeof mobile;

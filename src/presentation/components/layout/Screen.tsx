@@ -27,8 +27,10 @@ export function Screen({
   const content = scroll ? (
     <ScrollView
       contentContainerStyle={{
-        gap: theme.spacing.x5,
-        padding: theme.spacing.x4,
+        flexGrow: 1,
+        gap: theme.mobile.gapSection,
+        paddingHorizontal: theme.mobile.screenPaddingX,
+        paddingVertical: theme.mobile.screenPaddingY,
       }}
       keyboardShouldPersistTaps="handled"
     >

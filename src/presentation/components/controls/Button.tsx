@@ -1,8 +1,18 @@
 import type { ReactNode } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
-import { Pressable, Text } from '@presentation/components/primitives';
-import { useTheme } from '@presentation/theme';
+import {
+  Pressable,
+  Text,
+  type TextVariant,
+} from '@presentation/components/primitives';
+import { mobile, useTheme } from '@presentation/theme';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
@@ -16,8 +26,43 @@ export type ButtonProps = {
   loading?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
+  inverse?: boolean;
   icon?: ReactNode;
+  style?: StyleProp<ViewStyle>;
   testID?: string | undefined;
+};
+
+/**
+ * Geometry from the app prototype: the primary CTA is `height: 50px; border-radius: 15px;
+ * font-size: 13.5px; font-weight: 700`; secondary actions use the reference border token,
+ * 48px height, 14px radius and 12.5px type; compact actions are 38–40px.
+ *
+ * Filled backgrounds use `accentHover` / `dangerAccessible` rather than the raw brand colours:
+ * the reference white-on-accent and white-on-danger pairs are both below AA for label text at
+ * these sizes. That substitution is the Phase 2 contrast audit's recorded remedy.
+ */
+const SIZE: Record<
+  ButtonSize,
+  { height: number; radius: number; variant: TextVariant; paddingX: number }
+> = {
+  sm: {
+    height: mobile.buttonHeight.sm,
+    radius: 12,
+    variant: 'xs',
+    paddingX: 16,
+  },
+  md: {
+    height: mobile.buttonHeight.md,
+    radius: 14,
+    variant: 'sm',
+    paddingX: 18,
+  },
+  lg: {
+    height: mobile.buttonHeight.lg,
+    radius: 15,
+    variant: 'body',
+    paddingX: 20,
+  },
 };
 
 export function Button({
@@ -25,35 +70,37 @@ export function Button({
   accessibilityLabel = label,
   onPress,
   variant = 'primary',
-  size = 'md',
+  size = 'lg',
   loading = false,
   disabled = false,
   fullWidth = false,
+  inverse = false,
   icon,
+  style,
   testID,
 }: ButtonProps) {
   const { theme } = useTheme();
   const filled = variant === 'primary' || variant === 'danger';
-  const foreground =
-    variant === 'secondary'
-      ? theme.colors.textPrimary
-      : filled
-        ? theme.colors.textInverse
+  const outlined = variant === 'secondary';
+  const foreground = inverse
+    ? theme.colors.onDarkPrimary
+    : filled
+      ? theme.colors.textInverse
+      : outlined
+        ? theme.colors.textPrimary
         : theme.colors.accentHover;
   const background =
     variant === 'primary'
       ? theme.colors.accentHover
       : variant === 'danger'
         ? theme.colors.dangerAccessible
-        : variant === 'secondary'
-          ? theme.colors.accentLight
-          : theme.colors.transparent;
-  const verticalPadding =
-    size === 'sm'
-      ? theme.spacing.x1
-      : size === 'lg'
-        ? theme.spacing.x4
-        : theme.spacing.x3;
+        : theme.colors.transparent;
+  const borderColor = inverse
+    ? theme.colors.onDarkBorder
+    : outlined
+      ? theme.colors.border
+      : background;
+  const metrics = SIZE[size];
 
   return (
     <Pressable
@@ -66,28 +113,34 @@ export function Button({
         styles.base,
         {
           alignSelf: fullWidth ? 'stretch' : 'flex-start',
-          backgroundColor: background,
-          borderColor:
-            variant === 'ghost' ? theme.colors.transparent : background,
-          borderRadius: theme.radius.md,
-          paddingHorizontal: theme.spacing.x5,
-          paddingVertical: verticalPadding,
+          backgroundColor: inverse
+            ? theme.colors.transparent
+            : outlined
+              ? theme.colors.surface
+              : background,
+          borderColor,
+          borderRadius: metrics.radius,
+          borderWidth: outlined ? 1.5 : 1,
+          height: metrics.height,
+          paddingHorizontal: metrics.paddingX,
         },
+        style,
       ]}
     >
-      <View style={styles.content}>
+      <View style={[styles.content, { gap: theme.mobile.gapHairline }]}>
         {icon}
         <Text
+          align="center"
           color={foreground}
-          variant={size === 'sm' ? 'sm' : 'body'}
-          weight="semibold"
+          variant={metrics.variant}
+          weight="bold"
           style={loading ? styles.hiddenLabel : undefined}
         >
           {label}
         </Text>
         {loading ? (
           <View style={styles.spinner} testID="button-spinner">
-            <ActivityIndicator color={foreground} />
+            <ActivityIndicator color={foreground} size="small" />
           </View>
         ) : null}
       </View>
@@ -96,7 +149,7 @@ export function Button({
 }
 
 const styles = StyleSheet.create({
-  base: { borderWidth: 1, justifyContent: 'center' },
+  base: { justifyContent: 'center' },
   content: {
     alignItems: 'center',
     flexDirection: 'row',
