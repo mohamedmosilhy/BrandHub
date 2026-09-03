@@ -21,6 +21,7 @@
     "boundaries:graph": "depcruise src --config .dependency-cruiser.cjs --output-type dot > .dependency-cruiser-graph.dot",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "test:contract": "NODE_OPTIONS=--experimental-vm-modules jest contract-tests --runInBand",
     "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "verify": "npm run typecheck && npm run lint && npm run format:check && npm run boundaries && npm run test",
     "prepare": "husky"
@@ -28,6 +29,9 @@
   "dependencies": {
     "@expo-google-fonts/noto-kufi-arabic": "^0.4.3",
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@tanstack/react-query": "^5.102.8",
+    "axios": "^1.20.0",
     "expo": "~54.0.37",
     "expo-build-properties": "~1.0.10",
     "expo-constants": "~18.0.14",
@@ -35,6 +39,7 @@
     "expo-font": "~14.0.12",
     "expo-image": "~3.0.11",
     "expo-linear-gradient": "~15.0.8",
+    "expo-secure-store": "~15.0.8",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
     "expo-updates": "~29.0.20",
@@ -44,7 +49,8 @@
     "react-native": "0.81.5",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-svg": "^15.12.1",
-    "zod": "^4.5.4"
+    "zod": "^4.5.4",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
@@ -68,6 +74,7 @@
     "jest-expo": "54.0.18",
     "json-server": "^0.17.4",
     "lint-staged": "16.2.7",
+    "msw": "^1.3.5",
     "prettier": "3.9.6",
     "react-test-renderer": "19.1.0",
     "supertest": "^7.1.4",

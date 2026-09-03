@@ -1,12 +1,12 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Implemented through Phase 3 — Phase 4 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
+**Status:** **Implemented through Phase 4 — Phase 5 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
 **Date:** 2026-09-03 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
-> Phases 1–3 are implemented. Their completion reports are in `docs/reports/`.
+> Phases 1–4 are implemented. Their completion reports are in `docs/reports/`.
 > All 17 open questions were approved as recommended on 2026-09-02 and are recorded as decisions
-> **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 4.**
+> **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 5.**
 
 ---
 
@@ -441,16 +441,16 @@ Phases 1 and 3 done.
 
 ### Review checklist
 
-- [ ] Is `Money` correct for OMR, including rounding at the baisa?
-- [ ] Is the refresh flow free of races and infinite loops?
-- [ ] Is the error taxonomy complete for the states the UI must show?
-- [ ] Is the container readable, with every binding visible in one file?
-- [ ] Does the debug slice pass through every layer without shortcuts?
+- [x] Is `Money` correct for OMR, including rounding at the baisa?
+- [x] Is the refresh flow free of races and infinite loops?
+- [x] Is the error taxonomy complete for the states the UI must show?
+- [x] Is the container readable, with every binding visible in one file?
+- [x] Does the debug slice pass through every layer without shortcuts?
 
 ### Definition of done
 
-All twelve criteria pass; the vertical slice runs against the mock; the debug screen is removed or
-moved behind the development flag before Phase 5 ends.
+**Met.** All fourteen criteria pass; the vertical slice runs against the mock, and the debug screen
+is available only when the development menu is enabled.
 
 ---
 

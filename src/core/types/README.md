@@ -1,5 +1,5 @@
 # Shared types
 
-**May contain:** Small structural types used across layers, such as `Page<T>`.
+**May contain:** Small cross-layer structural types and branded idempotency attempts.
 
 **May not contain:** Domain entities and DTOs.

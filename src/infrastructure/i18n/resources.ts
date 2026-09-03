@@ -80,6 +80,12 @@ const ar = {
     ltr: 'من اليسار لليمين',
     direction: 'اتجاه القراءة',
     quantity: 'الكمية',
+    developerTools: 'أدوات المطور',
+    categoryDebugTab: 'الفئات المباشرة',
+    categoryDebugTitle: 'اختبار مسار الفئات',
+    categoryDebugSubtitle: 'بيانات مباشرة عبر HTTP والتحقق والمستودع',
+    categoryDebugEmpty: 'لا توجد فئات',
+    categoryDebugEmptyBody: 'تحقق من بيانات الخادم الوهمي ثم حاول مرة أخرى.',
   },
   states: {
     genericErrorTitle: 'تعذّر تحميل المحتوى',
@@ -178,6 +184,13 @@ const en = {
     ltr: 'Left to right',
     direction: 'Reading direction',
     quantity: 'Quantity',
+    developerTools: 'Developer tools',
+    categoryDebugTab: 'Live categories',
+    categoryDebugTitle: 'Category pipeline check',
+    categoryDebugSubtitle:
+      'Live data through HTTP, validation and repository mapping',
+    categoryDebugEmpty: 'No categories',
+    categoryDebugEmptyBody: 'Check the mock server seed and try again.',
   },
   states: {
     genericErrorTitle: 'We couldn\u2019t load this content',

@@ -17,6 +17,9 @@ import { i18n } from '@infrastructure/i18n';
 import { ToastProvider } from '@presentation/components';
 import { ThemeProvider } from '@presentation/theme';
 
+import { ContainerProvider } from '@app/di';
+import { QueryProvider } from '@app/providers/QueryProvider';
+
 const fonts = {
   NotoKufiArabic_400Regular,
   NotoKufiArabic_500Medium,
@@ -36,12 +39,16 @@ export function AppProviders({ children }: { children: ReactNode }) {
   if (!loaded && !error) return null;
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <SafeAreaProvider>
-        <ThemeProvider>
-          <ToastProvider>{children}</ToastProvider>
-        </ThemeProvider>
-      </SafeAreaProvider>
-    </I18nextProvider>
+    <ContainerProvider>
+      <QueryProvider>
+        <I18nextProvider i18n={i18n}>
+          <SafeAreaProvider>
+            <ThemeProvider>
+              <ToastProvider>{children}</ToastProvider>
+            </ThemeProvider>
+          </SafeAreaProvider>
+        </I18nextProvider>
+      </QueryProvider>
+    </ContainerProvider>
   );
 }

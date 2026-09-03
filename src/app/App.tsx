@@ -10,10 +10,10 @@ import { StatusBar } from 'expo-status-bar';
 
 import { appConfig } from '@infrastructure/config';
 
-import { ComponentGallery } from '@presentation/devtools';
 import type { EnvironmentRow } from '@presentation/features/diagnostics';
 import { EnvironmentScreen } from '@presentation/features/diagnostics';
 
+import { DevelopmentTools } from '@app/DevelopmentTools';
 import { AppProviders } from '@app/providers';
 
 function buildRows(): readonly EnvironmentRow[] {
@@ -33,10 +33,10 @@ export default function App() {
     <AppProviders>
       <StatusBar style="dark" />
       {appConfig.enableDevMenu ? (
-        <ComponentGallery />
+        <DevelopmentTools />
       ) : (
         <EnvironmentScreen
-          title="BRANDHUB · Phase 2"
+          title="BRANDHUB · Phase 4"
           environmentName={appConfig.env}
           rows={buildRows()}
         />

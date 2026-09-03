@@ -6,6 +6,7 @@ module.exports = {
     '<rootDir>/src/**/*.test.ts',
     '<rootDir>/src/**/*.test.tsx',
     '<rootDir>/mock-server/**/*.test.ts',
+    '<rootDir>/contract-tests/**/*.test.ts',
   ],
   moduleNameMapper: {
     '^@app/(.*)$': '<rootDir>/src/app/$1',

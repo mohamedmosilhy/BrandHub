@@ -1,0 +1,11 @@
+import { QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
+
+import { useContainer } from '@app/di';
+
+export function QueryProvider({ children }: { children: ReactNode }) {
+  const { queryClient } = useContainer();
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+}
