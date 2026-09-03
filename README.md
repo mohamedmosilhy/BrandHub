@@ -6,9 +6,9 @@ Design and planning live in [`docs/architecture.md`](docs/architecture.md) and
 [`docs/plan.md`](docs/plan.md). The UI/UX source of truth is `design-reference/`, which is read-only
 and never modified.
 
-**Current state: Phase 2 (design system and UI foundation) implemented.** No feature screens exist
-yet. Development builds open the bilingual RTL/LTR component gallery; production configuration
-keeps the environment diagnostic until the navigation shell arrives in Phase 5.
+**Current state: Phase 3 (mock backend and API contract) implemented.** No feature screens exist yet.
+Development builds open the bilingual RTL/LTR component gallery; production configuration keeps the
+environment diagnostic until the navigation shell arrives in Phase 5.
 
 ## Requirements
 
@@ -79,8 +79,14 @@ the field. Nothing else in the codebase reads `process.env`.
 | `npm run boundaries`    | dependency-cruiser: layer graph and cycle detection  |
 | `npm test`              | Unit, component and architecture tests               |
 | `npm run test:coverage` | Same, with coverage for the domain and mappers       |
+| `npm run mock`          | Contract mock at `http://localhost:3001/api/v1`      |
+| `npm run mock:reset`    | Rebuild the deterministic mock database              |
 
 Git hooks run lint-staged on commit, and type-check, boundaries and tests on push.
+
+The mock deliberately uses port 3001 so it can run beside Metro on 8081. Its seeded login,
+physical-device LAN setup, fault controls and invented endpoint contracts are documented in
+[`mock-server/README.md`](mock-server/README.md).
 
 ## Architecture in one screen
 

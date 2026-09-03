@@ -1,0 +1,409 @@
+import type { MockDatabase } from './types';
+
+const categories = [
+  {
+    id: 'cat-electronics',
+    parentId: null,
+    slug: 'electronics',
+    name: { ar: 'الإلكترونيات', en: 'Electronics' },
+  },
+  {
+    id: 'cat-fashion',
+    parentId: null,
+    slug: 'fashion',
+    name: { ar: 'الأزياء', en: 'Fashion' },
+  },
+  {
+    id: 'cat-home',
+    parentId: null,
+    slug: 'home',
+    name: { ar: 'المنزل', en: 'Home' },
+  },
+  {
+    id: 'cat-beauty',
+    parentId: null,
+    slug: 'beauty',
+    name: { ar: 'الجمال', en: 'Beauty' },
+  },
+  {
+    id: 'cat-audio',
+    parentId: 'cat-electronics',
+    slug: 'audio',
+    name: { ar: 'الصوتيات', en: 'Audio' },
+  },
+  {
+    id: 'cat-shoes',
+    parentId: 'cat-fashion',
+    slug: 'shoes',
+    name: { ar: 'الأحذية', en: 'Shoes' },
+  },
+  {
+    id: 'cat-kitchen',
+    parentId: 'cat-home',
+    slug: 'kitchen',
+    name: { ar: 'المطبخ', en: 'Kitchen' },
+  },
+  {
+    id: 'cat-skincare',
+    parentId: 'cat-beauty',
+    slug: 'skincare',
+    name: { ar: 'العناية بالبشرة', en: 'Skincare' },
+  },
+].map((category, index) => ({
+  ...category,
+  imageUrl: `/api/v1/mock-assets/category-${index + 1}.png`,
+}));
+
+const productNames = [
+  ['سماعات لاسلكية عازلة للضوضاء', 'Noise-cancelling wireless headphones'],
+  ['حذاء رياضي خفيف', 'Lightweight running shoes'],
+  ['آلة قهوة عربية', 'Arabic coffee maker'],
+  ['مصل ترطيب للوجه', 'Hydrating face serum'],
+  ['ساعة ذكية رياضية', 'Sport smart watch'],
+  ['حقيبة جلدية يومية', 'Everyday leather bag'],
+  ['طقم أواني خزفي', 'Ceramic cookware set'],
+  ['واقي شمس معدني', 'Mineral sunscreen'],
+] as const;
+
+const sellerIds = ['seller-a2', 'seller-bait', 'seller-nizwa'];
+
+const products = Array.from({ length: 220 }, (_, index) => {
+  const category = categories[index % categories.length]!;
+  const name = productNames[index % productNames.length]!;
+  const id = `product-${index + 1}`;
+  const basePrice = Number((8.9 + (index % 73) * 0.65).toFixed(3));
+  const onSale = index % 4 === 0;
+  const averageRating = Number((3.7 + (index % 13) / 10).toFixed(1));
+  const reviewCount = 3 + ((index * 17) % 380);
+
+  return {
+    id,
+    slug: `${category.slug}-${index + 1}`,
+    categoryId: category.id,
+    sellerId: sellerIds[index % sellerIds.length],
+    name: { ar: `${name[0]} ${index + 1}`, en: `${name[1]} ${index + 1}` },
+    description: {
+      ar: 'منتج مختار من متجر عُماني موثّق مع توصيل داخل السلطنة.',
+      en: 'A curated product from a verified Omani seller with local delivery.',
+    },
+    basePrice,
+    salePrice: onSale ? Number((basePrice * 0.85).toFixed(3)) : null,
+    currency: 'OMR',
+    stock: 8 + (index % 42),
+    featured: index < 16,
+    createdAt: new Date(
+      Date.UTC(2026, 7, 31) - index * 3_600_000,
+    ).toISOString(),
+    salesCount: 20 + ((index * 11) % 600),
+    averageRating,
+    reviewCount,
+    images: [
+      {
+        id: `${id}-image-1`,
+        url: `/api/v1/mock-assets/product-${(index % 20) + 1}.png`,
+        alt: name,
+      },
+      {
+        id: `${id}-image-2`,
+        url: `/api/v1/mock-assets/product-${((index + 4) % 20) + 1}.png`,
+        alt: name,
+      },
+    ],
+    variants: [
+      {
+        id: `${id}-default`,
+        sku: `BH-${String(index + 1).padStart(5, '0')}-D`,
+        attributes: { colour: 'Black' },
+        stock: 6 + (index % 20),
+        price: onSale ? Number((basePrice * 0.85).toFixed(3)) : basePrice,
+      },
+      {
+        id: `${id}-sand`,
+        sku: `BH-${String(index + 1).padStart(5, '0')}-S`,
+        attributes: { colour: 'Sand' },
+        stock: 2 + (index % 9),
+        price: basePrice,
+      },
+    ],
+    specs: Array.from({ length: 5 }, (__, specIndex) => ({
+      name: {
+        ar: `المواصفة ${specIndex + 1}`,
+        en: `Specification ${specIndex + 1}`,
+      },
+      value: `${specIndex + 1}`,
+    })),
+  };
+});
+
+const addresses = [
+  {
+    id: 'address-1',
+    userId: 'user-customer',
+    fullName: 'Salim Al Rashdi',
+    phone: '+96899112233',
+    addressLine1: 'Building 24, Flat 3',
+    addressLine2: 'Al Khoudh 7',
+    city: 'Seeb',
+    state: 'Muscat',
+    postalCode: '121',
+    country: 'OM',
+    areaId: 'area-seeb',
+    isDefault: true,
+  },
+  {
+    id: 'address-2',
+    userId: 'user-customer',
+    fullName: 'Salim Al Rashdi',
+    phone: '+96899112233',
+    addressLine1: 'Office 52, Knowledge Oasis',
+    city: 'Muscat',
+    state: 'Muscat',
+    postalCode: '135',
+    country: 'OM',
+    areaId: 'area-muscat',
+    isDefault: false,
+  },
+  {
+    id: 'address-3',
+    userId: 'user-customer',
+    fullName: 'Salim Al Rashdi',
+    phone: '+96899112233',
+    addressLine1: 'Nizwa Souq Road',
+    city: 'Nizwa',
+    state: 'Ad Dakhiliyah',
+    country: 'OM',
+    areaId: 'area-nizwa',
+    isDefault: false,
+  },
+];
+
+export function buildSeedDatabase(): MockDatabase {
+  const now = '2026-09-02T12:00:00.000Z';
+  const orderItems = (offset: number) => [
+    {
+      id: `order-item-${offset}-1`,
+      productId: `product-${offset + 1}`,
+      variantId: `product-${offset + 1}-default`,
+      quantity: 1,
+      unitPrice: products[offset]!.salePrice ?? products[offset]!.basePrice,
+    },
+  ];
+
+  return {
+    users: [
+      {
+        id: 'user-customer',
+        email: 'customer@brandhub.om',
+        password: 'Password123!',
+        firstName: 'Salim',
+        lastName: 'Al Rashdi',
+        phone: '+96899112233',
+        role: 'ROLE_CUSTOMER',
+        walletBalance: 125.5,
+        profileImageUrl: '/api/v1/users/user-customer/profile-image',
+      },
+      {
+        id: 'user-recipient',
+        email: 'friend@brandhub.om',
+        password: 'Password123!',
+        firstName: 'Maha',
+        lastName: 'Al Balushi',
+        phone: '+96899223344',
+        role: 'ROLE_CUSTOMER',
+        walletBalance: 20,
+      },
+    ],
+    categories,
+    products,
+    influencers: Array.from({ length: 6 }, (_, index) => ({
+      id: `influencer-${index + 1}`,
+      name: ['Layan', 'Maha', 'Aisha', 'Noor', 'Salma', 'Reem'][index],
+      handle: `creator${index + 1}`,
+      followerCount: 12000 + index * 3700,
+      taggedProductIds: [`product-${index + 1}`, `product-${index + 9}`],
+    })),
+    posts: Array.from({ length: 6 }, (_, index) => ({
+      id: `post-${index + 1}`,
+      influencerId: `influencer-${index + 1}`,
+      caption: {
+        ar: 'اختياراتي لهذا الأسبوع من براند هب.',
+        en: 'My BrandHub picks for this week.',
+      },
+      productIds: [`product-${index + 1}`],
+      createdAt: now,
+    })),
+    follows: [],
+    cartItems: [
+      {
+        id: 'cart-item-1',
+        userId: 'user-customer',
+        productId: 'product-1',
+        variantId: 'product-1-default',
+        quantity: 1,
+      },
+      {
+        id: 'cart-item-2',
+        userId: 'user-customer',
+        productId: 'product-2',
+        variantId: 'product-2-default',
+        quantity: 2,
+      },
+    ],
+    orders: Array.from({ length: 4 }, (_, index) => ({
+      id: `order-${index + 1}`,
+      orderNumber: `BH-${284193 - index}`,
+      userId: 'user-customer',
+      status: ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED'][index],
+      items: orderItems(index),
+      subtotal: products[index]!.salePrice ?? products[index]!.basePrice,
+      vat: Number(
+        (
+          ((products[index]!.salePrice ??
+            products[index]!.basePrice) as number) * 0.05
+        ).toFixed(3),
+      ),
+      shipping: 0,
+      paymentFee: 0,
+      discount: 0,
+      total: Number(
+        (
+          ((products[index]!.salePrice ??
+            products[index]!.basePrice) as number) * 1.05
+        ).toFixed(3),
+      ),
+      currency: 'OMR',
+      shippingAddressId: 'address-1',
+      deliveryOtp: String(3814 + index),
+      createdAt: now,
+    })),
+    addresses,
+    tickets: Array.from({ length: 3 }, (_, index) => ({
+      id: `ticket-${index + 1}`,
+      ticketNumber: `TKT-2026-${String(index + 1).padStart(4, '0')}`,
+      userId: 'user-customer',
+      orderId: `order-${index + 1}`,
+      category: index === 0 ? 'ORDER' : 'GENERAL',
+      priority: index === 2 ? 'HIGH' : 'NORMAL',
+      subject: `Support request ${index + 1}`,
+      description: 'Please help me with this request.',
+      status: index === 2 ? 'RESOLVED' : 'OPEN',
+      messages: [
+        {
+          id: `ticket-message-${index + 1}`,
+          senderType: 'CUSTOMER',
+          message: 'Please help me with this request.',
+          createdAt: now,
+        },
+      ],
+      createdAt: now,
+      updatedAt: now,
+    })),
+    ticketAttachments: [],
+    walletTransactions: Array.from({ length: 5 }, (_, index) => ({
+      id: `wallet-transaction-${index + 1}`,
+      userId: 'user-customer',
+      type: index % 2 === 0 ? 'CREDIT' : 'PURCHASE',
+      amount: Number((5 + index * 3.25).toFixed(3)),
+      currency: 'OMR',
+      description: `Wallet transaction ${index + 1}`,
+      createdAt: now,
+    })),
+    walletTransfers: [],
+    gifts: [],
+    returns: [],
+    reviews: Array.from({ length: 3 }, (_, index) => ({
+      id: `review-${index + 1}`,
+      userId: 'user-customer',
+      productId: `product-${index + 1}`,
+      rating: 5 - index,
+      comment: 'A useful product and prompt local delivery.',
+      createdAt: now,
+    })),
+    notifications: Array.from({ length: 5 }, (_, index) => ({
+      id: `notification-${index + 1}`,
+      userId: 'user-customer',
+      type: ['ORDER', 'PROMOTION', 'SOCIAL', 'PRICE_DROP', 'ORDER'][index],
+      title: `Notification ${index + 1}`,
+      body: 'A BRANDHUB update is ready for you.',
+      isRead: index > 2,
+      createdAt: now,
+    })),
+    coupons: [
+      {
+        id: 'coupon-welcome',
+        code: 'WELCOME10',
+        name: 'Welcome 10%',
+        type: 'PERCENTAGE',
+        value: 10,
+        minimumOrder: 5,
+        maximumDiscount: 25,
+        active: true,
+        startsAt: '2026-01-01T00:00:00.000Z',
+        expiresAt: '2027-01-01T00:00:00.000Z',
+      },
+    ],
+    areas: [
+      {
+        id: 'area-muscat',
+        name: 'Muscat',
+        governorate: 'Muscat',
+        shippingPrice: 1.5,
+        minOrderAmount: 20,
+        estimatedDeliveryDays: 1,
+        active: true,
+      },
+      {
+        id: 'area-seeb',
+        name: 'Seeb',
+        governorate: 'Muscat',
+        shippingPrice: 2,
+        minOrderAmount: 25,
+        estimatedDeliveryDays: 2,
+        active: true,
+      },
+      {
+        id: 'area-salalah',
+        name: 'Salalah',
+        governorate: 'Dhofar',
+        shippingPrice: 3.5,
+        minOrderAmount: 40,
+        estimatedDeliveryDays: 4,
+        active: true,
+      },
+      {
+        id: 'area-sohar',
+        name: 'Sohar',
+        governorate: 'Al Batinah North',
+        shippingPrice: 3,
+        minOrderAmount: 35,
+        estimatedDeliveryDays: 3,
+        active: true,
+      },
+      {
+        id: 'area-nizwa',
+        name: 'Nizwa',
+        governorate: 'Ad Dakhiliyah',
+        shippingPrice: 3,
+        minOrderAmount: 35,
+        estimatedDeliveryDays: 3,
+        active: true,
+      },
+    ],
+    shippingRates: [
+      { id: 'shipping-standard', area: 'Muscat', price: 1.5, active: true },
+      {
+        id: 'shipping-north',
+        area: 'Al Batinah North',
+        price: 3,
+        active: true,
+      },
+    ],
+    wishlist: [
+      { id: 'wishlist-1', userId: 'user-customer', productId: 'product-4' },
+    ],
+    refreshTokens: [],
+    revokedTokens: [],
+    idempotency: [],
+    otpChallenges: [],
+  };
+}

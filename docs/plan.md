@@ -1,12 +1,12 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Implemented through Phase 2 — Phase 3 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
-**Date:** 2026-09-02 · **Reviewer / decision maker:** repository owner
+**Status:** **Implemented through Phase 3 — Phase 4 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
+**Date:** 2026-09-03 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
-> Phases 1 and 2 are implemented. Their completion reports are in `docs/reports/`.
+> Phases 1–3 are implemented. Their completion reports are in `docs/reports/`.
 > All 17 open questions were approved as recommended on 2026-09-02 and are recorded as decisions
-> **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 1.**
+> **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 4.**
 
 ---
 
@@ -360,19 +360,19 @@ Phase 1 done. The mock runs behind an Express contract adapter (D2); catalogue l
 
 ### Review checklist
 
-- [ ] Do the mock's shapes match the Postman collection, field for field?
-- [ ] Is the invented-endpoint list complete and precise enough to hand to the backend team?
-- [ ] Is the seed data realistic — Arabic titles, OMR prices at 3 decimals, plausible ratings?
-- [ ] Is content localisation implemented per D9, returning one resolved language rather than a pair?
-- [ ] Does `INVENTED_ENDPOINTS.md` now contain only the three genuinely uncontracted areas, with everything the expanded collection covers moved to real routes?
-- [ ] Do the idempotency semantics match what the real API promises, rather than a convenient approximation?
-- [ ] Are the shipping areas genuinely data, changeable without touching code?
-- [ ] Does the fault switch cover every state the UI must handle?
+- [x] Do the mock's shapes match the Postman collection, field for field?
+- [x] Is the invented-endpoint list complete and precise enough to hand to the backend team?
+- [x] Is the seed data realistic — Arabic titles, OMR prices at 3 decimals, plausible ratings?
+- [x] Is content localisation implemented per D9, returning one resolved language rather than a pair?
+- [x] Does `INVENTED_ENDPOINTS.md` now contain only the three genuinely uncontracted areas, with everything the expanded collection covers moved to real routes?
+- [x] Do the idempotency semantics match what the real API promises, rather than a convenient approximation?
+- [x] Are the shipping areas genuinely data, changeable without touching code?
+- [x] Does the fault switch cover every state the UI must handle?
 
 ### Definition of done
 
-All thirteen criteria pass; the mock runs from a clean checkout with one command; the invented-endpoint
-document is reviewed and ready to send to the backend team.
+**Met.** All twenty-three criteria pass; the mock runs from a clean checkout with one command; the
+invented-endpoint document is ready to send to the backend team.
 
 ---
 
