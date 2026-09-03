@@ -26,6 +26,8 @@ export const colors = {
   ink80: 'rgba(26, 26, 46, 0.80)',
   ink40: 'rgba(26, 26, 46, 0.40)',
   ink10: 'rgba(26, 26, 46, 0.06)',
+  /** The indigo the seller-store cover fades into; `#1A1A2E → #4A4470` in the prototype. */
+  inkIndigo: '#4A4470',
   white: '#FFFFFF',
   background: '#F5F5F7',
   surface: '#FFFFFF',
@@ -98,6 +100,13 @@ export const gradients = {
     start: { x: 0, y: 0 },
     end: { x: 0, y: 1 },
     css: 'linear-gradient(180deg, transparent 40%, rgba(26,26,46,0.75) 100%)',
+  },
+  /** `linear-gradient(135deg, #1A1A2E 0%, #4A4470 100%)` seller-store cover. */
+  sellerCover: {
+    colors: [colors.ink, colors.inkIndigo] as const,
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+    css: 'linear-gradient(135deg, #1A1A2E 0%, #4A4470 100%)',
   },
   /** The app prototype's onboarding hero scrim: .25 → .55 → solid ink. */
   onboardingHero: {

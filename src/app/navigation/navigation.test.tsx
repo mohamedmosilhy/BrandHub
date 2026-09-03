@@ -6,6 +6,7 @@ import { renderWithProviders, screen, waitFor } from '@test/render';
 
 import { linking } from './linking';
 import { RequireAuth, gatedScreens } from './RequireAuth';
+import { hidesTabBar } from './tabBarVisibility';
 
 describe('navigation shell contract', () => {
   it('parses the product deep link into the Home tab product stack', () => {
@@ -35,6 +36,15 @@ describe('navigation shell contract', () => {
     ]);
     expect(gatedScreens).not.toContain('Cart');
     expect(gatedScreens).not.toContain('Product');
+  });
+
+  it('stands the tab bar down on the screens that own their own bottom (AC7.11)', () => {
+    expect(hidesTabBar('Product')).toBe(true);
+    expect(hidesTabBar('Seller')).toBe(true);
+    expect(hidesTabBar('Home')).toBe(false);
+    expect(hidesTabBar('Category')).toBe(false);
+    // No nested state yet — the tabs stay up rather than flickering away on first render.
+    expect(hidesTabBar(undefined)).toBe(false);
   });
 
   it('requests login with returnTo for a guest', async () => {

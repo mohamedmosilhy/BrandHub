@@ -23,19 +23,18 @@ function artworkIndex(value: string, prefix: string, fallbackKey: string) {
   return [...fallbackKey].reduce((sum, char) => sum + char.charCodeAt(0), 0);
 }
 
+function artworkAt(index: number): number {
+  return productArtwork[index % productArtwork.length] ?? productArtwork[0];
+}
+
 /** Keep the mock catalogue visual even when a device cannot reach the local mock server. */
 export function productArtworkSource(
   url: string | undefined,
   productId: string,
-): ImageSource | number | undefined {
-  if (!url)
-    return productArtwork[
-      artworkIndex('', 'product', productId) % productArtwork.length
-    ];
+): ImageSource | number {
+  if (!url) return artworkAt(artworkIndex('', 'product', productId));
   if (!url.includes('/mock-assets/')) return { uri: url };
-  return productArtwork[
-    artworkIndex(url, 'product', productId) % productArtwork.length
-  ];
+  return artworkAt(artworkIndex(url, 'product', productId));
 }
 
 export function categoryArtworkSource(
@@ -45,6 +44,5 @@ export function categoryArtworkSource(
   if (!url.includes('/mock-assets/')) return { uri: url };
   const categoryIndex =
     artworkIndex(url, 'category', categoryId) % categoryArtwork.length;
-  const productIndex = categoryArtwork[categoryIndex] ?? 0;
-  return productArtwork[productIndex];
+  return artworkAt(categoryArtwork[categoryIndex] ?? 0);
 }

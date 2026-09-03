@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import type {
   CategoryRepository,
   GetCategoryProductsUseCase,
-  ProductRepository,
+  GetProductDetailUseCase,
   SearchCriteria,
 } from '@domain/catalog';
 
@@ -33,12 +33,13 @@ import {
   useCategoryProducts,
   useProductPrefetch,
 } from '@presentation/features/catalog/useCatalogQueries';
+import { useWishlistCardProps } from '@presentation/features/wishlist';
 import { toneAt, useTheme } from '@presentation/theme';
 
 export function CategoryScreen({
   categoryId,
   categoryRepository,
-  productRepository,
+  getProductDetail,
   getCategoryProducts,
   onBack,
   onSearch,
@@ -46,7 +47,7 @@ export function CategoryScreen({
 }: {
   categoryId: string;
   categoryRepository: CategoryRepository;
-  productRepository: ProductRepository;
+  getProductDetail: GetProductDetailUseCase;
   getCategoryProducts: GetCategoryProductsUseCase;
   onBack: () => void;
   onSearch: (categoryId: string) => void;
@@ -75,7 +76,8 @@ export function CategoryScreen({
   const items = productPages(products.data);
   const total = products.data?.pages[0]?.total ?? 0;
   const previewTotal = preview.data?.pages[0]?.total ?? 0;
-  const prefetch = useProductPrefetch(productRepository, locale);
+  const prefetch = useProductPrefetch(getProductDetail, locale);
+  const wishlist = useWishlistCardProps();
   const filterLabels = {
     sortBy: t('sortBy'),
     relevance: t('sRelevant'),
@@ -244,6 +246,7 @@ export function CategoryScreen({
           />
         ) : (
           <ProductGrid
+            wishlist={wishlist}
             products={items}
             gap={12}
             onOpen={onOpenProduct}

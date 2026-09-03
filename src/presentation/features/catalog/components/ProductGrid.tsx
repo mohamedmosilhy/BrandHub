@@ -8,6 +8,7 @@ import { EmptyState } from '@presentation/components/feedback';
 import { toneAt, useTheme } from '@presentation/theme';
 
 import { ProductCard, type ProductCardVariant } from './ProductCard';
+import { heartProps, type WishlistCardSource } from './wishlistProps';
 
 export function ProductGrid({
   products,
@@ -26,6 +27,7 @@ export function ProductGrid({
   paddingTop = 10,
   paddingBottom = 18,
   footer,
+  wishlist,
 }: {
   products: readonly Product[];
   variant?: ProductCardVariant;
@@ -43,6 +45,7 @@ export function ProductGrid({
   paddingBottom?: number;
   /** Trails the last row inside the scroller, the way the prototype's page-end actions do. */
   footer?: ReactNode;
+  wishlist?: WishlistCardSource;
 }) {
   const { theme } = useTheme();
   const columns = variant === 'list' ? 1 : 2;
@@ -98,6 +101,7 @@ export function ProductGrid({
             tone={toneAt(index)}
             onOpen={() => onOpen(item.id)}
             onPrefetch={() => onPrefetch?.(item.id)}
+            {...heartProps(item, wishlist)}
           />
         </View>
       )}

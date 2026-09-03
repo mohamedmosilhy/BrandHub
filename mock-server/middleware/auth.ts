@@ -77,6 +77,9 @@ const publicGetPrefixes = [
   '/mock-assets',
   '/influencers',
   '/posts',
+  // D3: browsing is public, and a product's reviews are part of the product page a guest sees.
+  // Writing one still needs a session — only the GET prefix is listed here.
+  '/reviews/product',
 ];
 
 function isPublic(request: Request): boolean {

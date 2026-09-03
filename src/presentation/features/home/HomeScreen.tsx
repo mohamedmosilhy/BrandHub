@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import type {
   Category,
   CategoryRepository,
+  GetProductDetailUseCase,
   ProductRepository,
 } from '@domain/catalog';
 
@@ -29,6 +30,7 @@ import {
   useHomeQueries,
   useProductPrefetch,
 } from '@presentation/features/catalog/useCatalogQueries';
+import { useWishlistCardProps } from '@presentation/features/wishlist';
 import { mobile, toneAt, useTheme } from '@presentation/theme';
 
 const creators = [
@@ -51,6 +53,7 @@ function flattenCategories(
 export function HomeScreen({
   categoryRepository,
   productRepository,
+  getProductDetail,
   onSearch,
   onNotifications,
   onBrowse,
@@ -60,6 +63,7 @@ export function HomeScreen({
 }: {
   categoryRepository: CategoryRepository;
   productRepository: ProductRepository;
+  getProductDetail: GetProductDetailUseCase;
   onSearch: () => void;
   onNotifications: () => void;
   onBrowse: () => void;
@@ -71,7 +75,8 @@ export function HomeScreen({
   const { theme } = useTheme();
   const locale = i18n.resolvedLanguage ?? i18n.language;
   const queries = useHomeQueries(categoryRepository, productRepository, locale);
-  const prefetch = useProductPrefetch(productRepository, locale);
+  const prefetch = useProductPrefetch(getProductDetail, locale);
+  const wishlist = useWishlistCardProps();
   const categories = flattenCategories(queries.categories.data ?? []);
 
   return (
@@ -326,6 +331,7 @@ export function HomeScreen({
         }
       >
         <StaticProductGrid
+          wishlist={wishlist}
           products={queries.deals.data ?? []}
           onOpen={onOpenProduct}
           onPrefetch={prefetch}

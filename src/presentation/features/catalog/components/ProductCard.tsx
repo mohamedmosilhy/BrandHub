@@ -123,6 +123,8 @@ export type ProductCardProps = {
   tone?: string;
   express?: boolean;
   showRating?: boolean;
+  /** Renders the heart filled and labels it as a removal; see `useWishlistCardProps`. */
+  saved?: boolean;
   onOpen: () => void;
   onPrefetch?: () => void;
   onWishlist?: () => void;
@@ -135,6 +137,7 @@ export const ProductCard = memo(function ProductCard({
   tone,
   express = false,
   showRating = false,
+  saved = false,
   onOpen,
   onPrefetch,
   onWishlist,
@@ -211,7 +214,8 @@ export const ProductCard = memo(function ProductCard({
         ) : null}
         {onWishlist ? (
           <Pressable
-            accessibilityLabel={t('wishlist')}
+            accessibilityLabel={saved ? t('removeFromWishlist') : t('wishlist')}
+            accessibilityState={{ selected: saved }}
             compact
             compactSize={theme.mobile.iconButtonSize}
             onPress={onWishlist}
@@ -225,7 +229,12 @@ export const ProductCard = memo(function ProductCard({
               },
             ]}
           >
-            <Icon name="heart" size={theme.iconSizes.sm} />
+            <Icon
+              name="heart"
+              color={saved ? theme.colors.pink : theme.colors.textPrimary}
+              filled={saved}
+              size={theme.iconSizes.sm}
+            />
           </Pressable>
         ) : null}
       </View>

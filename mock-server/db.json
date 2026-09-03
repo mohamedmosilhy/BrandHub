@@ -546,15 +546,6 @@
           },
           "stock": 10,
           "price": 9.775
-        },
-        {
-          "id": "product-5-sand",
-          "sku": "BH-00005-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 6,
-          "price": 11.5
         }
       ],
       "specs": [
@@ -1035,15 +1026,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 14.75
-        },
-        {
-          "id": "product-10-sand",
-          "sku": "BH-00010-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 2,
           "price": 14.75
         }
       ],
@@ -1526,15 +1508,6 @@
           },
           "stock": 20,
           "price": 18
-        },
-        {
-          "id": "product-15-sand",
-          "sku": "BH-00015-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 7,
-          "price": 18
         }
       ],
       "specs": [
@@ -2015,15 +1988,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 21.25
-        },
-        {
-          "id": "product-20-sand",
-          "sku": "BH-00020-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 3,
           "price": 21.25
         }
       ],
@@ -2506,15 +2470,6 @@
           },
           "stock": 10,
           "price": 20.825
-        },
-        {
-          "id": "product-25-sand",
-          "sku": "BH-00025-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 8,
-          "price": 24.5
         }
       ],
       "specs": [
@@ -2995,15 +2950,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 27.75
-        },
-        {
-          "id": "product-30-sand",
-          "sku": "BH-00030-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 4,
           "price": 27.75
         }
       ],
@@ -3486,15 +3432,6 @@
           },
           "stock": 20,
           "price": 31
-        },
-        {
-          "id": "product-35-sand",
-          "sku": "BH-00035-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 9,
-          "price": 31
         }
       ],
       "specs": [
@@ -3975,15 +3912,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 34.25
-        },
-        {
-          "id": "product-40-sand",
-          "sku": "BH-00040-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 5,
           "price": 34.25
         }
       ],
@@ -4466,15 +4394,6 @@
           },
           "stock": 10,
           "price": 31.875
-        },
-        {
-          "id": "product-45-sand",
-          "sku": "BH-00045-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 10,
-          "price": 37.5
         }
       ],
       "specs": [
@@ -4955,15 +4874,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 40.75
-        },
-        {
-          "id": "product-50-sand",
-          "sku": "BH-00050-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 6,
           "price": 40.75
         }
       ],
@@ -5446,15 +5356,6 @@
           },
           "stock": 20,
           "price": 44
-        },
-        {
-          "id": "product-55-sand",
-          "sku": "BH-00055-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 2,
-          "price": 44
         }
       ],
       "specs": [
@@ -5935,15 +5836,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 47.25
-        },
-        {
-          "id": "product-60-sand",
-          "sku": "BH-00060-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 7,
           "price": 47.25
         }
       ],
@@ -6426,15 +6318,6 @@
           },
           "stock": 10,
           "price": 42.925
-        },
-        {
-          "id": "product-65-sand",
-          "sku": "BH-00065-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 3,
-          "price": 50.5
         }
       ],
       "specs": [
@@ -6915,15 +6798,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 53.75
-        },
-        {
-          "id": "product-70-sand",
-          "sku": "BH-00070-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 8,
           "price": 53.75
         }
       ],
@@ -7406,15 +7280,6 @@
           },
           "stock": 20,
           "price": 9.55
-        },
-        {
-          "id": "product-75-sand",
-          "sku": "BH-00075-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 4,
-          "price": 9.55
         }
       ],
       "specs": [
@@ -7895,15 +7760,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 12.8
-        },
-        {
-          "id": "product-80-sand",
-          "sku": "BH-00080-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 9,
           "price": 12.8
         }
       ],
@@ -8386,15 +8242,6 @@
           },
           "stock": 10,
           "price": 13.643
-        },
-        {
-          "id": "product-85-sand",
-          "sku": "BH-00085-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 5,
-          "price": 16.05
         }
       ],
       "specs": [
@@ -8875,15 +8722,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 19.3
-        },
-        {
-          "id": "product-90-sand",
-          "sku": "BH-00090-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 10,
           "price": 19.3
         }
       ],
@@ -9366,15 +9204,6 @@
           },
           "stock": 20,
           "price": 22.55
-        },
-        {
-          "id": "product-95-sand",
-          "sku": "BH-00095-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 6,
-          "price": 22.55
         }
       ],
       "specs": [
@@ -9855,15 +9684,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 25.8
-        },
-        {
-          "id": "product-100-sand",
-          "sku": "BH-00100-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 2,
           "price": 25.8
         }
       ],
@@ -10346,15 +10166,6 @@
           },
           "stock": 10,
           "price": 24.692
-        },
-        {
-          "id": "product-105-sand",
-          "sku": "BH-00105-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 7,
-          "price": 29.05
         }
       ],
       "specs": [
@@ -10835,15 +10646,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 32.3
-        },
-        {
-          "id": "product-110-sand",
-          "sku": "BH-00110-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 3,
           "price": 32.3
         }
       ],
@@ -11326,15 +11128,6 @@
           },
           "stock": 20,
           "price": 35.55
-        },
-        {
-          "id": "product-115-sand",
-          "sku": "BH-00115-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 8,
-          "price": 35.55
         }
       ],
       "specs": [
@@ -11815,15 +11608,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 38.8
-        },
-        {
-          "id": "product-120-sand",
-          "sku": "BH-00120-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 4,
           "price": 38.8
         }
       ],
@@ -12306,15 +12090,6 @@
           },
           "stock": 10,
           "price": 35.742
-        },
-        {
-          "id": "product-125-sand",
-          "sku": "BH-00125-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 9,
-          "price": 42.05
         }
       ],
       "specs": [
@@ -12795,15 +12570,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 45.3
-        },
-        {
-          "id": "product-130-sand",
-          "sku": "BH-00130-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 5,
           "price": 45.3
         }
       ],
@@ -13286,15 +13052,6 @@
           },
           "stock": 20,
           "price": 48.55
-        },
-        {
-          "id": "product-135-sand",
-          "sku": "BH-00135-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 10,
-          "price": 48.55
         }
       ],
       "specs": [
@@ -13775,15 +13532,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 51.8
-        },
-        {
-          "id": "product-140-sand",
-          "sku": "BH-00140-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 6,
           "price": 51.8
         }
       ],
@@ -14266,15 +14014,6 @@
           },
           "stock": 10,
           "price": 46.792
-        },
-        {
-          "id": "product-145-sand",
-          "sku": "BH-00145-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 2,
-          "price": 55.05
         }
       ],
       "specs": [
@@ -14755,15 +14494,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 10.85
-        },
-        {
-          "id": "product-150-sand",
-          "sku": "BH-00150-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 7,
           "price": 10.85
         }
       ],
@@ -15246,15 +14976,6 @@
           },
           "stock": 20,
           "price": 14.1
-        },
-        {
-          "id": "product-155-sand",
-          "sku": "BH-00155-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 3,
-          "price": 14.1
         }
       ],
       "specs": [
@@ -15735,15 +15456,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 17.35
-        },
-        {
-          "id": "product-160-sand",
-          "sku": "BH-00160-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 8,
           "price": 17.35
         }
       ],
@@ -16226,15 +15938,6 @@
           },
           "stock": 10,
           "price": 17.51
-        },
-        {
-          "id": "product-165-sand",
-          "sku": "BH-00165-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 4,
-          "price": 20.6
         }
       ],
       "specs": [
@@ -16715,15 +16418,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 23.85
-        },
-        {
-          "id": "product-170-sand",
-          "sku": "BH-00170-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 9,
           "price": 23.85
         }
       ],
@@ -17206,15 +16900,6 @@
           },
           "stock": 20,
           "price": 27.1
-        },
-        {
-          "id": "product-175-sand",
-          "sku": "BH-00175-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 5,
-          "price": 27.1
         }
       ],
       "specs": [
@@ -17695,15 +17380,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 30.35
-        },
-        {
-          "id": "product-180-sand",
-          "sku": "BH-00180-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 10,
           "price": 30.35
         }
       ],
@@ -18186,15 +17862,6 @@
           },
           "stock": 10,
           "price": 28.56
-        },
-        {
-          "id": "product-185-sand",
-          "sku": "BH-00185-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 6,
-          "price": 33.6
         }
       ],
       "specs": [
@@ -18675,15 +18342,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 36.85
-        },
-        {
-          "id": "product-190-sand",
-          "sku": "BH-00190-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 2,
           "price": 36.85
         }
       ],
@@ -19166,15 +18824,6 @@
           },
           "stock": 20,
           "price": 40.1
-        },
-        {
-          "id": "product-195-sand",
-          "sku": "BH-00195-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 7,
-          "price": 40.1
         }
       ],
       "specs": [
@@ -19655,15 +19304,6 @@
             "colour": "Black"
           },
           "stock": 25,
-          "price": 43.35
-        },
-        {
-          "id": "product-200-sand",
-          "sku": "BH-00200-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 3,
           "price": 43.35
         }
       ],
@@ -20146,15 +19786,6 @@
           },
           "stock": 10,
           "price": 39.61
-        },
-        {
-          "id": "product-205-sand",
-          "sku": "BH-00205-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 8,
-          "price": 46.6
         }
       ],
       "specs": [
@@ -20635,15 +20266,6 @@
             "colour": "Black"
           },
           "stock": 15,
-          "price": 49.85
-        },
-        {
-          "id": "product-210-sand",
-          "sku": "BH-00210-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 4,
           "price": 49.85
         }
       ],
@@ -21126,15 +20748,6 @@
           },
           "stock": 20,
           "price": 53.1
-        },
-        {
-          "id": "product-215-sand",
-          "sku": "BH-00215-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 9,
-          "price": 53.1
         }
       ],
       "specs": [
@@ -21616,15 +21229,6 @@
           },
           "stock": 25,
           "price": 8.9
-        },
-        {
-          "id": "product-220-sand",
-          "sku": "BH-00220-S",
-          "attributes": {
-            "colour": "Sand"
-          },
-          "stock": 5,
-          "price": 8.9
         }
       ],
       "specs": [
@@ -21672,42 +21276,60 @@
       "name": "Layan",
       "handle": "creator1",
       "followerCount": 12000,
-      "taggedProductIds": ["product-1", "product-9"]
+      "taggedProductIds": [
+        "product-1",
+        "product-9"
+      ]
     },
     {
       "id": "influencer-2",
       "name": "Maha",
       "handle": "creator2",
       "followerCount": 15700,
-      "taggedProductIds": ["product-2", "product-10"]
+      "taggedProductIds": [
+        "product-2",
+        "product-10"
+      ]
     },
     {
       "id": "influencer-3",
       "name": "Aisha",
       "handle": "creator3",
       "followerCount": 19400,
-      "taggedProductIds": ["product-3", "product-11"]
+      "taggedProductIds": [
+        "product-3",
+        "product-11"
+      ]
     },
     {
       "id": "influencer-4",
       "name": "Noor",
       "handle": "creator4",
       "followerCount": 23100,
-      "taggedProductIds": ["product-4", "product-12"]
+      "taggedProductIds": [
+        "product-4",
+        "product-12"
+      ]
     },
     {
       "id": "influencer-5",
       "name": "Salma",
       "handle": "creator5",
       "followerCount": 26800,
-      "taggedProductIds": ["product-5", "product-13"]
+      "taggedProductIds": [
+        "product-5",
+        "product-13"
+      ]
     },
     {
       "id": "influencer-6",
       "name": "Reem",
       "handle": "creator6",
       "followerCount": 30500,
-      "taggedProductIds": ["product-6", "product-14"]
+      "taggedProductIds": [
+        "product-6",
+        "product-14"
+      ]
     }
   ],
   "posts": [
@@ -21718,7 +21340,9 @@
         "ar": "اختياراتي لهذا الأسبوع من براند هب.",
         "en": "My BrandHub picks for this week."
       },
-      "productIds": ["product-1"],
+      "productIds": [
+        "product-1"
+      ],
       "createdAt": "2026-09-02T12:00:00.000Z"
     },
     {
@@ -21728,7 +21352,9 @@
         "ar": "اختياراتي لهذا الأسبوع من براند هب.",
         "en": "My BrandHub picks for this week."
       },
-      "productIds": ["product-2"],
+      "productIds": [
+        "product-2"
+      ],
       "createdAt": "2026-09-02T12:00:00.000Z"
     },
     {
@@ -21738,7 +21364,9 @@
         "ar": "اختياراتي لهذا الأسبوع من براند هب.",
         "en": "My BrandHub picks for this week."
       },
-      "productIds": ["product-3"],
+      "productIds": [
+        "product-3"
+      ],
       "createdAt": "2026-09-02T12:00:00.000Z"
     },
     {
@@ -21748,7 +21376,9 @@
         "ar": "اختياراتي لهذا الأسبوع من براند هب.",
         "en": "My BrandHub picks for this week."
       },
-      "productIds": ["product-4"],
+      "productIds": [
+        "product-4"
+      ],
       "createdAt": "2026-09-02T12:00:00.000Z"
     },
     {
@@ -21758,7 +21388,9 @@
         "ar": "اختياراتي لهذا الأسبوع من براند هب.",
         "en": "My BrandHub picks for this week."
       },
-      "productIds": ["product-5"],
+      "productIds": [
+        "product-5"
+      ],
       "createdAt": "2026-09-02T12:00:00.000Z"
     },
     {
@@ -21768,7 +21400,9 @@
         "ar": "اختياراتي لهذا الأسبوع من براند هب.",
         "en": "My BrandHub picks for this week."
       },
-      "productIds": ["product-6"],
+      "productIds": [
+        "product-6"
+      ],
       "createdAt": "2026-09-02T12:00:00.000Z"
     }
   ],

@@ -23,7 +23,9 @@ export type IconName =
   | 'person'
   | 'plus'
   | 'search'
+  | 'shield'
   | 'star'
+  | 'truck'
   | 'warning';
 
 const directional = new Set<IconName>(['arrow-back', 'chevron-forward']);
@@ -146,6 +148,23 @@ function Glyph({ name }: { name: IconName }): ReactNode {
         <>
           <Circle cx="11" cy="11" r="7" />
           <Path d="m20 20-3.5-3.5" />
+        </>
+      );
+    // The PDP's delivery and returns promises, traced from the prototype's own two glyphs.
+    case 'truck':
+      return (
+        <>
+          <Rect x="2" y="7" width="12" height="9" rx="1.6" />
+          <Path d="M14 10h4l3 3v3h-7z" />
+          <Circle cx="6.5" cy="18" r="1.6" />
+          <Circle cx="17" cy="18" r="1.6" />
+        </>
+      );
+    case 'shield':
+      return (
+        <>
+          <Path d="M12 3 4 6v6c0 4.6 3.4 8.2 8 9 4.6-.8 8-4.4 8-9V6z" />
+          <Path d="m9 12 2 2 4-4" />
         </>
       );
     case 'star':

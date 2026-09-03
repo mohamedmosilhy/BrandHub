@@ -8,6 +8,7 @@ import { useCallback } from 'react';
 import type {
   CategoryRepository,
   GetCategoryProductsUseCase,
+  GetProductDetailUseCase,
   ProductRepository,
   SearchCriteria,
   SearchProductsUseCase,
@@ -96,8 +97,13 @@ export function useCategoryProducts(
   });
 }
 
+/**
+ * Warms the exact entry the PDP reads on press-in, so the detail use case — and with it D8's
+ * variant resolution — runs once. Prefetching the bare product under the same key would leave
+ * the PDP reading a differently shaped cache hit.
+ */
 export function useProductPrefetch(
-  repository: ProductRepository,
+  useCase: GetProductDetailUseCase,
   locale: string,
 ) {
   const client = useQueryClient();
@@ -105,11 +111,11 @@ export function useProductPrefetch(
     (id: string) => {
       void client.prefetchQuery({
         queryKey: catalogKeys.detail(locale, id),
-        queryFn: () => valueOf(repository.getById(id)),
+        queryFn: () => valueOf(useCase.execute(id)),
         staleTime: 60_000,
       });
     },
-    [client, locale, repository],
+    [client, locale, useCase],
   );
 }
 

@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import type {
   CategoryRepository,
   GetCategoryProductsUseCase,
-  ProductRepository,
+  GetProductDetailUseCase,
 } from '@domain/catalog';
 
 import { Chip } from '@presentation/components/controls';
@@ -19,16 +19,17 @@ import {
   useCategoryProducts,
   useProductPrefetch,
 } from '@presentation/features/catalog/useCatalogQueries';
+import { useWishlistCardProps } from '@presentation/features/wishlist';
 import { useTheme } from '@presentation/theme';
 
 export function BrowseScreen({
   categoryRepository,
-  productRepository,
+  getProductDetail,
   getCategoryProducts,
   onOpenProduct,
 }: {
   categoryRepository: CategoryRepository;
-  productRepository: ProductRepository;
+  getProductDetail: GetProductDetailUseCase;
   getCategoryProducts: GetCategoryProductsUseCase;
   onOpenProduct: (id: string) => void;
 }) {
@@ -52,7 +53,8 @@ export function BrowseScreen({
     Boolean(resolvedRootId),
   );
   const items = productPages(products.data);
-  const prefetch = useProductPrefetch(productRepository, locale);
+  const prefetch = useProductPrefetch(getProductDetail, locale);
+  const wishlist = useWishlistCardProps();
 
   return (
     <Screen accessibilityLabel={t('tabCats')} edgeToEdge gap={0} scroll={false}>
@@ -167,6 +169,7 @@ export function BrowseScreen({
               </View>
             ) : (
               <ProductGrid
+                wishlist={wishlist}
                 products={items}
                 variant="compact"
                 gap={10}

@@ -707,10 +707,16 @@ formatter. Rounding is half-up at the baisa. No arithmetic on prices happens out
 ### 11.4 Repository ports
 
 One port per aggregate, named for the domain concept, returning entities and `Result`:
-`ProductRepository`, `CategoryRepository`, `ReviewRepository`, `CartRepository`,
-`OrderRepository`, `AuthRepository`, `UserRepository`, `AddressRepository`, `WalletRepository`,
-`WishlistRepository`, `InfluencerRepository`, `SupportRepository`, `NotificationRepository`,
-`CouponRepository`.
+`ProductRepository`, `CategoryRepository`, `ReviewRepository`, `SellerRepository`,
+`CartRepository`, `OrderRepository`, `AuthRepository`, `UserRepository`, `AddressRepository`,
+`WalletRepository`, `WishlistRepository`, `InfluencerRepository`, `SupportRepository`,
+`NotificationRepository`, `CouponRepository`.
+
+`SellerRepository` was added in Phase 7 for the seller store screen. The contract has
+`GET /sellers`, `GET /sellers/{id}/products` and the profile image but **no `GET /sellers/{id}`**,
+so `getById` is a lookup over the seller directory page inside `SellerRemoteDataSource` rather than
+a request of its own. The port is the shape the screen needs, so a real single-seller endpoint later
+changes one method in one implementation.
 
 Ports are **narrow**: `ProductRepository` exposes `search(criteria)`, `getById(id)`,
 `getRelated(id)`, `getByCategory(categoryId, page)`, `getBestSellers()`, `getNewArrivals()`,
@@ -728,7 +734,13 @@ the repository port directly through the container. Examples that earn their exi
 `PlaceOrderUseCase` (BR5, BR12, then create), `ToggleWishlistUseCase` (BR6),
 `RequestReturnUseCase` (BR8), `SetDefaultAddressUseCase` (BR7), `SignInUseCase` /
 `SignUpUseCase` (BR10, session persistence), `TopUpWalletUseCase`, `ApplyCouponUseCase`,
-`SearchProductsUseCase` (filter and sort criteria assembly).
+`SearchProductsUseCase` (filter and sort criteria assembly),
+`GetProductDetailUseCase` (D8 variant resolution) and `GetRelatedProductsUseCase` (excludes the
+product being viewed).
+
+There is deliberately **no** `GetProductReviewsUseCase` or `GetSellerStoreUseCase`: neither carries
+a rule, so the PDP and the seller store call `ReviewRepository` and `SellerRepository` through the
+container directly, as §11.5's first paragraph requires.
 
 ---
 
@@ -1591,11 +1603,24 @@ These survive the decisions in §34. Each is accepted, not open.
     matches the address city against the area name and governorate, which is correct for the seeded
     Omani data and wrong the moment the backend introduces an explicit link. It is contained in one
     mapper.
-14. **Wallet-to-wallet transfers exist in the API but not in the UI.** `/wallet/transfers` is a
+14. **A review's author name is a mock addition.** The collection contracts the review routes but
+    shows no response body, and a review has to be rendered with a name. The mock resolves
+    `userName` server-side rather than letting the client fan out one user request per review — the
+    N+1 D14 already rejected for card ratings. If the backend never adds it, the PDP falls back to
+    an anonymous reviewer label. Recorded in `mock-server/INVENTED_ENDPOINTS.md`.
+15. **A seller is fetched from the seller directory, not by id.** There is no `GET /sellers/{id}`
+    in the collection, so `SellerRemoteDataSource.getById` pages `/sellers` and selects from it.
+    That is one request either way at today's seller count, and it is wrong at a scale the seeded
+    data never reaches. It is contained in one method.
+16. **The PDP's specification table and review list have no counterpart in the reference.** The
+    prototype's product page ends at the related-products rail. Phase 7's plan requires both, so
+    they are built from the PDP's own vocabulary — the delivery panel's block treatment and the
+    card border — rather than from a design that does not exist.
+17. **Wallet-to-wallet transfers exist in the API but not in the UI.** `/wallet/transfers` is a
     distinct feature from gifts, with a recipient preview and a password confirmation. The prototype
     never shows it, so it is not built. Worth raising as a product question rather than assuming it
     was an oversight.
-15. **Notifications have no push delivery** (D17), so the list only updates when the app is opened
+18. **Notifications have no push delivery** (D17), so the list only updates when the app is opened
     or refreshed.
 
 ---

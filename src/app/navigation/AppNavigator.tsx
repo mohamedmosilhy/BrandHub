@@ -6,6 +6,7 @@ import {
   NavigationContainer,
   StackActions,
   createNavigationContainerRef,
+  getFocusedRouteNameFromRoute,
   type NavigationProp,
   type RouteProp,
   useNavigation,
@@ -13,11 +14,14 @@ import {
 } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
+  type NativeStackNavigationProp,
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { useToast } from '@presentation/components/feedback';
 import {
   BrandTabBar,
   type NavigationTab,
@@ -32,13 +36,20 @@ import { CategoryScreen } from '@presentation/features/category';
 import { HomeScreen } from '@presentation/features/home';
 import { AccountScreen, ShellScreen } from '@presentation/features/navigation';
 import { OnboardingScreen } from '@presentation/features/onboarding';
+import { ProductScreen } from '@presentation/features/product';
 import { SearchScreen } from '@presentation/features/search';
+import { SellerStoreScreen } from '@presentation/features/sellerStore';
+import {
+  WishlistProvider,
+  WishlistScreen,
+} from '@presentation/features/wishlist';
 import { useTheme } from '@presentation/theme';
 
 import { useContainer } from '@app/di';
 
 import { linking } from './linking';
 import { RequireAuth } from './RequireAuth';
+import { hidesTabBar } from './tabBarVisibility';
 import type {
   AccountStackParamList,
   AuthStackParamList,
@@ -128,11 +139,13 @@ function LoginRoute({
 function HomeRoute({
   navigation,
 }: NativeStackScreenProps<HomeStackParamList, 'Home'>) {
-  const { categoryRepository, productRepository } = useContainer();
+  const { categoryRepository, productRepository, getProductDetail } =
+    useContainer();
   return (
     <HomeScreen
       categoryRepository={categoryRepository}
       productRepository={productRepository}
+      getProductDetail={getProductDetail}
       onSearch={() => navigation.navigate('Search')}
       onNotifications={() => navigation.navigate('Notifications')}
       onBrowse={() => navigationRef.navigate('Main', { screen: 'BrowseTab' })}
@@ -152,12 +165,12 @@ function HomeRoute({
 function BrowseRoute({
   navigation,
 }: NativeStackScreenProps<BrowseStackParamList, 'Browse'>) {
-  const { categoryRepository, productRepository, getCategoryProducts } =
+  const { categoryRepository, getProductDetail, getCategoryProducts } =
     useContainer();
   return (
     <BrowseScreen
       categoryRepository={categoryRepository}
-      productRepository={productRepository}
+      getProductDetail={getProductDetail}
       getCategoryProducts={getCategoryProducts}
       onOpenProduct={(productId) =>
         navigation.navigate('Product', { productId })
@@ -185,14 +198,77 @@ function CartRoute() {
 }
 
 function ProductRoute() {
-  const { t } = useTranslation();
+  const {
+    getProductDetail,
+    getRelatedProducts,
+    reviewRepository,
+    sellerRepository,
+  } = useContainer();
+  const { showToast } = useToast();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const route =
     useRoute<RouteProp<{ Product: { productId: string } }, 'Product'>>();
-  return <ShellScreen title={t('product')} detail={route.params.productId} />;
+  return (
+    <ProductScreen
+      productId={route.params.productId}
+      getProductDetail={getProductDetail}
+      getRelatedProducts={getRelatedProducts}
+      reviewRepository={reviewRepository}
+      sellerRepository={sellerRepository}
+      onBack={() => navigation.goBack()}
+      onCart={() => navigationRef.navigate('Main', { screen: 'CartTab' })}
+      onOpenProduct={(productId) => navigation.push('Product', { productId })}
+      onOpenSeller={(sellerId) => navigation.navigate('Seller', { sellerId })}
+      // Phase 8 owns the cart mutation; until then the bar confirms without navigating (AC7.12).
+      onAddedToCart={(message) => showToast({ message, tone: 'success' })}
+      onBuyNow={() => navigationRef.navigate('Checkout')}
+    />
+  );
+}
+
+function SellerRoute() {
+  const { sellerRepository, getProductDetail } = useContainer();
+  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
+  const route =
+    useRoute<RouteProp<{ Seller: { sellerId: string } }, 'Seller'>>();
+  return (
+    <SellerStoreScreen
+      sellerId={route.params.sellerId}
+      sellerRepository={sellerRepository}
+      getProductDetail={getProductDetail}
+      onBack={() => navigation.goBack()}
+      onOpenProduct={(productId) =>
+        navigation.navigate('Product', { productId })
+      }
+      onViewAll={(sellerId) => navigation.navigate('Search', { sellerId })}
+    />
+  );
+}
+
+function WishlistRoute() {
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  const returnTo = { kind: 'account', screen: 'Wishlist' } as const;
+  return (
+    <RequireAuth returnTo={returnTo} onRequireAuth={requestAuth}>
+      <WishlistScreen
+        onBack={() => navigation.goBack()}
+        onDiscover={() =>
+          navigationRef.navigate('Main', { screen: 'BrowseTab' })
+        }
+        onOpenProduct={(productId) =>
+          navigationRef.navigate('Main', {
+            screen: 'HomeTab',
+            params: { screen: 'Product', params: { productId } },
+          })
+        }
+      />
+    </RequireAuth>
+  );
 }
 
 function CategoryRoute() {
-  const { categoryRepository, productRepository, getCategoryProducts } =
+  const { categoryRepository, getProductDetail, getCategoryProducts } =
     useContainer();
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const route =
@@ -201,7 +277,7 @@ function CategoryRoute() {
     <CategoryScreen
       categoryId={route.params.categoryId}
       categoryRepository={categoryRepository}
-      productRepository={productRepository}
+      getProductDetail={getProductDetail}
       getCategoryProducts={getCategoryProducts}
       onBack={() => navigation.goBack()}
       onSearch={(categoryId) => navigation.navigate('Search', { categoryId })}
@@ -213,7 +289,7 @@ function CategoryRoute() {
 }
 
 function SearchRoute() {
-  const { productRepository, searchProducts } = useContainer();
+  const { getProductDetail, searchProducts } = useContainer();
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const route =
     useRoute<RouteProp<{ Search: HomeStackParamList['Search'] }, 'Search'>>();
@@ -224,7 +300,7 @@ function SearchRoute() {
       {...(route.params?.categoryId
         ? { categoryId: route.params.categoryId }
         : {})}
-      productRepository={productRepository}
+      getProductDetail={getProductDetail}
       searchProducts={searchProducts}
       onBack={() => navigation.goBack()}
       onOpenProduct={(productId) =>
@@ -326,7 +402,7 @@ function HomeNavigator() {
       <HomeStack.Screen name="Category" component={CategoryRoute} />
       <HomeStack.Screen name="Search" component={SearchRoute} />
       <HomeStack.Screen name="Product" component={ProductRoute} />
-      <HomeStack.Screen name="Seller" component={GenericRoute} />
+      <HomeStack.Screen name="Seller" component={SellerRoute} />
       <HomeStack.Screen name="Influencer" component={GenericRoute} />
       <HomeStack.Screen name="Notifications" component={NotificationsRoute} />
     </HomeStack.Navigator>
@@ -379,7 +455,7 @@ function AccountNavigator() {
       <AccountStack.Screen name="Support" component={AccountGatedRoute} />
       <AccountStack.Screen name="Ticket" component={AccountGatedRoute} />
       <AccountStack.Screen name="Profile" component={AccountGatedRoute} />
-      <AccountStack.Screen name="Wishlist" component={AccountGatedRoute} />
+      <AccountStack.Screen name="Wishlist" component={WishlistRoute} />
       <AccountStack.Screen name="Notifications" component={AccountGatedRoute} />
     </AccountStack.Navigator>
   );
@@ -387,6 +463,10 @@ function AccountNavigator() {
 
 function MainTabBar({ state, navigation }: BottomTabBarProps) {
   const { t } = useTranslation();
+  const focused = state.routes[state.index];
+  if (focused) {
+    if (hidesTabBar(getFocusedRouteNameFromRoute(focused))) return null;
+  }
   const tabs: readonly NavigationTab[] = [
     { key: 'HomeTab', label: t('tabHome'), icon: 'home' },
     // The prototype's tab glyphs: a four-square grid for categories and a star for creators.
@@ -445,6 +525,32 @@ function AuthNavigator() {
   );
 }
 
+/**
+ * The wishlist sits above the navigator rather than inside a screen: every heart in the app —
+ * home, browse, category, search, the PDP, the wishlist itself — has to read one membership set,
+ * and a guest tapping one is sent to sign-in with the wishlist as its return (D3).
+ */
+function AppWishlistProvider({ children }: { children: ReactNode }) {
+  const { wishlistRepository, toggleWishlist } = useContainer();
+  const { t, i18n } = useTranslation();
+  const { showToast } = useToast();
+  const status = useSessionStore((state) => state.status);
+  return (
+    <WishlistProvider
+      repository={wishlistRepository}
+      toggleWishlist={toggleWishlist}
+      locale={i18n.resolvedLanguage ?? i18n.language}
+      authenticated={status === 'authenticated'}
+      onRequireAuth={() => requestAuth({ kind: 'account', screen: 'Wishlist' })}
+      onFailure={() =>
+        showToast({ message: t('wishlistFailed'), tone: 'error' })
+      }
+    >
+      {children}
+    </WishlistProvider>
+  );
+}
+
 export function AppNavigator() {
   const { direction } = useTheme();
   const status = useSessionStore((state) => state.status);
@@ -454,31 +560,36 @@ export function AppNavigator() {
   if (status === 'loading') return null;
   return (
     <View style={{ direction, flex: 1 }}>
-      <NavigationContainer ref={navigationRef} linking={linking}>
-        <Root.Navigator
-          key={onboardingComplete ? 'main' : 'auth'}
-          initialRouteName={onboardingComplete ? 'Main' : 'Auth'}
-          screenOptions={screenOptions}
-        >
-          <Root.Screen name="Auth" component={AuthNavigator} />
-          <Root.Screen name="Main" component={MainTabs} />
-          <Root.Group
-            screenOptions={{ headerShown: false, presentation: 'modal' }}
+      <AppWishlistProvider>
+        <NavigationContainer ref={navigationRef} linking={linking}>
+          <Root.Navigator
+            key={onboardingComplete ? 'main' : 'auth'}
+            initialRouteName={onboardingComplete ? 'Main' : 'Auth'}
+            screenOptions={screenOptions}
           >
-            <Root.Screen name="Checkout" component={CheckoutRoute} />
-            <Root.Screen name="OrderConfirmation" component={RootGatedRoute} />
-            <Root.Screen name="PaymentResult" component={RootGatedRoute} />
-          </Root.Group>
-          <Root.Group
-            screenOptions={{
-              headerShown: false,
-              presentation: 'transparentModal',
-            }}
-          >
-            <Root.Screen name="FilterSheet" component={GenericRoute} />
-          </Root.Group>
-        </Root.Navigator>
-      </NavigationContainer>
+            <Root.Screen name="Auth" component={AuthNavigator} />
+            <Root.Screen name="Main" component={MainTabs} />
+            <Root.Group
+              screenOptions={{ headerShown: false, presentation: 'modal' }}
+            >
+              <Root.Screen name="Checkout" component={CheckoutRoute} />
+              <Root.Screen
+                name="OrderConfirmation"
+                component={RootGatedRoute}
+              />
+              <Root.Screen name="PaymentResult" component={RootGatedRoute} />
+            </Root.Group>
+            <Root.Group
+              screenOptions={{
+                headerShown: false,
+                presentation: 'transparentModal',
+              }}
+            >
+              <Root.Screen name="FilterSheet" component={GenericRoute} />
+            </Root.Group>
+          </Root.Navigator>
+        </NavigationContainer>
+      </AppWishlistProvider>
     </View>
   );
 }

@@ -30,6 +30,7 @@ export function buildProduct(overrides: Partial<Product> = {}): Product {
         price: Money.fromDecimal('19.900'),
       },
     ],
+    specs: [{ name: 'Colour', value: 'Black' }],
     ...overrides,
   };
 }

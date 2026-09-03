@@ -120,6 +120,12 @@ function byId(collection: Row[], id: string): Row | undefined {
   return collection.find((item) => item['id'] === id);
 }
 
+/** A reviewer, a gift recipient and a ticket author are all shown by name, not by id. */
+function displayName(user: Row | undefined): string {
+  if (!user) return '';
+  return `${stringValue(user['firstName'])} ${stringValue(user['lastName'])}`.trim();
+}
+
 function userView(user: Row): Row {
   const { password: _password, walletBalance: _walletBalance, ...safe } = user;
   return safe;
@@ -981,12 +987,24 @@ function registerAccountRoutes(app: Express, store: MockStore): void {
 }
 
 function registerCommerceRoutes(app: Express, store: MockStore): void {
+  /**
+   * The collection specifies the review routes but carries no response example, so the shape is
+   * the mock's to define, as it was for every other silent endpoint in Phase 3. A review is
+   * rendered with its author's name, so `userName` is resolved here rather than leaving the
+   * client to issue a per-review user request — the same reasoning as D14 for card ratings.
+   */
+  const reviewResponse = (review: Record<string, unknown>) => ({
+    ...review,
+    userName: displayName(
+      byId(store.data.users, stringValue(review['userId'])),
+    ),
+  });
   app.get('/api/v1/reviews/product/:productId', (request, response) =>
     response.json(
       pageOf(
-        store.data.reviews.filter(
-          (item) => item['productId'] === request.params.productId,
-        ),
+        store.data.reviews
+          .filter((item) => item['productId'] === request.params.productId)
+          .map(reviewResponse),
         request,
       ),
     ),
@@ -1014,7 +1032,7 @@ function registerCommerceRoutes(app: Express, store: MockStore): void {
     };
     store.data.reviews.push(review);
     store.write();
-    response.status(201).json(envelope(review));
+    response.status(201).json(envelope(reviewResponse(review)));
   });
   app.get('/api/v1/coupons', (_request, response) =>
     response.json(store.data.coupons.filter((item) => item['active'] === true)),

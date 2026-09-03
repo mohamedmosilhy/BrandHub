@@ -109,6 +109,8 @@ const products = Array.from({ length: 220 }, (_, index) => {
         alt: { ar: name[0], en: name[1] },
       },
     ],
+    // D8 needs both shapes in the catalogue: most products offer a colour choice, and every
+    // fifth ships in one colour only so the PDP's auto-resolved, selector-free path is reachable.
     variants: [
       {
         id: `${id}-default`,
@@ -117,13 +119,17 @@ const products = Array.from({ length: 220 }, (_, index) => {
         stock: 6 + (index % 20),
         price: onSale ? Number((basePrice * 0.85).toFixed(3)) : basePrice,
       },
-      {
-        id: `${id}-sand`,
-        sku: `BH-${String(index + 1).padStart(5, '0')}-S`,
-        attributes: { colour: 'Sand' },
-        stock: 2 + (index % 9),
-        price: basePrice,
-      },
+      ...(index % 5 === 4
+        ? []
+        : [
+            {
+              id: `${id}-sand`,
+              sku: `BH-${String(index + 1).padStart(5, '0')}-S`,
+              attributes: { colour: 'Sand' },
+              stock: 2 + (index % 9),
+              price: basePrice,
+            },
+          ]),
     ],
     specs: Array.from({ length: 5 }, (__, specIndex) => ({
       name: {

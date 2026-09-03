@@ -1,7 +1,11 @@
 import { ServerError } from '@core/errors';
 import { err, ok } from '@core/result';
 
-import type { CategoryRepository, ProductRepository } from '@domain/catalog';
+import {
+  GetProductDetailUseCase,
+  type CategoryRepository,
+  type ProductRepository,
+} from '@domain/catalog';
 
 import { buildProduct } from '@test/builders';
 import { renderWithProviders, screen, waitFor } from '@test/render';
@@ -37,6 +41,7 @@ describe('HomeScreen', () => {
       <HomeScreen
         categoryRepository={categories}
         productRepository={products}
+        getProductDetail={new GetProductDetailUseCase(products)}
         onSearch={jest.fn()}
         onNotifications={jest.fn()}
         onBrowse={jest.fn()}

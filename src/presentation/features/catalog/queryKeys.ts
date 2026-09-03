@@ -23,4 +23,17 @@ export const catalogKeys = {
     ['catalog', 'search', locale, criteriaKey(criteria), size] as const,
   detail: (locale: string, id: string) =>
     ['catalog', 'detail', locale, id] as const,
+  related: (locale: string, id: string) =>
+    ['catalog', 'related', locale, id] as const,
+  reviews: (locale: string, id: string) =>
+    ['catalog', 'reviews', locale, id] as const,
+  seller: (locale: string, id: string) =>
+    ['catalog', 'seller', locale, id] as const,
+  sellerProducts: (locale: string, id: string) =>
+    ['catalog', 'seller-products', locale, id] as const,
+};
+
+/** D9: catalogue content is locale-resolved server-side, so saved products key on locale too. */
+export const wishlistKeys = {
+  all: (locale: string) => ['wishlist', locale] as const,
 };

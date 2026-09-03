@@ -42,6 +42,7 @@ export function mapProduct(
       stock: variant.stock,
       price: Money.fromDecimal(variant.price),
     })),
+    specs: dto.specs.map((spec) => ({ name: spec.name, value: spec.value })),
   };
 }
 

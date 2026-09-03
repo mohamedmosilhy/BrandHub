@@ -5,6 +5,7 @@ import type { Product } from '@domain/catalog';
 import { toneAt } from '@presentation/theme';
 
 import { ProductCard, type ProductCardVariant } from './ProductCard';
+import { heartProps, type WishlistCardSource } from './wishlistProps';
 
 /**
  * The prototype's home "Today's deals" block is a two-column CSS grid inside the page's own
@@ -17,12 +18,14 @@ export function StaticProductGrid({
   gap = 12,
   onOpen,
   onPrefetch,
+  wishlist,
 }: {
   products: readonly Product[];
   variant?: ProductCardVariant;
   gap?: number;
   onOpen: (id: string) => void;
   onPrefetch?: (id: string) => void;
+  wishlist?: WishlistCardSource;
 }) {
   return (
     <View style={[styles.grid, { gap }]}>
@@ -34,6 +37,7 @@ export function StaticProductGrid({
             tone={toneAt(index)}
             onOpen={() => onOpen(product.id)}
             onPrefetch={() => onPrefetch?.(product.id)}
+            {...heartProps(product, wishlist)}
           />
         </View>
       ))}

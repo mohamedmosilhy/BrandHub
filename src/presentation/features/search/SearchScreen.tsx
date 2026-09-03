@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import type {
-  ProductRepository,
+  GetProductDetailUseCase,
   ProductSort,
   SearchCriteria,
   SearchProductsUseCase,
@@ -26,6 +26,7 @@ import {
   useProductPrefetch,
   useSearchProducts,
 } from '@presentation/features/catalog/useCatalogQueries';
+import { useWishlistCardProps } from '@presentation/features/wishlist';
 import { textStart, useTheme, writingDirection } from '@presentation/theme';
 
 const sortOptions: readonly [ProductSort, string][] = [
@@ -39,7 +40,7 @@ export function SearchScreen({
   initialQuery = '',
   sellerId,
   categoryId,
-  productRepository,
+  getProductDetail,
   searchProducts,
   onBack,
   onOpenProduct,
@@ -47,7 +48,7 @@ export function SearchScreen({
   initialQuery?: string;
   sellerId?: string;
   categoryId?: string;
-  productRepository: ProductRepository;
+  getProductDetail: GetProductDetailUseCase;
   searchProducts: SearchProductsUseCase;
   onBack: () => void;
   onOpenProduct: (id: string) => void;
@@ -114,7 +115,8 @@ export function SearchScreen({
   const items = productPages(results.data);
   const total = results.data?.pages[0]?.total ?? 0;
   const previewTotal = preview.data?.pages[0]?.total ?? 0;
-  const prefetch = useProductPrefetch(productRepository, locale);
+  const prefetch = useProductPrefetch(getProductDetail, locale);
+  const wishlist = useWishlistCardProps();
   const trending = locale.startsWith('ar')
     ? ['سماعات', 'ساعة ذكية', 'قهوة', 'حذاء رياضي']
     : ['headphones', 'smart watch', 'coffee', 'running shoes'];
@@ -331,6 +333,7 @@ export function SearchScreen({
           </View>
         ) : (
           <ProductGrid
+            wishlist={wishlist}
             products={items}
             variant="list"
             gap={10}

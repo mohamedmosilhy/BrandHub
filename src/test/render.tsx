@@ -31,16 +31,33 @@ void testI18n.use(initReactI18next).init({
   interpolation: { escapeValue: false },
 });
 
+/**
+ * Every client a test creates is tracked so it can be torn down with the test. Without this a
+ * query that settles after the assertion keeps TanStack Query's notify timer alive, which Jest
+ * reports as a worker that "failed to exit gracefully" and React reports as an update outside
+ * `act(...)`.
+ */
+const clients: QueryClient[] = [];
+
+afterEach(() => {
+  for (const client of clients.splice(0)) {
+    client.cancelQueries();
+    client.unmount();
+    client.clear();
+  }
+});
+
 function AllProviders({ children }: { children: ReactNode }) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: { gcTime: Infinity, retry: false },
-          mutations: { retry: false },
-        },
-      }),
-  );
+  const [queryClient] = useState(() => {
+    const client = new QueryClient({
+      defaultOptions: {
+        queries: { gcTime: Infinity, retry: false },
+        mutations: { retry: false },
+      },
+    });
+    clients.push(client);
+    return client;
+  });
   return (
     <QueryClientProvider client={queryClient}>
       <I18nextProvider i18n={testI18n}>

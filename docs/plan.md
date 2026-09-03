@@ -1,6 +1,6 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Implemented through Phase 6 — Phase 7 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
+**Status:** **Implemented through Phase 7 — Phase 8 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
 **Date:** 2026-09-03 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
@@ -64,7 +64,7 @@ behaviour. They are collected at the end of this document under
 | 4     | Core infrastructure and data plumbing            | 1, 3       | Done       |
 | 5     | Identity, session and navigation shell           | 2, 4       | Done       |
 | 6     | Catalogue and discovery                          | 5          | Done       |
-| 7     | Product detail and wishlist                      | 6          | Medium     |
+| 7     | Product detail and wishlist                      | 6          | Done       |
 | 8     | Cart and checkout                                | 7          | **Large**  |
 | 9     | Account, orders and addresses                    | 5, 8       | **Large**  |
 | 10    | Wallet, gifts and payment result                 | 9          | Medium     |
@@ -661,17 +661,30 @@ Phase 6 done. The PDP gains a variant selector, auto-resolving for single-varian
 - AC7.14 Reviews show reviewer, stars, relative time and text; an unreviewed product shows the reviews empty state.
 - AC7.15 The whole screen renders correctly in Arabic RTL and English LTR.
 
-### Review checklist
+### Review checklist — implementation audit 2026-09-03
 
-- [ ] PDP compared against the prototype element by element.
-- [ ] Does the variant selector read as part of the design rather than bolted on, given it is an addition to the reference (D8)?
-- [ ] Does the optimistic wishlist feel instant and recover cleanly?
-- [ ] Is the sticky bar correct on a notched device and with the Android gesture bar?
+- [x] PDP compared against the prototype element by element: tone hero with the 36 px circular
+      back / wishlist / cart controls, the dot pager, badge row, title, rating line, 25 px price
+      with strikethrough, hairline rule, seller strip, `#F5F5F7` delivery-and-returns panel and the
+      related rail, in that order.
+- [x] Does the variant selector read as part of the design rather than bolted on, given it is an
+      addition to the reference (D8)? It occupies the prototype's colour-swatch slot under the same
+      `t('colour')` heading, using the accent-selected chip treatment already used by the filter
+      sheet — but it shows the attribute the API actually varies rather than an invented swatch.
+- [x] Does the optimistic wishlist feel instant and recover cleanly? One cache behind every heart,
+      rewritten before the request leaves, snapshot-restored with an error toast on failure.
+      Covered by `useWishlist.test.tsx`.
+- [ ] Is the sticky bar correct on a notched device and with the Android gesture bar? The bar takes
+      the bottom safe-area inset (the tab bar stands down on this screen), but that is a physical
+      device check, not an inference from the inset code.
+- [ ] Final side-by-side AR/EN visual comparison on physical iOS and Android hardware.
 
 ### Definition of done
 
-All fifteen criteria pass; the PDP is approved against the reference; wishlist round-trips through
-the mock and survives a restart.
+Fourteen of the fifteen criteria pass in the automated gates; AC7.11's sticky-bar behaviour on a
+notched device and the Android gesture bar is an explicit human check tracked in the Phase 7
+report. The wishlist round-trips through the mock and its membership survives a refetch. Phase 8 is
+cleared to begin: it owns the cart mutation the buy bar currently confirms with a toast.
 
 ---
 

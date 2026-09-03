@@ -1,6 +1,10 @@
 import { ok } from '@core/result';
 
-import { SearchProductsUseCase, type ProductRepository } from '@domain/catalog';
+import {
+  GetProductDetailUseCase,
+  SearchProductsUseCase,
+  type ProductRepository,
+} from '@domain/catalog';
 
 import { buildProduct } from '@test/builders';
 import { fireEvent, renderWithProviders, screen, waitFor } from '@test/render';
@@ -40,15 +44,16 @@ function fixture() {
     product,
     repository,
     useCase: new SearchProductsUseCase(repository),
+    getProductDetail: new GetProductDetailUseCase(repository),
   };
 }
 
 describe('SearchScreen', () => {
   it('moves from pre-query prompt to results and then the empty state', async () => {
-    const { product, repository, useCase } = fixture();
+    const { product, getProductDetail, useCase } = fixture();
     await renderWithProviders(
       <SearchScreen
-        productRepository={repository}
+        getProductDetail={getProductDetail}
         searchProducts={useCase}
         onBack={jest.fn()}
         onOpenProduct={jest.fn()}
@@ -74,11 +79,11 @@ describe('SearchScreen', () => {
   });
 
   it('removes seller scope and restores unscoped results', async () => {
-    const { product, repository, useCase } = fixture();
+    const { product, getProductDetail, useCase } = fixture();
     await renderWithProviders(
       <SearchScreen
         sellerId="seller-a2"
-        productRepository={repository}
+        getProductDetail={getProductDetail}
         searchProducts={useCase}
         onBack={jest.fn()}
         onOpenProduct={jest.fn()}

@@ -1,6 +1,8 @@
 import {
   GetCategoryProductsUseCase,
   GetHomeSectionsUseCase,
+  GetProductDetailUseCase,
+  GetRelatedProductsUseCase,
   SearchProductsUseCase,
 } from '@domain/catalog';
 import {
@@ -11,20 +13,29 @@ import {
   SignOutUseCase,
   SignUpUseCase,
 } from '@domain/identity';
+import { ToggleWishlistUseCase } from '@domain/wishlist';
 
 import {
   CategoryRemoteDataSource,
   ProductRemoteDataSource,
+  ReviewRemoteDataSource,
+  SellerRemoteDataSource,
 } from '@data/catalog/datasources';
 import {
   CategoryRepositoryImpl,
   HttpProductRepository,
+  HttpReviewRepository,
+  HttpSellerRepository,
 } from '@data/catalog/repositories';
 import {
   AuthRemoteDataSource,
   HttpAuthRepository,
   SessionLocalDataSource,
 } from '@data/identity';
+import {
+  HttpWishlistRepository,
+  WishlistRemoteDataSource,
+} from '@data/wishlist';
 
 import { appConfig } from '@infrastructure/config';
 import { AxiosHttpClient } from '@infrastructure/http';
@@ -64,7 +75,21 @@ const productRepository = new HttpProductRepository(
   productDataSource,
   resolveAssetUrl,
 );
+const reviewRepository = new HttpReviewRepository(
+  new ReviewRemoteDataSource(httpClient),
+);
+const sellerRepository = new HttpSellerRepository(
+  new SellerRemoteDataSource(httpClient),
+  resolveAssetUrl,
+);
+const wishlistRepository = new HttpWishlistRepository(
+  new WishlistRemoteDataSource(httpClient),
+  resolveAssetUrl,
+);
 const searchProducts = new SearchProductsUseCase(productRepository);
+const getProductDetail = new GetProductDetailUseCase(productRepository);
+const getRelatedProducts = new GetRelatedProductsUseCase(productRepository);
+const toggleWishlist = new ToggleWishlistUseCase(wishlistRepository);
 const getCategoryProducts = new GetCategoryProductsUseCase(productRepository);
 const getHomeSections = new GetHomeSectionsUseCase(
   productRepository,
@@ -96,9 +121,15 @@ export const container = Object.freeze({
   httpClient,
   categoryRepository,
   productRepository,
+  reviewRepository,
+  sellerRepository,
+  wishlistRepository,
   searchProducts,
   getCategoryProducts,
   getHomeSections,
+  getProductDetail,
+  getRelatedProducts,
+  toggleWishlist,
   authRepository,
   signIn,
   signUp,

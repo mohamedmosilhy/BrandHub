@@ -6,10 +6,12 @@ Design and planning live in [`docs/architecture.md`](docs/architecture.md) and
 [`docs/plan.md`](docs/plan.md). The UI/UX source of truth is `design-reference/`, which is read-only
 and never modified.
 
-**Current state: Phase 6 (catalogue and discovery) implemented.** The app opens on Arabic
-onboarding, supports the Phase 5 identity/navigation shell, and now replaces its Home, Browse,
-Category and Search placeholders with locale-scoped catalogue data, filters, sorting, paginated
-FlashList grids, independent async states and product-detail prefetching.
+**Current state: Phase 7 (product detail and wishlist) implemented.** The app opens on Arabic
+onboarding, supports the Phase 5 identity/navigation shell, and browses a live catalogue through
+Home, Browse, Category and Search. A product now opens a real detail page — image pager, variant
+selector, seller strip, specifications, reviews, related products and a sticky buy bar — with the
+seller store and the wishlist behind it. Adding to the cart is confirmed but not yet persisted;
+that is Phase 8.
 
 ## Requirements
 
@@ -103,6 +105,12 @@ terms, seller scope, four sort orders, stock/price/rating filters and infinite p
 share rail, grid, list and compact geometry, format OMR to three decimals, render response-provided
 ratings and prefetch detail data on press-in. See
 [`docs/reports/phase-6-report.md`](docs/reports/phase-6-report.md).
+
+Phase 7 adds reviews, sellers and a wishlist slice, and the screens that use them. A product with
+one variant resolves it silently; anything else has to be chosen before the buy bar unlocks (D8).
+The wishlist is optimistic and lives in one cache above the navigator, so every heart in the app
+agrees and a failed toggle rolls back with an error toast. See
+[`docs/reports/phase-7-report.md`](docs/reports/phase-7-report.md).
 
 ## Architecture in one screen
 

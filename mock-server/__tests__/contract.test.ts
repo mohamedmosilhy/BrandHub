@@ -422,6 +422,8 @@ describe('customer endpoint inventory', () => {
       '/api/v1/areas/governorate/Muscat',
       '/api/v1/areas/area-muscat',
       '/api/v1/shipping-rates',
+      // A guest can open a PDP, so the reviews on it are readable without a session (D3).
+      '/api/v1/reviews/product/product-1',
     ];
     for (const path of publicPaths)
       expect((await request(app).get(path)).status).toBe(200);
@@ -616,6 +618,30 @@ describe('customer endpoint inventory', () => {
     expect(slots.body.data).toEqual(
       expect.arrayContaining([expect.objectContaining({ express: true })]),
     );
+  });
+
+  it('serves the product-detail shapes Phase 7 renders', async () => {
+    const reviews = await request(app).get('/api/v1/reviews/product/product-1');
+    expect(reviews.status).toBe(200);
+    expect(reviews.body.content[0]).toMatchObject({
+      productId: 'product-1',
+      // Resolved server-side so a review list never fans out into per-reviewer requests.
+      userName: 'Salim Al Rashdi',
+    });
+
+    // D8 needs both shapes present: a colour choice, and a product that resolves on its own.
+    const multi = await request(app).get('/api/v1/products/product-1');
+    const single = await request(app).get('/api/v1/products/product-5');
+    expect(multi.body.variants).toHaveLength(2);
+    expect(single.body.variants).toHaveLength(1);
+    expect(multi.body.specs.length).toBeGreaterThan(0);
+
+    // The seller store reads the directory page; there is no `GET /sellers/{id}` to read.
+    const sellers = await request(app).get('/api/v1/sellers?page=0&size=100');
+    expect(
+      sellers.body.data.content.map((seller: { id: string }) => seller.id),
+    ).toContain('seller-a2');
+    expect((await request(app).get('/api/v1/sellers/nope')).status).toBe(404);
   });
 
   it('covers the remaining auth, cart, account and commerce verbs', async () => {
