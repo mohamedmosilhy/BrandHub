@@ -4,7 +4,6 @@ import { StyleSheet, View } from 'react-native';
 import type { Seller } from '@domain/catalog';
 
 import { Pressable, Text } from '@presentation/components/primitives';
-import { Avatar } from '@presentation/components/surfaces';
 import { formatCount } from '@presentation/formatting';
 import { useTheme } from '@presentation/theme';
 
@@ -20,7 +19,48 @@ export function storeInitials(storeName: string): string {
     .toUpperCase();
 }
 
-/** `padding: 12px; border: 1px solid #E8E8EC; border-radius: 14px` seller row on the PDP. */
+/**
+ * The store tile is a rounded square, not an avatar circle: `width: 38px; height: 38px;
+ * border-radius: 10px; background: #EEEDF9` with `14px/800` accent initials, inside a `padding:
+ * 12px; gap: 11px; border-radius: 14px` bordered row.
+ */
+export function StoreTile({
+  storeName,
+  size,
+  radius,
+  textVariant,
+}: {
+  storeName: string;
+  size: number;
+  radius: number;
+  textVariant: 'sm' | 'h2';
+}) {
+  const { theme } = useTheme();
+  return (
+    <View
+      accessibilityRole="image"
+      style={[
+        styles.tile,
+        {
+          backgroundColor: theme.colors.accentLight,
+          borderRadius: radius,
+          height: size,
+          width: size,
+        },
+      ]}
+    >
+      <Text
+        color={theme.colors.accentHover}
+        latin
+        variant={textVariant}
+        weight="extrabold"
+      >
+        {storeInitials(storeName)}
+      </Text>
+    </View>
+  );
+}
+
 export function SellerStrip({
   seller,
   onOpen,
@@ -30,19 +70,26 @@ export function SellerStrip({
 }) {
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const pdp = theme.mobile.pdp;
   return (
     <Pressable
       accessibilityLabel={seller.storeName}
       onPress={onOpen}
       style={[
         styles.strip,
-        { borderColor: theme.colors.border, borderRadius: 14 },
+        {
+          borderColor: theme.colors.border,
+          borderRadius: 14,
+          gap: pdp.sellerGap,
+          padding: pdp.sellerPadding,
+        },
       ]}
     >
-      <Avatar
-        accessibilityLabel={seller.storeName}
-        initials={storeInitials(seller.storeName)}
-        size="md"
+      <StoreTile
+        storeName={seller.storeName}
+        size={pdp.sellerTileSize}
+        radius={pdp.sellerTileRadius}
+        textVariant="sm"
       />
       <View style={styles.copy}>
         <Text variant="xs" weight="bold">
@@ -54,7 +101,7 @@ export function SellerStrip({
           {t('salesCount', { count: formatCount(seller.salesCount) })}
         </Text>
       </View>
-      <Text color={theme.colors.accent} variant="micro" weight="bold">
+      <Text color={theme.colors.accentHover} variant="xxs" weight="bold">
         {t('visitStore')}
       </Text>
     </Pressable>
@@ -63,11 +110,6 @@ export function SellerStrip({
 
 const styles = StyleSheet.create({
   copy: { flex: 1, gap: 2 },
-  strip: {
-    alignItems: 'center',
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 11,
-    padding: 12,
-  },
+  strip: { alignItems: 'center', borderWidth: 1, flexDirection: 'row' },
+  tile: { alignItems: 'center', justifyContent: 'center' },
 });

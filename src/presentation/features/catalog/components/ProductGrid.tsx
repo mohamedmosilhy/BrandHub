@@ -28,6 +28,7 @@ export function ProductGrid({
   paddingBottom = 18,
   footer,
   wishlist,
+  imageHeight,
 }: {
   products: readonly Product[];
   variant?: ProductCardVariant;
@@ -46,6 +47,7 @@ export function ProductGrid({
   /** Trails the last row inside the scroller, the way the prototype's page-end actions do. */
   footer?: ReactNode;
   wishlist?: WishlistCardSource;
+  imageHeight?: number;
 }) {
   const { theme } = useTheme();
   const columns = variant === 'list' ? 1 : 2;
@@ -101,6 +103,7 @@ export function ProductGrid({
             tone={toneAt(index)}
             onOpen={() => onOpen(item.id)}
             onPrefetch={() => onPrefetch?.(item.id)}
+            {...(imageHeight === undefined ? {} : { imageHeight })}
             {...heartProps(item, wishlist)}
           />
         </View>

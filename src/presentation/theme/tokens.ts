@@ -22,6 +22,8 @@ export const colors = {
   pink: '#D4537E',
   pinkLight: '#FCEEF3',
   gold: '#C8A84B',
+  /** `#D4C9BD` — the third colour swatch the prototype paints on the product page. */
+  sand: '#D4C9BD',
   ink: '#1A1A2E',
   ink80: 'rgba(26, 26, 46, 0.80)',
   ink40: 'rgba(26, 26, 46, 0.40)',
@@ -241,6 +243,90 @@ export const mobile = {
     /** `min-width: 17px; height: 17px` cart count. */
     badgeSize: 17,
   },
+  /**
+   * Product detail. `padding: 16px 18px 0` under a full-bleed tone hero; the hero's three
+   * circular controls are 36 px with 20 px back and 19 px wishlist/cart glyphs.
+   */
+  pdp: {
+    /** `height: 340px; object-fit: contain` hero image. */
+    heroHeight: 340,
+    actionSize: 36,
+    backIconSize: 20,
+    actionIconSize: 19,
+    actionInset: 14,
+    actionTop: 12,
+    bodyPaddingX: 18,
+    bodyPaddingTop: 16,
+    bodyGap: 12,
+    /** `padding: 4px 10px; border-radius: 99px` express and discount pills. */
+    badgePaddingX: 10,
+    badgePaddingY: 4,
+    /** `width: 18px` active pager pill against 5 px dots. */
+    dotSize: 5,
+    dotActiveWidth: 18,
+    dotsBottom: 14,
+    /** `width: 34px; height: 34px; border-radius: 99px` colour swatches with a 2/4 px ring. */
+    swatchSize: 34,
+    swatchRingGap: 2,
+    swatchRingWidth: 2,
+    /** `width: 38px; height: 38px; border-radius: 10px` seller tile inside a 12 px row. */
+    sellerTileSize: 38,
+    sellerTileRadius: 10,
+    sellerPadding: 12,
+    sellerGap: 11,
+    /** `padding: 13px; gap: 10px; border-radius: 14px` delivery and returns panel. */
+    promisePadding: 13,
+    promiseGap: 10,
+    promiseIconSize: 17,
+    /** `width: 122px; border-radius: 14px` related card — smaller than every catalogue card. */
+    relatedWidth: 122,
+    relatedRadius: 14,
+    relatedGap: 11,
+    /** `height: 92px` related card image. */
+    relatedImageHeight: 92,
+    /** `height: 50px; border-radius: 15px` buy-bar actions in a `12px 16px` bar. */
+    buyBarPaddingX: 16,
+    buyBarPaddingY: 12,
+    buyBarGap: 10,
+  },
+  /**
+   * Seller store. A 148 px gradient cover with the store tile pulled 34 px over it, three stat
+   * blocks, then the tab rule and the product grid.
+   */
+  sellerStore: {
+    coverHeight: 148,
+    backSize: 34,
+    backIconSize: 20,
+    backInset: 14,
+    /** `width: 68px; border-radius: 18px; border: 3px solid #fff` store tile. */
+    tileSize: 68,
+    tileRadius: 18,
+    tileBorder: 3,
+    tileOverlap: -34,
+    paddingX: 18,
+    /** `height: 34px; padding: 0 16px; border-radius: 99px` follow action. */
+    followHeight: 34,
+    followPaddingX: 16,
+    /** `border-radius: 14px; padding: 12px` stat blocks in a 10 px row. */
+    statRadius: 14,
+    statPadding: 12,
+    statGap: 10,
+    tabGap: 18,
+    tabPaddingBottom: 10,
+    tabIndicatorWidth: 2.5,
+    /** `height: 112px` product image — the catalogue grid's card at a taller crop. */
+    productImageHeight: 112,
+  },
+  /** Wishlist grid: `border-radius: 16px` cells with a 30 px remove heart and a 34 px action. */
+  wishlist: {
+    cellRadius: 16,
+    imageHeight: 118,
+    removeSize: 30,
+    actionHeight: 34,
+    copyPaddingX: 11,
+    copyPaddingTop: 9,
+    copyPaddingBottom: 12,
+  },
   /** Toast floats `bottom: 118px` in the prototype — above the tab bar, not behind it. */
   toastInsetX: 20,
   toastOffset: 22,
@@ -314,6 +400,10 @@ export const fontSizes = {
   xs: 11.5,
   xxs: 10.5,
   micro: 10,
+  /** `font-size: 9.5px` — badge pills, the PDP related card and the seller-store stat labels. */
+  nano: 9.5,
+  /** `font-size: 25px; font-weight: 800` — the PDP price, the largest number in the app. */
+  priceHero: 25,
 } as const;
 
 /** The desktop storefront scale from `tokens.css`, kept for parity checks. */

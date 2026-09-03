@@ -12,9 +12,12 @@ import { useTheme } from '@presentation/theme';
 export function HorizontalRail({
   children,
   accessibilityLabel,
+  gap,
 }: {
   children: ReactNode;
   accessibilityLabel: string;
+  /** The catalogue rails run on the 12 pt step; the PDP's related rail is 11 in the prototype. */
+  gap?: number;
 }) {
   const { theme } = useTheme();
   return (
@@ -22,7 +25,7 @@ export function HorizontalRail({
       accessibilityLabel={accessibilityLabel}
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ gap: theme.spacing.x3 }}
+      contentContainerStyle={{ gap: gap ?? theme.spacing.x3 }}
     >
       {children}
     </ScrollView>

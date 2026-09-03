@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { Button } from '@presentation/components/controls';
 import {
   EmptyState,
   ErrorState,
@@ -16,7 +15,7 @@ import {
 } from '@presentation/components/primitives';
 import { productArtworkSource } from '@presentation/features/catalog/components';
 import { formatPrice } from '@presentation/formatting';
-import { toneAt, useTheme } from '@presentation/theme';
+import { mobile, toneAt, useTheme } from '@presentation/theme';
 
 import { useWishlistContext } from './WishlistProvider';
 
@@ -39,6 +38,7 @@ export function WishlistScreen({
 }) {
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const geometry = theme.mobile.wishlist;
   const wishlist = useWishlistContext();
   const items = wishlist?.items ?? [];
 
@@ -62,7 +62,8 @@ export function WishlistScreen({
         <Pressable accessibilityLabel={t('back')} compact onPress={onBack}>
           <Icon name="arrow-back" size={theme.iconSizes.md} />
         </Pressable>
-        <Text variant="h3" weight="extrabold">
+        {/* `font-size: 15px; font-weight: 800`. */}
+        <Text variant="bodyLg" weight="extrabold">
           {t('wishlist')}
         </Text>
         <Text color={theme.colors.textMuted} style={styles.count} variant="xs">
@@ -114,7 +115,13 @@ export function WishlistScreen({
               <Pressable
                 accessibilityLabel={item.product.title}
                 onPress={() => onOpenProduct(item.productId)}
-                style={[styles.imageShell, { backgroundColor: toneAt(index) }]}
+                style={[
+                  styles.imageShell,
+                  {
+                    backgroundColor: toneAt(index),
+                    height: geometry.imageHeight,
+                  },
+                ]}
               >
                 <Image
                   accessibilityLabel={item.product.title}
@@ -128,7 +135,7 @@ export function WishlistScreen({
                 <Pressable
                   accessibilityLabel={t('removeFromWishlist')}
                   compact
-                  compactSize={30}
+                  compactSize={geometry.removeSize}
                   onPress={() => wishlist?.toggle(item.product)}
                   style={[
                     styles.remove,
@@ -150,17 +157,34 @@ export function WishlistScreen({
                 <Text numberOfLines={2} style={styles.title} variant="xxs">
                   {item.product.title}
                 </Text>
-                <Text latin variant="body" weight="extrabold">
+                {/* `font-size: 13.5px; font-weight: 800`. */}
+                <Text latin variant="price" weight="extrabold">
                   {formatPrice(item.product.price.toDecimal())}
                 </Text>
-                <Button
-                  fullWidth
-                  label={t('addToCart')}
-                  size="sm"
-                  style={styles.add}
-                  variant="secondary"
+                {/*
+                  `height: 34px; border-radius: 99px; background: #EEEDF9; color: #7F77DD` —
+                  a tinted pill, not one of the bordered button variants.
+                */}
+                <Pressable
+                  accessibilityLabel={t('addToCart')}
                   onPress={() => onAddToCart?.(item.productId)}
-                />
+                  style={[
+                    styles.add,
+                    {
+                      backgroundColor: theme.colors.accentLight,
+                      borderRadius: theme.radius.full,
+                      height: geometry.actionHeight,
+                    },
+                  ]}
+                >
+                  <Text
+                    color={theme.colors.accentHover}
+                    variant="xs"
+                    weight="bold"
+                  >
+                    {t('addToCart')}
+                  </Text>
+                </Pressable>
               </View>
             </View>
           ))}
@@ -171,16 +195,20 @@ export function WishlistScreen({
 }
 
 const styles = StyleSheet.create({
-  /** `height: 34px; border-radius: 99px` pill action under the price. */
-  add: { height: 34 },
+  add: { alignItems: 'center', justifyContent: 'center' },
   cell: {
-    borderRadius: 16,
+    borderRadius: mobile.wishlist.cellRadius,
     borderWidth: 1,
     flexBasis: '47%',
     flexGrow: 1,
     overflow: 'hidden',
   },
-  copy: { gap: 7, paddingBottom: 12, paddingHorizontal: 11, paddingTop: 9 },
+  copy: {
+    gap: 7,
+    paddingBottom: mobile.wishlist.copyPaddingBottom,
+    paddingHorizontal: mobile.wishlist.copyPaddingX,
+    paddingTop: mobile.wishlist.copyPaddingTop,
+  },
   count: { marginInlineStart: 'auto' },
   grid: {
     flexDirection: 'row',
@@ -199,7 +227,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   image: { height: '100%', width: '100%' },
-  imageShell: { height: 118 },
+  imageShell: {},
   loading: { flexDirection: 'row', gap: 12, padding: 16 },
   remove: {
     alignItems: 'center',
@@ -209,5 +237,6 @@ const styles = StyleSheet.create({
     top: 8,
     zIndex: 1,
   },
-  title: { height: 32, lineHeight: 16 },
+  // `line-height: 1.55; height: 3.1em` — exactly two lines, so a row keeps one baseline.
+  title: { height: 33, lineHeight: 16 },
 });

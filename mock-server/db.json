@@ -21837,7 +21837,13 @@
       "productId": "product-4"
     }
   ],
-  "refreshTokens": [],
+  "refreshTokens": [
+    {
+      "token": "eyJzdWIiOiJ1c2VyLWN1c3RvbWVyIiwicm9sZSI6IlJPTEVfQ1VTVE9NRVIiLCJraW5kIjoicmVmcmVzaCIsImV4cCI6MTc4ODU1OTI0Nywibm9uY2UiOiJ1N2JqbzY0ZXExZiJ9._eTwCw8Hh5S8NFZnDP1iIhaoVn-vaeoCUL8yIhlPvu8",
+      "userId": "user-customer",
+      "revoked": false
+    }
+  ],
   "revokedTokens": [],
   "idempotency": [],
   "otpChallenges": []

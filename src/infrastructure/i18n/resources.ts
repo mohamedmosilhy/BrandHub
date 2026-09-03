@@ -118,6 +118,8 @@ const ar = {
     product: 'المنتج',
     sellerStore: 'متجر البائع',
     specifications: 'المواصفات',
+    /** The prototype writes the discount as a word in Arabic and as a minus sign in English. */
+    discountLabel: 'خصم {{percent}}%',
     reviewCount_zero: 'لا توجد تقييمات',
     reviewCount_one: 'تقييم واحد',
     reviewCount_two: 'تقييمان',
@@ -277,6 +279,7 @@ const en = {
     product: 'Product',
     sellerStore: 'Seller store',
     specifications: 'Specifications',
+    discountLabel: '-{{percent}}%',
     reviewCount_one: '{{count}} review',
     reviewCount_other: '{{count}} reviews',
     noReviewsYet: 'No reviews for this product yet',

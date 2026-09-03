@@ -135,6 +135,41 @@ Live mock (npm run mock), manual request pass
   fifth produces a null tree. `ProductScreen.test.tsx` groups its assertions accordingly and says
   so in a comment. Worth a proper look before test files grow further.
 
+## Reference-fidelity pass (follow-up, 2026-09-04)
+
+A review against `design-reference/BRANDHUB App.dc.html` found the first cut off the prototype in
+several places. All of them are corrected, and the measurements are now pinned in
+`src/presentation/theme/tokens.test.ts` so they cannot drift back.
+
+| Element             | Was                                                | Now (prototype)                                            |
+| ------------------- | -------------------------------------------------- | ---------------------------------------------------------- |
+| PDP hero controls   | 17 px glyphs                                       | 20 px back, 19 px wishlist and cart, in 36 px circles      |
+| PDP hero image      | 300 px                                             | 340 px                                                     |
+| PDP hero tone       | `toneAt(id.length)` — three tones for 220 products | id folded into the five-tone rotation, as Category does    |
+| Discount badge      | shared `Badge`, Latin-only `-20%`                  | 9.5 px tinted pill; `خصم 20%` in Arabic, `-20%` in English |
+| PDP price           | 20 px                                              | 25 px                                                      |
+| Review count        | `42 تقييم`                                         | `(42 تقييم)`, the prototype's parenthesised form           |
+| Colour selector     | text chips                                         | 34 px swatches with the prototype's 2/4 px selection ring  |
+| Seller strip tile   | 48 px avatar circle                                | 38 px radius-10 tile with accent initials                  |
+| Related rail        | the home deals card (158 px, radius 18)            | its own 122 px radius-14 card, 92 px image, 9.5 px title   |
+| Buy bar add action  | neutral bordered button                            | accent-outlined, matching the prototype                    |
+| Seller store tile   | avatar circle in a padded box                      | 68 px radius-18 tile with a 3 px white edge                |
+| Seller store name   | 17 px                                              | 14 px                                                      |
+| Seller follow pill  | missing                                            | present, and inert — following a seller has no contract    |
+| Seller "about" tab  | missing                                            | present beside "all products", inert for the same reason   |
+| Seller grid image   | 104 px                                             | 112 px                                                     |
+| Wishlist title      | 17 px                                              | 15 px                                                      |
+| Wishlist add action | bordered button                                    | tinted accent pill                                         |
+
+Two type steps the prototype uses had no token and were being rounded to a neighbour: `nano`
+(9.5 px — badge pills, related titles, stat labels) and `priceHero` (25 px — the PDP price).
+`Button` gained an `accentOutline` variant for the buy bar, and `HorizontalRail` an optional gap so
+the PDP's 11 px rail does not have to be the catalogue's 12.
+
+**This pass was made by reading the prototype's declared values, not by looking at the screens.**
+There is no simulator, no Xcode and no web target in this environment, so the visual comparison the
+review checklist calls for is still outstanding.
+
 ## Handoff
 
 Phase 8 can consume the resolved `ProductVariant` the PDP already computes (D8's `variantId` is

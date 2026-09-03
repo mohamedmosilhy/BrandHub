@@ -11,16 +11,9 @@ import {
 
 import type { Product } from '@domain/catalog';
 
-import {
-  Icon,
-  Image,
-  Pressable,
-  Text,
-} from '@presentation/components/primitives';
+import { Icon, Image, Pressable } from '@presentation/components/primitives';
 import { productArtworkSource } from '@presentation/features/catalog/components';
 import { useTheme } from '@presentation/theme';
-
-const HERO_HEIGHT = 300;
 
 /**
  * `design-reference/BRANDHUB App.dc.html`: the hero sits on the product's tone with a 36 px
@@ -45,6 +38,7 @@ export function ProductGallery({
 }) {
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const pdp = theme.mobile.pdp;
   const [width, setWidth] = useState(0);
   const [active, setActive] = useState(0);
   const images = product.images.length > 0 ? product.images : [null];
@@ -67,7 +61,10 @@ export function ProductGallery({
         showsHorizontalScrollIndicator={false}
       >
         {images.map((image, index) => (
-          <View key={image?.id ?? index} style={{ height: HERO_HEIGHT, width }}>
+          <View
+            key={image?.id ?? index}
+            style={{ height: pdp.heroHeight, width }}
+          >
             <Image
               accessibilityLabel={image?.alt || product.title}
               contentFit="contain"
@@ -78,23 +75,33 @@ export function ProductGallery({
         ))}
       </ScrollView>
 
-      <View style={[styles.actions, styles.leading]}>
+      <View
+        style={[
+          styles.actions,
+          { insetInlineStart: pdp.actionInset, top: pdp.actionTop },
+        ]}
+      >
         <Pressable
           accessibilityLabel={t('back')}
           compact
-          compactSize={36}
+          compactSize={pdp.actionSize}
           onPress={onBack}
           style={[styles.action, { borderRadius: theme.radius.full }]}
         >
-          <Icon name="arrow-back" size={theme.iconSizes.sm} />
+          <Icon name="arrow-back" size={pdp.backIconSize} />
         </Pressable>
       </View>
-      <View style={[styles.actions, styles.trailing]}>
+      <View
+        style={[
+          styles.actions,
+          { insetInlineEnd: pdp.actionInset, top: pdp.actionTop },
+        ]}
+      >
         <Pressable
           accessibilityLabel={saved ? t('removeFromWishlist') : t('wishlist')}
           accessibilityState={{ selected: saved }}
           compact
-          compactSize={36}
+          compactSize={pdp.actionSize}
           onPress={onToggleWishlist}
           style={[styles.action, { borderRadius: theme.radius.full }]}
         >
@@ -102,27 +109,31 @@ export function ProductGallery({
             name="heart"
             color={saved ? theme.colors.pink : theme.colors.textPrimary}
             filled={saved}
-            size={theme.iconSizes.sm}
+            size={pdp.actionIconSize}
           />
         </Pressable>
         <Pressable
           accessibilityLabel={t('cart')}
           compact
-          compactSize={36}
+          compactSize={pdp.actionSize}
           onPress={onCart}
           style={[styles.action, { borderRadius: theme.radius.full }]}
         >
-          <Icon name="cart" size={theme.iconSizes.sm} />
+          <Icon name="cart" size={pdp.actionIconSize} />
         </Pressable>
       </View>
 
+      {/*
+        The prototype's pager is dots alone. They carry no text, so the count is attached to the
+        row as its accessibility label rather than printed over the artwork.
+      */}
       {images.length > 1 ? (
         <View
           accessibilityLabel={t('imageOf', {
             index: active + 1,
             count: images.length,
           })}
-          style={styles.dots}
+          style={[styles.dots, { bottom: pdp.dotsBottom }]}
         >
           {images.map((image, index) => (
             <View
@@ -131,27 +142,13 @@ export function ProductGallery({
                 backgroundColor:
                   index === active ? theme.colors.ink : theme.colors.ink40,
                 borderRadius: theme.radius.full,
-                height: 5,
-                width: index === active ? 18 : 5,
+                height: pdp.dotSize,
+                width: index === active ? pdp.dotActiveWidth : pdp.dotSize,
               }}
             />
           ))}
         </View>
       ) : null}
-      {/* The count is text so screen readers and tests can read the pager, not just see it. */}
-      <Text
-        accessibilityLabel={t('imageOf', {
-          index: active + 1,
-          count: images.length,
-        })}
-        color={theme.colors.textSecondary}
-        latin
-        style={styles.counter}
-        variant="micro"
-        weight="semibold"
-      >
-        {active + 1}/{images.length}
-      </Text>
     </View>
   );
 }
@@ -162,31 +159,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.92)',
     justifyContent: 'center',
   },
-  actions: {
-    flexDirection: 'row',
-    gap: 8,
-    position: 'absolute',
-    top: 12,
-    zIndex: 3,
-  },
-  counter: {
-    backgroundColor: 'rgba(255,255,255,0.86)',
-    borderRadius: 99,
-    bottom: 12,
-    insetInlineEnd: 14,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    position: 'absolute',
-  },
+  actions: { flexDirection: 'row', gap: 8, position: 'absolute', zIndex: 3 },
   dots: {
     alignSelf: 'center',
-    bottom: 14,
     flexDirection: 'row',
     gap: 5,
     position: 'absolute',
   },
   hero: { position: 'relative' },
   image: { height: '100%', width: '100%' },
-  leading: { insetInlineStart: 14 },
-  trailing: { insetInlineEnd: 14 },
 });

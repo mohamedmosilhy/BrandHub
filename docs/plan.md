@@ -663,10 +663,11 @@ Phase 6 done. The PDP gains a variant selector, auto-resolving for single-varian
 
 ### Review checklist — implementation audit 2026-09-03
 
-- [x] PDP compared against the prototype element by element: tone hero with the 36 px circular
-      back / wishlist / cart controls, the dot pager, badge row, title, rating line, 25 px price
-      with strikethrough, hairline rule, seller strip, `#F5F5F7` delivery-and-returns panel and the
-      related rail, in that order.
+- [x] PDP compared against the prototype element by element: 340 px tone hero with the 36 px
+      circular back / wishlist / cart controls at 20 and 19 px, the dot pager, tinted badge pill,
+      15 px title, rating line, 25 px price with strikethrough, hairline rule, 34 px colour
+      swatches, the 38 px-tile seller strip, `#F5F5F7` delivery-and-returns panel and the 122 px
+      related rail, in that order. Every measurement is pinned in `theme/tokens.test.ts`.
 - [x] Does the variant selector read as part of the design rather than bolted on, given it is an
       addition to the reference (D8)? It occupies the prototype's colour-swatch slot under the same
       `t('colour')` heading, using the accent-selected chip treatment already used by the filter
@@ -677,7 +678,9 @@ Phase 6 done. The PDP gains a variant selector, auto-resolving for single-varian
 - [ ] Is the sticky bar correct on a notched device and with the Android gesture bar? The bar takes
       the bottom safe-area inset (the tab bar stands down on this screen), but that is a physical
       device check, not an inference from the inset code.
-- [ ] Final side-by-side AR/EN visual comparison on physical iOS and Android hardware.
+- [ ] Final side-by-side AR/EN visual comparison on physical iOS and Android hardware. The
+      geometry pass was made from the prototype's declared values; nothing here has been seen
+      rendered.
 
 ### Definition of done
 

@@ -24,6 +24,7 @@ export function BuyBar({
 }) {
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const pdp = theme.mobile.pdp;
   return (
     <View
       style={[
@@ -31,6 +32,8 @@ export function BuyBar({
         {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.border,
+          paddingHorizontal: pdp.buyBarPaddingX,
+          paddingVertical: pdp.buyBarPaddingY,
         },
       ]}
     >
@@ -39,14 +42,14 @@ export function BuyBar({
           {hint}
         </Text>
       ) : null}
-      <View style={styles.actions}>
+      <View style={[styles.actions, { gap: pdp.buyBarGap }]}>
         <Button
           disabled={disabled}
           fullWidth
           label={t('addToCart')}
           size="lg"
           style={styles.action}
-          variant="secondary"
+          variant="accentOutline"
           onPress={onAddToCart}
         />
         <Button
@@ -64,11 +67,6 @@ export function BuyBar({
 
 const styles = StyleSheet.create({
   action: { flex: 1 },
-  actions: { alignItems: 'center', flexDirection: 'row', gap: 10 },
-  bar: {
-    borderTopWidth: 1,
-    gap: 6,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
+  actions: { alignItems: 'center', flexDirection: 'row' },
+  bar: { borderTopWidth: 1, gap: 6 },
 });

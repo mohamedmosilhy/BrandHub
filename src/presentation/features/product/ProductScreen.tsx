@@ -15,19 +15,20 @@ import {
 import { ErrorState, Skeleton } from '@presentation/components/feedback';
 import { Screen } from '@presentation/components/layout';
 import { Icon, Text } from '@presentation/components/primitives';
-import { Badge } from '@presentation/components/surfaces';
-import { ProductRail } from '@presentation/features/catalog/components';
 import { useWishlistCardProps } from '@presentation/features/wishlist';
 import { formatPrice } from '@presentation/formatting';
-import { toneAt, useTheme } from '@presentation/theme';
+import { mobile, toneAt, useTheme } from '@presentation/theme';
 
 import {
   BuyBar,
+  ProductBadges,
   ProductGallery,
   ProductReviews,
   ProductSpecs,
+  RelatedRail,
   SellerStrip,
   VariantSelector,
+  type ProductBadge,
 } from './components';
 import {
   useProductDetail,
@@ -35,6 +36,18 @@ import {
   useRelatedProducts,
   useSeller,
 } from './useProductQueries';
+
+/**
+ * `TONES[PRODUCTS.indexOf(p) % TONES.length]` in the prototype: the hero takes the product's tint
+ * from its position in the catalogue, which this screen does not have. The id is folded into the
+ * same five-step rotation instead — stable per product, and spread across all five tones, which
+ * indexing by id length was not.
+ */
+function productTone(productId: string): string {
+  return toneAt(
+    [...productId].reduce((sum, char) => sum + char.charCodeAt(0), 0),
+  );
+}
 
 export function ProductScreen({
   productId,
@@ -63,6 +76,7 @@ export function ProductScreen({
 }) {
   const { t, i18n } = useTranslation();
   const { theme } = useTheme();
+  const pdp = theme.mobile.pdp;
   const locale = i18n.resolvedLanguage ?? i18n.language;
   const reviewLocale = locale.startsWith('ar') ? 'ar' : 'en';
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(
@@ -121,6 +135,18 @@ export function ProductScreen({
     );
   }
 
+  const badges: ProductBadge[] = [
+    ...(discount > 0
+      ? [
+          {
+            label: t('discountLabel', { percent: discount }),
+            tone: 'pink' as const,
+          },
+        ]
+      : []),
+    ...(soldOut ? [{ label: t('outOfStock'), tone: 'neutral' as const }] : []),
+  ];
+
   const addLabel = soldOut
     ? t('outOfStock')
     : needsChoice
@@ -142,7 +168,7 @@ export function ProductScreen({
       >
         <ProductGallery
           product={product}
-          tone={toneAt(product.id.length)}
+          tone={productTone(product.id)}
           saved={wishlist.savedIds.has(product.id)}
           onBack={onBack}
           onCart={onCart}
@@ -150,15 +176,11 @@ export function ProductScreen({
         />
 
         <View style={styles.body}>
-          <View style={styles.badges}>
-            {/* D21 holds Express back until the API carries it; the discount badge is derived. */}
-            {discount > 0 ? (
-              <Badge label={`-${discount}%`} tone="pink" />
-            ) : null}
-            {soldOut ? <Badge label={t('outOfStock')} tone="neutral" /> : null}
-          </View>
+          {/* D21 holds Express back until the API carries it; the discount pill is derived. */}
+          <ProductBadges badges={badges} />
 
-          <Text variant="bodyLg" weight="bold">
+          {/* `font-size: 15px; font-weight: 700; line-height: 1.7`. */}
+          <Text style={styles.title} variant="bodyLg" weight="bold">
             {product.title}
           </Text>
 
@@ -172,13 +194,13 @@ export function ProductScreen({
             <Text latin variant="sm" weight="bold">
               {product.rating.toFixed(1)}
             </Text>
-            <Text color={theme.colors.textMuted} variant="micro">
-              {t('reviewCount', { count: reviewTotal })}
+            <Text color={theme.colors.textMuted} variant="xxs">
+              ({reviewTotal} {t('reviewsWord')})
             </Text>
           </View>
 
           <View style={styles.priceRow}>
-            <Text latin variant="h2" weight="extrabold">
+            <Text latin variant="priceHero" weight="extrabold">
               {formatPrice((price ?? product.price).toDecimal())}
             </Text>
             <Text color={theme.colors.textSecondary} variant="xs">
@@ -189,7 +211,7 @@ export function ProductScreen({
                 color={theme.colors.textMuted}
                 latin
                 style={styles.oldPrice}
-                variant="sm"
+                variant="body"
               >
                 {formatPrice(product.originalPrice.toDecimal())}
               </Text>
@@ -218,14 +240,19 @@ export function ProductScreen({
           <View
             style={[
               styles.promise,
-              { backgroundColor: theme.colors.background, borderRadius: 14 },
+              {
+                backgroundColor: theme.colors.background,
+                borderRadius: 14,
+                gap: pdp.promiseGap,
+                padding: pdp.promisePadding,
+              },
             ]}
           >
             <View style={styles.promiseRow}>
               <Icon
                 name="truck"
                 color={theme.colors.accent}
-                size={theme.iconSizes.sm}
+                size={pdp.promiseIconSize}
               />
               <Text variant="xs">{t('deliveryLine')}</Text>
             </View>
@@ -233,7 +260,7 @@ export function ProductScreen({
               <Icon
                 name="shield"
                 color={theme.colors.accent}
-                size={theme.iconSizes.sm}
+                size={pdp.promiseIconSize}
               />
               <Text variant="xs">{t('returnsLine')}</Text>
             </View>
@@ -258,13 +285,17 @@ export function ProductScreen({
 
           {related.data && related.data.length > 0 ? (
             <View style={styles.relatedSection}>
-              <Text variant="sm" weight="extrabold">
+              {/* `font-size: 12.5px; font-weight: 800; margin-top: 6px`. */}
+              <Text
+                style={styles.relatedHeading}
+                variant="sm"
+                weight="extrabold"
+              >
                 {t('alsoLike')}
               </Text>
-              <ProductRail
+              <RelatedRail
                 label={t('alsoLike')}
                 products={related.data}
-                wishlist={wishlist}
                 onOpen={onOpenProduct}
               />
             </View>
@@ -283,16 +314,21 @@ export function ProductScreen({
 }
 
 const styles = StyleSheet.create({
-  badges: { flexDirection: 'row', gap: 7 },
   // `padding: 16px 18px 0` under the hero, with the prototype's 12 px stack gap.
-  body: { gap: 12, paddingHorizontal: 18, paddingTop: 16 },
-  loadingCopy: { gap: 12, padding: 18 },
+  body: {
+    gap: mobile.pdp.bodyGap,
+    paddingHorizontal: mobile.pdp.bodyPaddingX,
+    paddingTop: mobile.pdp.bodyPaddingTop,
+  },
+  loadingCopy: { gap: 12, padding: mobile.pdp.bodyPaddingX },
   oldPrice: { textDecorationLine: 'line-through' },
   page: { paddingBottom: 24 },
   priceRow: { alignItems: 'baseline', flexDirection: 'row', gap: 9 },
-  promise: { gap: 10, padding: 13 },
+  promise: {},
   promiseRow: { alignItems: 'center', flexDirection: 'row', gap: 9 },
   ratingRow: { alignItems: 'center', flexDirection: 'row', gap: 8 },
+  relatedHeading: { marginTop: 6 },
   relatedSection: { gap: 9 },
   rule: { height: 1, marginVertical: 2 },
+  title: { lineHeight: 26 },
 });

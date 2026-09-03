@@ -124,7 +124,8 @@ describe('ProductScreen', () => {
       expect(screen.getByText(product.title)).toBeOnTheScreen(),
     );
     // Discount derived from 25.000 → 19.900 (BR11), with the strikethrough beside it.
-    expect(screen.getByLabelText('-20%')).toBeOnTheScreen();
+    // The prototype writes the discount as a word in Arabic, a minus sign in English.
+    expect(screen.getByText('خصم 20%')).toBeOnTheScreen();
     expect(screen.getAllByText('19.900').length).toBeGreaterThan(0);
     expect(screen.getAllByText('25.000').length).toBeGreaterThan(0);
     expect(screen.getByText('المواصفات')).toBeOnTheScreen();
@@ -161,7 +162,7 @@ describe('ProductScreen', () => {
     await waitFor(() =>
       expect(screen.getByText(product.title)).toBeOnTheScreen(),
     );
-    expect(screen.queryByLabelText('-20%')).toBeNull();
+    expect(screen.queryByText('خصم 20%')).toBeNull();
     expect(screen.queryByText('25.000')).toBeNull();
     await waitFor(
       () =>
@@ -208,8 +209,8 @@ describe('ProductScreen', () => {
         screen.queryByText('اختر اللون قبل الإضافة إلى العربة'),
       ).toBeNull(),
     );
-    // The chosen variant's own price replaces the product's; the option shows it too.
-    expect(screen.getAllByText('21.000')).toHaveLength(2);
+    // The chosen variant's own price replaces the product's in the price row.
+    expect(screen.getByText('21.000')).toBeOnTheScreen();
     fireEvent.press(screen.getByLabelText('أضف للعربة'));
     expect(onAddedToCart).toHaveBeenCalledTimes(1);
   });

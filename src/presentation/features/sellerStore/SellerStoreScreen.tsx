@@ -2,30 +2,34 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import type { SellerRepository } from '@domain/catalog';
+import type {
+  GetProductDetailUseCase,
+  SellerRepository,
+} from '@domain/catalog';
 
 import { ErrorState, Skeleton } from '@presentation/components/feedback';
 import { Screen } from '@presentation/components/layout';
 import { Icon, Pressable, Text } from '@presentation/components/primitives';
-import { Avatar } from '@presentation/components/surfaces';
 import {
   productPages,
   ProductGrid,
   useProductPrefetch,
 } from '@presentation/features/catalog';
 import {
-  storeInitials,
+  StoreTile,
   useSeller,
   useSellerProducts,
 } from '@presentation/features/product';
 import { useWishlistCardProps } from '@presentation/features/wishlist';
 import { formatCount } from '@presentation/formatting';
-import { gradients, useTheme } from '@presentation/theme';
+import { gradients, mobile, useTheme } from '@presentation/theme';
 
 /**
- * `design-reference/BRANDHUB App.dc.html`: a 148 px ink-to-indigo cover, a 68 px store tile
- * pulled 34 px up over it, three `#F5F5F7` stat blocks, a tab rule with the "view all" action
- * on its trailing edge, and a two-column product grid.
+ * `design-reference/BRANDHUB App.dc.html`, element by element: a 148 px ink-to-indigo cover with
+ * a `34px` translucent back control, a `68px` store tile with a 3 px white edge pulled 34 px up
+ * over the cover, the store name at `14px/800` beside a `34px` follow pill, three `#F5F5F7` stat
+ * blocks, the tab rule carrying "all products" and "about" with "view all" on its trailing edge,
+ * and a two-column product grid on an 18 px gutter.
  */
 export function SellerStoreScreen({
   sellerId,
@@ -37,13 +41,14 @@ export function SellerStoreScreen({
 }: {
   sellerId: string;
   sellerRepository: SellerRepository;
-  getProductDetail: import('@domain/catalog').GetProductDetailUseCase;
+  getProductDetail: GetProductDetailUseCase;
   onBack: () => void;
   onOpenProduct: (id: string) => void;
   onViewAll: (sellerId: string) => void;
 }) {
   const { t, i18n } = useTranslation();
   const { theme } = useTheme();
+  const store = theme.mobile.sellerStore;
   const locale = i18n.resolvedLanguage ?? i18n.language;
   const seller = useSeller(sellerRepository, locale, sellerId);
   const products = useSellerProducts(sellerRepository, locale, sellerId);
@@ -53,11 +58,8 @@ export function SellerStoreScreen({
 
   const stats = seller.data
     ? [
-        { value: seller.data.rating.toFixed(1), label: t('ratingFilter') },
-        {
-          value: formatCount(seller.data.salesCount),
-          label: t('salesLabel'),
-        },
+        { value: seller.data.rating.toFixed(1), label: t('rating') },
+        { value: formatCount(seller.data.salesCount), label: t('sales') },
         {
           value: String(products.data?.pages[0]?.total ?? 0),
           label: t('products'),
@@ -83,21 +85,25 @@ export function SellerStoreScreen({
         <Pressable
           accessibilityLabel={t('back')}
           compact
-          compactSize={34}
+          compactSize={store.backSize}
           onPress={onBack}
           style={[styles.back, { borderRadius: theme.radius.full }]}
         >
           <Icon
             name="arrow-back"
             color={theme.colors.textInverse}
-            size={theme.iconSizes.sm}
+            size={store.backIconSize}
           />
         </Pressable>
       </LinearGradient>
 
       {seller.isPending ? (
         <View style={styles.loading}>
-          <Skeleton accessibilityLabel={t('loading')} height={68} width="60%" />
+          <Skeleton
+            accessibilityLabel={t('loading')}
+            height={store.tileSize}
+            width="60%"
+          />
         </View>
       ) : seller.isError || !seller.data ? (
         <ErrorState
@@ -111,26 +117,52 @@ export function SellerStoreScreen({
           <View style={styles.identity}>
             <View
               style={[
-                styles.tile,
+                styles.tileFrame,
                 {
                   backgroundColor: theme.colors.surface,
+                  borderRadius: store.tileRadius,
                   boxShadow: theme.shadows.md.boxShadow,
+                  padding: store.tileBorder,
                 },
               ]}
             >
-              <Avatar
-                accessibilityLabel={seller.data.storeName}
-                initials={storeInitials(seller.data.storeName)}
-                size="lg"
+              <StoreTile
+                storeName={seller.data.storeName}
+                size={store.tileSize}
+                radius={store.tileRadius - store.tileBorder}
+                textVariant="h2"
               />
             </View>
             <View style={styles.identityCopy}>
-              <Text variant="h3" weight="extrabold">
+              {/* `font-size: 14px; font-weight: 800` — smaller than a screen title. */}
+              <Text style={styles.storeName} variant="body" weight="extrabold">
                 {seller.data.storeName}
               </Text>
-              <Text color={theme.colors.textMuted} variant="micro">
+              <Text color={theme.colors.textMuted} variant="xxs">
                 {seller.data.verified ? `${t('verifiedSeller')} · ` : ''}
                 {t('ratingValue', { value: seller.data.rating.toFixed(1) })}
+              </Text>
+            </View>
+            {/*
+              The prototype's follow pill. Following a seller has no contract — FA1 covers
+              influencer follows only — so it states the relationship without claiming to
+              persist it, and is disabled rather than silently doing nothing.
+            */}
+            <View
+              accessibilityLabel={t('follow')}
+              accessibilityState={{ disabled: true }}
+              style={[
+                styles.follow,
+                {
+                  backgroundColor: theme.colors.accentHover,
+                  borderRadius: theme.radius.full,
+                  height: store.followHeight,
+                  paddingHorizontal: store.followPaddingX,
+                },
+              ]}
+            >
+              <Text color={theme.colors.textInverse} variant="xs" weight="bold">
+                {t('follow')}
               </Text>
             </View>
           </View>
@@ -141,13 +173,17 @@ export function SellerStoreScreen({
                 key={stat.label}
                 style={[
                   styles.stat,
-                  { backgroundColor: theme.colors.background },
+                  {
+                    backgroundColor: theme.colors.background,
+                    borderRadius: store.statRadius,
+                    padding: store.statPadding,
+                  },
                 ]}
               >
                 <Text latin variant="bodyLg" weight="extrabold">
                   {stat.value}
                 </Text>
-                <Text color={theme.colors.textSecondary} variant="micro">
+                <Text color={theme.colors.textSecondary} variant="nano">
                   {stat.label}
                 </Text>
               </View>
@@ -158,12 +194,27 @@ export function SellerStoreScreen({
             style={[styles.tabs, { borderBottomColor: theme.colors.border }]}
           >
             <Text
-              color={theme.colors.accent}
-              style={[styles.tab, { borderBottomColor: theme.colors.accent }]}
+              color={theme.colors.accentHover}
+              style={[
+                styles.tab,
+                {
+                  borderBottomColor: theme.colors.accent,
+                  borderBottomWidth: store.tabIndicatorWidth,
+                },
+              ]}
               variant="sm"
               weight="extrabold"
             >
               {t('allProducts')}
+            </Text>
+            {/* The prototype's second tab. Seller profiles have no contract, so it is inert. */}
+            <Text
+              color={theme.colors.textMuted}
+              style={styles.tab}
+              variant="sm"
+              weight="semibold"
+            >
+              {t('about')}
             </Text>
             <Pressable
               accessibilityLabel={t('viewAll')}
@@ -171,7 +222,7 @@ export function SellerStoreScreen({
               onPress={() => onViewAll(sellerId)}
               style={styles.viewAll}
             >
-              <Text color={theme.colors.accent} variant="xs" weight="bold">
+              <Text color={theme.colors.accentHover} variant="xs" weight="bold">
                 {t('viewAll')}
               </Text>
             </Pressable>
@@ -179,8 +230,10 @@ export function SellerStoreScreen({
 
           <ProductGrid
             products={items}
-            paddingX={18}
+            imageHeight={store.productImageHeight}
+            paddingX={store.paddingX}
             paddingTop={14}
+            paddingBottom={24}
             emptyTitle={t('noResultsFound')}
             emptyBody={t('tryOther')}
             isFetchingNextPage={products.isFetchingNextPage}
@@ -203,37 +256,44 @@ const styles = StyleSheet.create({
   back: {
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.16)',
-    insetInlineStart: 14,
+    insetInlineStart: mobile.sellerStore.backInset,
     justifyContent: 'center',
     position: 'absolute',
-    top: 14,
+    top: mobile.sellerStore.backInset,
   },
-  cover: { height: 148 },
+  cover: { height: mobile.sellerStore.coverHeight },
+  follow: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
   identity: {
     alignItems: 'flex-end',
     flexDirection: 'row',
     gap: 12,
-    marginTop: -34,
-    paddingHorizontal: 18,
+    marginTop: mobile.sellerStore.tileOverlap,
+    paddingHorizontal: mobile.sellerStore.paddingX,
   },
   identityCopy: { flex: 1, gap: 3, paddingBottom: 4 },
-  loading: { padding: 18 },
-  stat: { borderRadius: 14, flex: 1, gap: 3, padding: 12 },
+  loading: { padding: mobile.sellerStore.paddingX },
+  stat: { flex: 1, gap: 3 },
   stats: {
     flexDirection: 'row',
-    gap: 10,
-    paddingHorizontal: 18,
+    gap: mobile.sellerStore.statGap,
+    paddingHorizontal: mobile.sellerStore.paddingX,
     paddingTop: 18,
   },
-  tab: { borderBottomWidth: 2.5, paddingBottom: 10 },
+  storeName: { fontSize: 14 },
+  /** The prototype's `border: 3px solid #fff` around the tile, drawn as padding on a white box. */
+  tileFrame: {},
+  tab: { paddingBottom: mobile.sellerStore.tabPaddingBottom },
   tabs: {
     alignItems: 'flex-end',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    gap: 18,
-    paddingHorizontal: 18,
+    gap: mobile.sellerStore.tabGap,
+    paddingHorizontal: mobile.sellerStore.paddingX,
     paddingTop: 14,
   },
-  tile: { borderRadius: 18, padding: 3 },
-  viewAll: { marginInlineStart: 'auto', paddingBottom: 8 },
+  viewAll: { marginBottom: 8, marginInlineStart: 'auto' },
 });

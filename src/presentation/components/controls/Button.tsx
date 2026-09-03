@@ -14,7 +14,8 @@ import {
 } from '@presentation/components/primitives';
 import { mobile, useTheme } from '@presentation/theme';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+export type ButtonVariant =
+  'primary' | 'secondary' | 'accentOutline' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export type ButtonProps = {
@@ -81,12 +82,15 @@ export function Button({
 }: ButtonProps) {
   const { theme } = useTheme();
   const filled = variant === 'primary' || variant === 'danger';
-  const outlined = variant === 'secondary';
+  // The PDP buy bar's add-to-cart is `1.5px solid #7F77DD` with accent text on white — an
+  // outline in the brand colour rather than in the neutral border token `secondary` uses.
+  const accentOutlined = variant === 'accentOutline';
+  const outlined = variant === 'secondary' || accentOutlined;
   const foreground = inverse
     ? theme.colors.onDarkPrimary
     : filled
       ? theme.colors.textInverse
-      : outlined
+      : outlined && !accentOutlined
         ? theme.colors.textPrimary
         : theme.colors.accentHover;
   const background =
@@ -97,9 +101,11 @@ export function Button({
         : theme.colors.transparent;
   const borderColor = inverse
     ? theme.colors.onDarkBorder
-    : outlined
-      ? theme.colors.border
-      : background;
+    : accentOutlined
+      ? theme.colors.accentHover
+      : outlined
+        ? theme.colors.border
+        : background;
   const metrics = SIZE[size];
 
   return (

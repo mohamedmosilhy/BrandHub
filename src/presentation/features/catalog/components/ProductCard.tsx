@@ -125,6 +125,8 @@ export type ProductCardProps = {
   showRating?: boolean;
   /** Renders the heart filled and labels it as a removal; see `useWishlistCardProps`. */
   saved?: boolean;
+  /** The seller store draws the grid card at a 112 px crop; every other screen takes the default. */
+  imageHeight?: number;
   onOpen: () => void;
   onPrefetch?: () => void;
   onWishlist?: () => void;
@@ -138,6 +140,7 @@ export const ProductCard = memo(function ProductCard({
   express = false,
   showRating = false,
   saved = false,
+  imageHeight,
   onOpen,
   onPrefetch,
   onWishlist,
@@ -177,7 +180,7 @@ export const ProductCard = memo(function ProductCard({
           {
             backgroundColor: background,
             borderRadius: metrics.thumbRadius ?? 0,
-            height: metrics.image,
+            height: imageHeight ?? metrics.image,
             width: horizontal ? metrics.image : '100%',
           },
         ]}

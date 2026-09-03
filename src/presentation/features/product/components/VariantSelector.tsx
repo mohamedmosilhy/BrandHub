@@ -4,15 +4,43 @@ import { StyleSheet, View } from 'react-native';
 import type { ProductVariant } from '@domain/catalog';
 
 import { Pressable, Text } from '@presentation/components/primitives';
-import { formatPrice } from '@presentation/formatting';
-import { useTheme } from '@presentation/theme';
+import { colors, useTheme } from '@presentation/theme';
 
 /**
- * D8's addition to the reference. The prototype drew four decorative colour dots that carried no
- * id; `POST /cart/items` needs one, so the dots become real options labelled with the attribute
- * the seed actually varies. Rendering the label rather than a colour swatch keeps it honest —
- * the API sends attribute names, not hex values.
+ * D8's addition to the reference, drawn in the reference's own shape. The prototype shows four
+ * `34px` circular swatches with the selected one ringed `0 0 0 2px #fff, 0 0 0 4px #7F77DD`; they
+ * carry no id, which is exactly why D8 exists. These do: each swatch is a real variant, labelled
+ * with the attribute value for screen readers.
+ *
+ * A variant whose attributes are not a colour the prototype paints falls back to a labelled chip,
+ * so nothing is silently drawn in the wrong hue.
  */
+const SWATCHES: Readonly<Record<string, string>> = {
+  black: colors.ink,
+  white: colors.white,
+  sand: colors.sand,
+  beige: colors.sand,
+  grey: colors.border,
+  gray: colors.border,
+  silver: colors.border,
+  purple: colors.accent,
+  violet: colors.accent,
+  pink: colors.pink,
+  gold: colors.gold,
+};
+
+function swatchColor(variant: ProductVariant): string | null {
+  for (const value of Object.values(variant.attributes)) {
+    const match = SWATCHES[value.trim().toLowerCase()];
+    if (match) return match;
+  }
+  return null;
+}
+
+function variantLabel(variant: ProductVariant): string {
+  return Object.values(variant.attributes).join(' · ') || variant.sku;
+}
+
 export function VariantSelector({
   variants,
   selectedId,
@@ -24,11 +52,10 @@ export function VariantSelector({
 }) {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const label = (variant: ProductVariant) =>
-    Object.values(variant.attributes).join(' · ') || variant.sku;
+  const pdp = theme.mobile.pdp;
 
   return (
-    <View style={styles.group}>
+    <View style={styles.group} accessibilityRole="radiogroup">
       <Text variant="xs" weight="bold">
         {t('colour')}
       </Text>
@@ -36,40 +63,72 @@ export function VariantSelector({
         {variants.map((variant) => {
           const selected = variant.id === selectedId;
           const soldOut = variant.stock <= 0;
+          const swatch = swatchColor(variant);
+          const ring = selected
+            ? {
+                borderColor: theme.colors.accent,
+                borderWidth: pdp.swatchRingWidth,
+                padding: pdp.swatchRingGap,
+              }
+            : {
+                borderColor: theme.colors.transparent,
+                borderWidth: pdp.swatchRingWidth,
+                padding: pdp.swatchRingGap,
+              };
+
           return (
             <Pressable
               key={variant.id}
-              accessibilityLabel={label(variant)}
+              accessibilityLabel={variantLabel(variant)}
               accessibilityRole="radio"
               accessibilityState={{ selected, disabled: soldOut }}
+              compact
               disabled={soldOut}
               onPress={() => onSelect(variant.id)}
               style={[
-                styles.option,
-                {
-                  backgroundColor: selected
-                    ? theme.colors.accentLight
-                    : theme.colors.surface,
-                  borderColor: selected
-                    ? theme.colors.accent
-                    : theme.colors.border,
-                  borderRadius: theme.radius.md,
-                  opacity: soldOut ? 0.45 : 1,
-                },
+                swatch ? styles.swatchShell : styles.chipShell,
+                { borderRadius: theme.radius.full, opacity: soldOut ? 0.4 : 1 },
+                ring,
               ]}
             >
-              <Text
-                color={
-                  selected ? theme.colors.accent : theme.colors.textPrimary
-                }
-                variant="xs"
-                weight="semibold"
-              >
-                {label(variant)}
-              </Text>
-              <Text color={theme.colors.textMuted} latin variant="micro">
-                {formatPrice(variant.price.toDecimal())}
-              </Text>
+              {swatch ? (
+                <View
+                  style={{
+                    backgroundColor: swatch,
+                    borderColor: theme.colors.border,
+                    borderRadius: theme.radius.full,
+                    borderWidth: 1,
+                    height: pdp.swatchSize,
+                    width: pdp.swatchSize,
+                  }}
+                />
+              ) : (
+                <View
+                  style={[
+                    styles.chip,
+                    {
+                      backgroundColor: selected
+                        ? theme.colors.accentLight
+                        : theme.colors.surface,
+                      borderColor: theme.colors.border,
+                      borderRadius: theme.radius.full,
+                      minHeight: pdp.swatchSize,
+                    },
+                  ]}
+                >
+                  <Text
+                    color={
+                      selected
+                        ? theme.colors.accentHover
+                        : theme.colors.textPrimary
+                    }
+                    variant="xs"
+                    weight="semibold"
+                  >
+                    {variantLabel(variant)}
+                  </Text>
+                </View>
+              )}
             </Pressable>
           );
         })}
@@ -79,14 +138,19 @@ export function VariantSelector({
 }
 
 const styles = StyleSheet.create({
-  group: { gap: 9 },
-  option: {
+  chip: {
     alignItems: 'center',
-    borderWidth: 1.5,
-    flexDirection: 'row',
-    gap: 8,
-    paddingHorizontal: 13,
-    paddingVertical: 9,
+    borderWidth: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 14,
   },
-  options: { flexDirection: 'row', flexWrap: 'wrap', gap: 9 },
+  chipShell: {},
+  group: { gap: 9 },
+  options: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 9,
+  },
+  swatchShell: {},
 });

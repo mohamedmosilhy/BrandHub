@@ -26,7 +26,9 @@ export type TextVariant =
   | 'sm'
   | 'xs'
   | 'xxs'
-  | 'micro';
+  | 'micro'
+  | 'nano'
+  | 'priceHero';
 export type TextWeight =
   'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold';
 
@@ -56,6 +58,8 @@ const HEADINGS = new Set<TextVariant>([
   'h2',
   'h2Compact',
   'h3',
+  // The PDP price is set like a heading: 25 px at 800, on the tight leading.
+  'priceHero',
 ]);
 
 export function Text({
