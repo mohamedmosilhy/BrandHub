@@ -30,7 +30,7 @@ export function OnboardingScreen({
   onEmail,
 }: OnboardingScreenProps) {
   const { t } = useTranslation();
-  const { theme, isRTL, direction } = useTheme();
+  const { theme, direction } = useTheme();
   const { showToast } = useToast();
   const [phone, setPhone] = useState('');
   const [challengeId, setChallengeId] = useState<string | null>(null);
@@ -188,10 +188,12 @@ export function OnboardingScreen({
                 styles.phoneInput,
                 {
                   color: theme.colors.textInverse,
-                  fontFamily:
-                    theme.fontFamilies[isRTL ? 'arabic' : 'latin'].regular,
+                  fontFamily: theme.fontFamilies.latin.regular,
                   fontSize: theme.fontSizes.body,
-                  textAlign: textStart(isRTL),
+                  // The prototype marks the phone field `direction: ltr`: a number is a Latin
+                  // run whatever the app's reading direction.
+                  direction: 'ltr',
+                  textAlign: textStart(),
                 },
               ]}
             />

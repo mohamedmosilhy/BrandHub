@@ -97,8 +97,11 @@ export function Input({
                 ? theme.spacing.x20
                 : theme.mobile.fieldHeight - 2,
               paddingHorizontal: theme.mobile.gapSection,
-              textAlign: textStart(runRTL),
+              textAlign: textStart(),
               writingDirection: writingDirection(runRTL),
+              // A forced-LTR field (email, phone) is its own LTR node, so `textStart` resolves
+              // to the physical left for it and the platform mirrors nothing.
+              ...(runRTL ? {} : { direction: 'ltr' as const }),
             },
           ]}
         />

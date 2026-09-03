@@ -13,7 +13,7 @@ import { Chip } from '@presentation/components/controls';
 import { ErrorState } from '@presentation/components/feedback';
 import { Screen } from '@presentation/components/layout';
 import { Icon, Pressable, Text } from '@presentation/components/primitives';
-import { Sheet } from '@presentation/components/surfaces';
+import { Divider, Sheet } from '@presentation/components/surfaces';
 import {
   emptyFilterDraft,
   filterDraftToCriteria,
@@ -143,7 +143,13 @@ export function SearchScreen({
   };
 
   return (
-    <Screen accessibilityLabel={t('search')} scroll={false}>
+    <Screen
+      accessibilityLabel={t('search')}
+      background={theme.colors.surface}
+      edgeToEdge
+      gap={0}
+      scroll={false}
+    >
       <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
         <Pressable
           accessibilityLabel={t('back')}
@@ -179,7 +185,7 @@ export function SearchScreen({
                 fontFamily:
                   theme.fontFamilies[isRTL ? 'arabic' : 'latin'].regular,
                 fontSize: theme.fontSizes.sm,
-                textAlign: textStart(isRTL),
+                textAlign: textStart(),
                 writingDirection: writingDirection(isRTL),
               },
             ]}
@@ -187,82 +193,118 @@ export function SearchScreen({
         </View>
       </View>
 
-      <View style={{ gap: theme.spacing.x2 }}>
-        <Text variant="xs" weight="bold">
-          {t('trending')}
-        </Text>
-        <View style={styles.trending}>
-          {trending.map((term) => (
-            <Chip key={term} label={term} onPress={() => setQuery(term)} />
-          ))}
-        </View>
-      </View>
-
-      {scope ? (
-        <Chip
-          label={`${locale.startsWith('ar') ? 'منتجات' : 'Products from'} ${scope}`}
-          removable
-          removeAccessibilityLabel={`${t('remove')} ${scope}`}
-          selected
-          onRemove={() => {
-            setScope(undefined);
-            setScopeCleared(true);
-          }}
-        />
-      ) : null}
-
-      <View style={styles.resultHeader}>
-        <Text variant="xs" weight="bold">
-          {hasIntent ? `${total} ${t('results')}` : t('noResults')}
-        </Text>
-        <Pressable
-          accessibilityLabel={t('filters')}
-          compact
-          onPress={() => setSheetOpen(true)}
-          style={[
-            styles.filterButton,
-            {
-              borderColor: hasFilters
-                ? theme.colors.accent
-                : theme.colors.border,
-              borderRadius: theme.radius.full,
-            },
-          ]}
-        >
-          <Icon
-            name="filter"
-            color={hasFilters ? theme.colors.accent : theme.colors.textPrimary}
-            size={theme.iconSizes.xs}
-          />
-          <Text
-            color={hasFilters ? theme.colors.accent : theme.colors.textPrimary}
-            variant="xs"
-            weight="bold"
-          >
-            {hasFilters
-              ? `${t('filters')} (${activeFilterCount})`
-              : t('filters')}
+      <View style={styles.body}>
+        <View style={{ gap: theme.mobile.gapTight + 2 }}>
+          <Text variant="sm" weight="bold">
+            {t('trending')}
           </Text>
-        </Pressable>
-      </View>
+          <View style={styles.trending}>
+            {trending.map((term) => (
+              <Chip
+                key={term}
+                label={term}
+                tone="muted"
+                onPress={() => setQuery(term)}
+              />
+            ))}
+          </View>
+        </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.sorts}
-      >
-        {sortOptions.map(([value, key]) => (
-          <Chip
-            key={value}
-            label={t(key)}
-            selected={(filters.sort ?? 'relevance') === value}
-            onPress={() => {
-              setFilters((current) => ({ ...current, sort: value }));
-              setDraft((current) => ({ ...current, sort: value }));
-            }}
-          />
-        ))}
-      </ScrollView>
+        <Divider />
+
+        {scope ? (
+          <View
+            style={[
+              styles.scope,
+              {
+                backgroundColor: theme.colors.accentLight,
+                borderRadius: theme.radius.field,
+              },
+            ]}
+          >
+            <Text
+              color={theme.colors.accentHover}
+              style={styles.flex}
+              variant="xs"
+              weight="bold"
+            >
+              {`${locale.startsWith('ar') ? 'منتجات' : 'Products from'} ${scope}`}
+            </Text>
+            <Pressable
+              accessibilityLabel={`${t('remove')} ${scope}`}
+              compact
+              onPress={() => {
+                setScope(undefined);
+                setScopeCleared(true);
+              }}
+            >
+              <Icon
+                name="close"
+                color={theme.colors.accentHover}
+                size={theme.iconSizes.xs}
+              />
+            </Pressable>
+          </View>
+        ) : null}
+
+        <View style={styles.resultHeader}>
+          <Text style={styles.flex} variant="sm" weight="bold">
+            {hasIntent ? `${total} ${t('results')}` : t('noResults')}
+          </Text>
+          <Pressable
+            accessibilityLabel={t('filters')}
+            compact
+            onPress={() => setSheetOpen(true)}
+            style={[
+              styles.filterButton,
+              {
+                borderColor: hasFilters
+                  ? theme.colors.accent
+                  : theme.colors.border,
+                borderRadius: theme.radius.full,
+              },
+            ]}
+          >
+            <Icon
+              name="filter"
+              color={
+                hasFilters ? theme.colors.accent : theme.colors.textPrimary
+              }
+              size={theme.iconSizes.xs}
+            />
+            <Text
+              color={
+                hasFilters ? theme.colors.accent : theme.colors.textPrimary
+              }
+              variant="xs"
+              weight="bold"
+            >
+              {hasFilters
+                ? `${t('filters')} (${activeFilterCount})`
+                : t('filters')}
+            </Text>
+          </Pressable>
+        </View>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.sortRow}
+          contentContainerStyle={styles.sorts}
+        >
+          {sortOptions.map(([value, key]) => (
+            <Chip
+              key={value}
+              label={t(key)}
+              selected={(filters.sort ?? 'relevance') === value}
+              onPress={() => {
+                setFilters((current) => ({ ...current, sort: value }));
+                setDraft((current) => ({ ...current, sort: value }));
+              }}
+            />
+          ))}
+        </ScrollView>
+      </View>
 
       <View style={styles.results}>
         {!hasIntent ? (
@@ -291,6 +333,8 @@ export function SearchScreen({
           <ProductGrid
             products={items}
             variant="list"
+            gap={10}
+            paddingTop={0}
             onOpen={onOpenProduct}
             onPrefetch={prefetch}
             onEndReached={() =>
@@ -310,7 +354,9 @@ export function SearchScreen({
       <Sheet
         visible={sheetOpen}
         title={t('filters')}
+        actionLabel={t('clearFilters')}
         closeLabel={t('close')}
+        onAction={() => setDraft(emptyFilterDraft)}
         onClose={() => setSheetOpen(false)}
       >
         <FilterSheetContent
@@ -318,7 +364,6 @@ export function SearchScreen({
           matchCount={previewTotal}
           labels={labels}
           onChange={setDraft}
-          onClear={() => setDraft(emptyFilterDraft)}
           onApply={(next) => {
             setFilters(next);
             setSheetOpen(false);
@@ -330,6 +375,8 @@ export function SearchScreen({
 }
 
 const styles = StyleSheet.create({
+  // `padding: 16px; gap: 16px` around everything under the search bar.
+  body: { gap: 16, padding: 16 },
   filterButton: {
     alignItems: 'center',
     borderWidth: 1,
@@ -338,12 +385,14 @@ const styles = StyleSheet.create({
     height: 32,
     paddingHorizontal: 13,
   },
+  flex: { flex: 1 },
   header: {
     alignItems: 'center',
     borderBottomWidth: 1,
     flexDirection: 'row',
     gap: 10,
-    paddingBottom: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   iconButton: { alignItems: 'center', justifyContent: 'center' },
   input: { flex: 1, paddingVertical: 0 },
@@ -359,6 +408,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   results: { flex: 1 },
+  scope: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  sortRow: { flexGrow: 0 },
   searchShell: {
     alignItems: 'center',
     flex: 1,

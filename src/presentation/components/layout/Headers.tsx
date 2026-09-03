@@ -61,6 +61,10 @@ export type SectionHeaderProps = {
   onAction?: (() => void) | undefined;
 };
 
+/**
+ * The prototype's section heading is `font-size: 15.5px; font-weight: 800` with an
+ * `11.5px / 700` accent link on the far side, the two sitting on a shared baseline.
+ */
 export function SectionHeader({
   title,
   actionLabel,
@@ -69,16 +73,17 @@ export function SectionHeader({
   const { theme } = useTheme();
   return (
     <View accessibilityRole="header" style={styles.sectionHeader}>
-      <Text variant="h3" weight="bold">
+      <Text variant="section" weight="extrabold">
         {title}
       </Text>
       {actionLabel ? (
         <Pressable
           accessibilityLabel={actionLabel}
+          compact
           onPress={onAction}
           style={styles.headerAction}
         >
-          <Text color={theme.colors.accentHover} variant="sm" weight="semibold">
+          <Text color={theme.colors.accentHover} variant="xs" weight="bold">
             {actionLabel}
           </Text>
         </Pressable>
@@ -95,7 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   sectionHeader: {
-    alignItems: 'center',
+    alignItems: 'baseline',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

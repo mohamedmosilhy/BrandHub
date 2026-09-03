@@ -1,9 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import type {
-  Category,
   CategoryRepository,
   GetCategoryProductsUseCase,
   ProductRepository,
@@ -38,26 +37,34 @@ export function BrowseScreen({
   const locale = i18n.resolvedLanguage ?? i18n.language;
   const categories = useCategories(categoryRepository, locale);
   const [activeRootId, setActiveRootId] = useState('');
-  const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const resolvedRootId = activeRootId || categories.data?.[0]?.id || '';
-  const resolvedCategoryId = selectedCategoryId || resolvedRootId;
-  const active = useMemo(
-    () => categories.data?.find((category) => category.id === resolvedRootId),
-    [categories.data, resolvedRootId],
-  );
+  const browseFilters = [
+    t('browseBestSellers'),
+    t('browseNewIn'),
+    t('browseUnder20'),
+    t('express'),
+  ];
   const products = useCategoryProducts(
     getCategoryProducts,
     locale,
-    resolvedCategoryId,
+    resolvedRootId,
     {},
-    Boolean(resolvedCategoryId),
+    Boolean(resolvedRootId),
   );
   const items = productPages(products.data);
   const prefetch = useProductPrefetch(productRepository, locale);
 
   return (
-    <Screen accessibilityLabel={t('tabCats')} scroll={false}>
-      <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
+    <Screen accessibilityLabel={t('tabCats')} edgeToEdge gap={0} scroll={false}>
+      <View
+        style={[
+          styles.header,
+          {
+            backgroundColor: theme.colors.surface,
+            borderBottomColor: theme.colors.border,
+          },
+        ]}
+      >
         <Text variant="h3" weight="extrabold">
           {t('browse')}
         </Text>
@@ -103,10 +110,7 @@ export function BrowseScreen({
                   accessibilityLabel={category.title}
                   accessibilityRole="tab"
                   accessibilityState={{ selected }}
-                  onPress={() => {
-                    setActiveRootId(category.id);
-                    setSelectedCategoryId(category.id);
-                  }}
+                  onPress={() => setActiveRootId(category.id)}
                   style={[
                     styles.railItem,
                     {
@@ -127,6 +131,7 @@ export function BrowseScreen({
                     }
                     variant="xxs"
                     weight="bold"
+                    style={styles.railLabel}
                   >
                     {category.title}
                   </Text>
@@ -135,25 +140,11 @@ export function BrowseScreen({
             })}
           </ScrollView>
           <View style={styles.products}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.chips}
-            >
-              <Chip
-                label={t('allProducts')}
-                selected={resolvedCategoryId === active?.id}
-                onPress={() => active && setSelectedCategoryId(active.id)}
-              />
-              {(active?.children ?? []).map((category: Category) => (
-                <Chip
-                  key={category.id}
-                  label={category.title}
-                  selected={resolvedCategoryId === category.id}
-                  onPress={() => setSelectedCategoryId(category.id)}
-                />
+            <View style={styles.chips}>
+              {browseFilters.map((label) => (
+                <Chip key={label} density="browse" label={label} />
               ))}
-            </ScrollView>
+            </View>
             {products.isError ? (
               <ErrorState
                 title={t('states:genericErrorTitle')}
@@ -177,6 +168,11 @@ export function BrowseScreen({
             ) : (
               <ProductGrid
                 products={items}
+                variant="compact"
+                gap={10}
+                paddingBottom={14}
+                paddingTop={0}
+                paddingX={0}
                 onOpen={onOpenProduct}
                 onPrefetch={prefetch}
                 onEndReached={() =>
@@ -197,13 +193,25 @@ export function BrowseScreen({
 }
 
 const styles = StyleSheet.create({
-  body: { flex: 1, flexDirection: 'row' },
-  chips: { gap: 7, paddingBottom: 10 },
-  gridLoading: { flexDirection: 'row', gap: 10, padding: 12 },
-  header: { borderBottomWidth: 1, paddingBottom: 10 },
-  loading: { flexDirection: 'row', gap: 12 },
-  products: { flex: 1 },
-  rail: { borderEndWidth: 1, flexGrow: 0, width: 104 },
+  body: { flex: 1, flexDirection: 'row', minHeight: 0 },
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 7,
+  },
+  gridLoading: { flexDirection: 'row', gap: 10 },
+  // `padding: 14px 18px 10px; background: #fff; border-bottom: 1px solid #E8E8EC`, full bleed.
+  header: {
+    borderBottomWidth: 1,
+    paddingBottom: 10,
+    paddingHorizontal: 18,
+    paddingTop: 14,
+  },
+  loading: { flexDirection: 'row', gap: 12, padding: 14 },
+  // `padding: 14px` around the pane beside the rail.
+  products: { flex: 1, gap: 12, minHeight: 0, padding: 14 },
+  rail: { alignSelf: 'stretch', borderEndWidth: 1, flexGrow: 0, width: 104 },
+  railLabel: { lineHeight: 15 },
   railItem: {
     borderStartWidth: 3,
     justifyContent: 'center',

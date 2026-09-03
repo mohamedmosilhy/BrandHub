@@ -389,8 +389,9 @@ function MainTabBar({ state, navigation }: BottomTabBarProps) {
   const { t } = useTranslation();
   const tabs: readonly NavigationTab[] = [
     { key: 'HomeTab', label: t('tabHome'), icon: 'home' },
-    { key: 'BrowseTab', label: t('tabCats'), icon: 'search' },
-    { key: 'InfluencersTab', label: t('tabInf'), icon: 'person' },
+    // The prototype's tab glyphs: a four-square grid for categories and a star for creators.
+    { key: 'BrowseTab', label: t('tabCats'), icon: 'grid' },
+    { key: 'InfluencersTab', label: t('tabInf'), icon: 'star' },
     { key: 'CartTab', label: t('tabCart'), icon: 'cart', badge: 0 },
     { key: 'AccountTab', label: t('tabMe'), icon: 'person' },
   ];

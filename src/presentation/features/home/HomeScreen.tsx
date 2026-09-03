@@ -23,13 +23,13 @@ import {
 import { GradientPanel } from '@presentation/components/surfaces';
 import {
   CategoryTile,
-  ProductRail,
+  StaticProductGrid,
 } from '@presentation/features/catalog/components';
 import {
   useHomeQueries,
   useProductPrefetch,
 } from '@presentation/features/catalog/useCatalogQueries';
-import { useTheme } from '@presentation/theme';
+import { mobile, toneAt, useTheme } from '@presentation/theme';
 
 const creators = [
   ['influencer-1', 'Layan'],
@@ -75,7 +75,12 @@ export function HomeScreen({
   const categories = flattenCategories(queries.categories.data ?? []);
 
   return (
-    <Screen accessibilityLabel={t('tabHome')}>
+    <Screen
+      accessibilityLabel={t('tabHome')}
+      paddingBottom={theme.spacing.x6}
+      paddingTop={theme.spacing.x3}
+      paddingX={theme.mobile.homePaddingX}
+    >
       <View style={styles.locationRow}>
         <Icon
           name="map-pin"
@@ -187,7 +192,13 @@ export function HomeScreen({
         ))}
       </ScrollView>
 
-      <GradientPanel accessibilityLabel={t('weekDeals')}>
+      <GradientPanel
+        accessibilityLabel={t('weekDeals')}
+        paddingX={theme.mobile.promo.paddingX}
+        paddingY={theme.mobile.promo.paddingY}
+        radius={theme.mobile.promo.radius}
+        ring
+      >
         <View style={styles.promoRow}>
           <View style={[styles.flex, { gap: theme.mobile.gapTight }]}>
             <Text
@@ -224,13 +235,13 @@ export function HomeScreen({
           {queries.deals.data?.[0]?.images[0] ? (
             <Image
               accessibilityLabel={queries.deals.data[0].title}
-              contentFit="contain"
+              contentFit="cover"
               source={{ uri: queries.deals.data[0].images[0].url }}
               style={[
                 styles.promoImage,
                 {
                   backgroundColor: theme.colors.surface,
-                  borderColor: theme.colors.onDarkBorder,
+                  borderColor: 'rgba(255,255,255,0.32)',
                 },
               ]}
             />
@@ -271,10 +282,11 @@ export function HomeScreen({
         }
       >
         <View style={styles.categoryGrid}>
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <CategoryTile
               key={category.id}
               category={category}
+              tone={toneAt(index)}
               onPress={() => onOpenCategory(category.id, category.title)}
             />
           ))}
@@ -294,12 +306,12 @@ export function HomeScreen({
             <Skeleton
               accessibilityLabel={t('loading')}
               height={210}
-              width={158}
+              width="47%"
             />
             <Skeleton
               accessibilityLabel={t('loading')}
               height={210}
-              width={158}
+              width="47%"
             />
           </View>
         }
@@ -313,9 +325,8 @@ export function HomeScreen({
           />
         }
       >
-        <ProductRail
+        <StaticProductGrid
           products={queries.deals.data ?? []}
-          label={t('todayDeals')}
           onOpen={onOpenProduct}
           onPrefetch={prefetch}
         />
@@ -345,7 +356,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 7,
   },
-  promoImage: { borderRadius: 99, borderWidth: 5, height: 88, width: 88 },
+  promoImage: {
+    borderRadius: 99,
+    borderWidth: mobile.promo.imageBorder,
+    height: mobile.promo.imageSize,
+    width: mobile.promo.imageSize,
+  },
   promoRow: { alignItems: 'center', flexDirection: 'row', gap: 12 },
   search: {
     alignItems: 'center',

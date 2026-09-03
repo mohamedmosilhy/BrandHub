@@ -59,6 +59,26 @@ export const colors = {
   dangerAccessible: '#B8323C',
 } as const;
 
+/**
+ * `const TONES` in `design-reference/BRANDHUB App.dc.html`. The prototype rotates these five
+ * tints across product images, category tiles and the category hero band; every surface that
+ * sits behind a cut-out product photo picks one by index rather than reusing a single tint.
+ */
+export const tones = [
+  colors.accentLight,
+  colors.pinkLight,
+  colors.successLight,
+  colors.warningLight,
+  '#E8F1F8',
+] as const;
+
+/** The prototype's index-based tone rotation, stable for a given list position. */
+export function toneAt(index: number): string {
+  return tones[
+    ((index % tones.length) + tones.length) % tones.length
+  ] as string;
+}
+
 export const gradients = {
   brand: {
     colors: [colors.accent, colors.pink] as const,
@@ -120,6 +140,8 @@ export const mobile = {
   /** `padding: 12px 16px` / `20px 16px` on every app screen body. */
   screenPaddingX: 16,
   screenPaddingY: 20,
+  /** Home is the one screen on an 18 px gutter: `padding: 12px 18px` on every one of its rows. */
+  homePaddingX: 18,
   /** `gap` values, most to least common in the prototype. */
   gapSection: 14,
   gapItem: 10,
@@ -157,6 +179,40 @@ export const mobile = {
   headerHeight: 46,
   /** `padding: 14px` card interiors, `border-radius: 14px`. */
   cardPadding: 14,
+  /** `margin: 12px 18px; border-radius: 20px; padding: 18px 20px` home promo banner. */
+  promo: {
+    radius: 20,
+    paddingX: 20,
+    paddingY: 18,
+    imageSize: 88,
+    imageBorder: 5,
+    /** The decorative outline ring bled off the banner's leading top corner. */
+    ringSize: 150,
+    ringInsetStart: -46,
+    ringTop: -48,
+  },
+  /** `padding: 14px 16px 20px` tone band; the artwork tile is `78px`, radius 18. */
+  categoryHero: {
+    paddingX: 16,
+    paddingTop: 14,
+    paddingBottom: 20,
+    imageSize: 78,
+    imageRadius: 18,
+    actionSize: 32,
+  },
+  /** `width: 104px` browse rail; the pane beside it is padded 14. */
+  browse: { railWidth: 104, panePadding: 14, headerPaddingX: 18 },
+  /** `border-radius: 22px 22px 0 0; padding: 14px 18px 22px` filter sheet. */
+  sheet: {
+    radius: 22,
+    paddingX: 18,
+    paddingTop: 14,
+    paddingBottom: 22,
+    handleWidth: 40,
+    handleHeight: 4,
+  },
+  /** `width: 34px; height: 20px` track with a 16 px knob and 2 px inset. */
+  toggle: { trackWidth: 34, trackHeight: 20, knobSize: 16, inset: 2 },
   /** `padding: 3px 9px` status and discount badges. */
   badgePaddingX: 9,
   badgePaddingY: 3,
@@ -203,6 +259,8 @@ export const radius = {
   cta: 15,
   lg: 16,
   pill: 16,
+  /** `border-radius: 18px` — the home deal card, the largest product card in the app. */
+  card: 18,
   xl: 24,
   full: 9999,
 } as const;
@@ -232,8 +290,16 @@ export const fontSizes = {
   display: 26,
   h1: 22,
   h2: 20,
+  /** `font-size: 21px` category-hero title. */
+  h2Compact: 21,
   h3: 17,
+  /** `font-size: 15.5px; font-weight: 800` — every "Today's deals"-style section heading. */
+  section: 15.5,
   bodyLg: 15,
+  /** `font-size: 14.5px` home deal price. */
+  priceLg: 14.5,
+  /** `font-size: 13.5px` search-row price and the primary CTA label. */
+  price: 13.5,
   body: 13,
   sm: 12.5,
   xs: 11.5,
@@ -317,6 +383,7 @@ export const zIndices = {
 
 export const theme = {
   colors,
+  tones,
   gradients,
   spacing,
   mobile,

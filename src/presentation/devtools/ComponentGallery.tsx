@@ -83,7 +83,7 @@ export function ComponentGallery() {
   ];
 
   return (
-    <Screen accessibilityLabel={t('galleryTitle')}>
+    <Screen accessibilityLabel={t('galleryTitle')} bottomInset>
       <ScreenHeader
         title={t('galleryTitle')}
         onBack={() => undefined}

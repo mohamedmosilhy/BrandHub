@@ -1,10 +1,11 @@
 import { FlashList } from '@shopify/flash-list';
+import type { ReactNode } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import type { Product } from '@domain/catalog';
 
 import { EmptyState } from '@presentation/components/feedback';
-import { useTheme } from '@presentation/theme';
+import { toneAt, useTheme } from '@presentation/theme';
 
 import { ProductCard, type ProductCardVariant } from './ProductCard';
 
@@ -19,6 +20,12 @@ export function ProductGrid({
   emptyBody,
   emptyActionLabel,
   onEmptyAction,
+  /** `gap: 12px` on the category grid, `10px` in the browse pane and the search list. */
+  gap = 12,
+  paddingX = 16,
+  paddingTop = 10,
+  paddingBottom = 18,
+  footer,
 }: {
   products: readonly Product[];
   variant?: ProductCardVariant;
@@ -30,20 +37,30 @@ export function ProductGrid({
   emptyBody: string;
   emptyActionLabel?: string;
   onEmptyAction?: () => void;
+  gap?: number;
+  paddingX?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
+  /** Trails the last row inside the scroller, the way the prototype's page-end actions do. */
+  footer?: ReactNode;
 }) {
   const { theme } = useTheme();
-  const grid = variant === 'grid';
+  const columns = variant === 'list' ? 1 : 2;
   return (
     <FlashList
+      style={styles.list}
       data={[...products]}
       keyExtractor={(item) => item.id}
-      numColumns={grid ? 2 : 1}
+      numColumns={columns}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.45}
-      contentContainerStyle={{ padding: theme.spacing.x4 }}
-      ItemSeparatorComponent={() => (
-        <View style={{ height: theme.spacing.x3 }} />
-      )}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        paddingBottom,
+        paddingHorizontal: paddingX,
+        paddingTop,
+      }}
+      ItemSeparatorComponent={() => <View style={{ height: gap }} />}
       ListEmptyComponent={
         <EmptyState
           title={emptyTitle}
@@ -58,17 +75,27 @@ export function ProductGrid({
           <View style={styles.footer}>
             <ActivityIndicator color={theme.colors.accent} />
           </View>
+        ) : footer ? (
+          <View style={{ paddingTop: gap }}>{footer}</View>
         ) : null
       }
-      renderItem={({ item }) => (
+      renderItem={({ item, index }) => (
         <View
           style={
-            grid ? { flex: 1, paddingHorizontal: theme.spacing.x1 } : undefined
+            columns === 2
+              ? {
+                  flex: 1,
+                  ...(index % 2 === 0
+                    ? { paddingEnd: gap / 2 }
+                    : { paddingStart: gap / 2 }),
+                }
+              : undefined
           }
         >
           <ProductCard
             product={item}
             variant={variant}
+            tone={toneAt(index)}
             onOpen={() => onOpen(item.id)}
             onPrefetch={() => onPrefetch?.(item.id)}
           />
@@ -80,4 +107,5 @@ export function ProductGrid({
 
 const styles = StyleSheet.create({
   footer: { alignItems: 'center', padding: 20 },
+  list: { flex: 1 },
 });

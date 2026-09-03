@@ -1,6 +1,7 @@
 import type { Product } from '@domain/catalog';
 
 import { HorizontalRail } from '@presentation/components/layout';
+import { toneAt } from '@presentation/theme';
 
 import { ProductCard } from './ProductCard';
 
@@ -17,10 +18,11 @@ export function ProductRail({
 }) {
   return (
     <HorizontalRail accessibilityLabel={label}>
-      {products.map((product) => (
+      {products.map((product, index) => (
         <ProductCard
           key={product.id}
           product={product}
+          tone={toneAt(index)}
           variant="rail"
           onOpen={() => onOpen(product.id)}
           onPrefetch={() => onPrefetch?.(product.id)}

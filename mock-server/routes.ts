@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+
 import type { Express, Request, Response } from 'express';
 
 import { authenticatedUserId, issueToken, readToken } from './middleware/auth';
@@ -12,6 +15,62 @@ const placeholderPng = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
   'base64',
 );
+
+/**
+ * Mock imagery.
+ *
+ * The seed asks for `/mock-assets/product-N.png` and `/mock-assets/category-N.png`. Answering
+ * those with a 1x1 pixel is contract-correct but renders as a black square in the app, which
+ * makes every catalogue screen unreadable next to the prototype. The prototype's own product
+ * illustrations ship in `design-reference/`, so they are served here instead. The 1x1 stays as
+ * the fallback for any name that does not resolve to a file, so the route never 404s and the
+ * contract is unchanged.
+ */
+const referenceImageDir = resolve(
+  __dirname,
+  '..',
+  'design-reference',
+  'uploads',
+  'BRAND HUB (6)',
+  'assets',
+  'products',
+);
+
+/** `CATS` in the app prototype: each category reuses one of the product illustrations. */
+const categoryArtwork = [1, 3, 10, 9, 6, 5, 7, 8];
+
+function referenceImagePath(file: string): string | null {
+  const product = /^product-(\d+)\.\w+$/.exec(file);
+  if (product) {
+    const index = Number(product[1]);
+    return join(referenceImageDir, `p${((index - 1) % 20) + 1}.jpg`);
+  }
+  const category = /^category-(\d+)\.\w+$/.exec(file);
+  if (category) {
+    const index = Number(category[1]) - 1;
+    const artwork =
+      categoryArtwork[
+        ((index % categoryArtwork.length) + categoryArtwork.length) %
+          categoryArtwork.length
+      ];
+    return join(referenceImageDir, `p${artwork}.jpg`);
+  }
+  return null;
+}
+
+function sendMockAsset(file: string, response: Response): void {
+  const path = referenceImagePath(file);
+  if (path && existsSync(path)) {
+    response.type('jpeg').send(readFileSync(path));
+    return;
+  }
+  const fallback = join(referenceImageDir, 'p1.jpg');
+  if (existsSync(fallback)) {
+    response.type('jpeg').send(readFileSync(fallback));
+    return;
+  }
+  response.type('png').send(placeholderPng);
+}
 
 const now = () => new Date().toISOString();
 const roundMoney = (value: number) => Number(value.toFixed(3));
@@ -518,16 +577,16 @@ function registerCatalogueRoutes(app: Express, store: MockStore): void {
     response.json(envelope(pageOf(listProducts(request, products), request)));
   });
   app.get('/api/v1/sellers/:id/profile-image', (_request, response) =>
-    response.type('png').send(placeholderPng),
+    sendMockAsset('product-12.png', response),
   );
   app.get('/api/v1/sellers', (request, response) =>
     response.json(envelope(pageOf(sellers, request))),
   );
   app.get('/api/v1/users/:userId/profile-image', (_request, response) =>
-    response.type('png').send(placeholderPng),
+    sendMockAsset('product-6.png', response),
   );
-  app.get('/api/v1/mock-assets/:file', (_request, response) =>
-    response.type('png').send(placeholderPng),
+  app.get('/api/v1/mock-assets/:file', (request, response) =>
+    sendMockAsset(stringValue(request.params['file']), response),
   );
 }
 

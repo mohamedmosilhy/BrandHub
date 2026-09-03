@@ -1,13 +1,13 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 
 import { Money } from '@core/money';
 
 import type { ProductSort, SearchCriteria } from '@domain/catalog';
 
-import { Button, Chip, Input, Switch } from '@presentation/components/controls';
+import { Button, Chip, Switch } from '@presentation/components/controls';
 import { Text } from '@presentation/components/primitives';
 import { Divider } from '@presentation/components/surfaces';
-import { useTheme } from '@presentation/theme';
+import { textStart, useTheme, writingDirection } from '@presentation/theme';
 
 export type FilterDraft = Readonly<{
   sort: ProductSort;
@@ -45,7 +45,6 @@ export function FilterSheetContent({
   matchCount,
   labels,
   onChange,
-  onClear,
   onApply,
 }: {
   value: FilterDraft;
@@ -69,7 +68,6 @@ export function FilterSheetContent({
     results: string;
   }>;
   onChange: (value: FilterDraft) => void;
-  onClear: () => void;
   onApply: (criteria: SearchCriteria) => void;
 }) {
   const { theme } = useTheme();
@@ -86,77 +84,83 @@ export function FilterSheetContent({
   ] as const;
   return (
     <View style={{ gap: theme.spacing.x4 }}>
-      <View style={styles.headingRow}>
+      <View style={{ gap: theme.mobile.gapHairline + 3 }}>
         <Text color={theme.colors.textSecondary} variant="xs" weight="bold">
           {labels.sortBy}
         </Text>
-        <Button
-          label={labels.clear}
-          variant="ghost"
-          size="sm"
-          onPress={onClear}
-        />
-      </View>
-      <View style={styles.wrap}>
-        {sorts.map((sort) => (
-          <Chip
-            key={sort.value}
-            label={sort.label}
-            selected={value.sort === sort.value}
-            onPress={() => onChange({ ...value, sort: sort.value })}
-          />
-        ))}
+        <View style={styles.wrap}>
+          {sorts.map((sort) => (
+            <Chip
+              key={sort.value}
+              label={sort.label}
+              selected={value.sort === sort.value}
+              onPress={() => onChange({ ...value, sort: sort.value })}
+            />
+          ))}
+        </View>
       </View>
       <Divider />
+      {/*
+        The prototype's second toggle here is "Hub Express only". D21 holds it back until the
+        API carries a trustworthy express flag (GAP-6/GAP-15), so this sheet ships one toggle.
+      */}
       <Switch
         label={labels.inStock}
         value={value.inStock}
         onValueChange={(inStock) => onChange({ ...value, inStock })}
       />
-      <Text color={theme.colors.textSecondary} variant="xs" weight="bold">
-        {labels.priceRange}
-      </Text>
-      <View style={[styles.priceRow, { gap: theme.spacing.x3 }]}>
-        <View style={styles.flex}>
-          <Input
-            label={labels.minPrice}
-            value={value.minPrice}
-            keyboardType="decimal-pad"
-            inputDirection="ltr"
-            onChangeText={(minPrice) => onChange({ ...value, minPrice })}
+      <View style={{ gap: theme.mobile.gapHairline + 3 }}>
+        <Text color={theme.colors.textSecondary} variant="xs" weight="bold">
+          {labels.priceRange}
+        </Text>
+        <View style={[styles.priceRow, { gap: theme.mobile.gapItem }]}>
+          <View style={styles.flex}>
+            <InlineAmountField
+              label={labels.minPrice}
+              value={value.minPrice}
+              onChangeText={(minPrice) => onChange({ ...value, minPrice })}
+            />
+          </View>
+          <View
+            style={[
+              styles.dash,
+              { backgroundColor: theme.colors.borderStrong },
+            ]}
           />
-        </View>
-        <View style={styles.flex}>
-          <Input
-            label={labels.maxPrice}
-            value={value.maxPrice}
-            keyboardType="decimal-pad"
-            inputDirection="ltr"
-            onChangeText={(maxPrice) => onChange({ ...value, maxPrice })}
-          />
+          <View style={styles.flex}>
+            <InlineAmountField
+              label={labels.maxPrice}
+              value={value.maxPrice}
+              onChangeText={(maxPrice) => onChange({ ...value, maxPrice })}
+            />
+          </View>
         </View>
       </View>
-      <Text color={theme.colors.textSecondary} variant="xs" weight="bold">
-        {labels.rating}
-      </Text>
-      <View style={styles.ratingRow}>
-        {ratings.map((item) => (
-          <Chip
-            key={item.value}
-            label={item.label}
-            selected={value.minRating === item.value}
-            onPress={() => {
-              if (value.minRating === item.value) {
-                const { minRating: _removed, ...rest } = value;
-                onChange(rest);
-              } else {
-                onChange({ ...value, minRating: item.value });
-              }
-            }}
-          />
-        ))}
+      <View style={{ gap: theme.mobile.gapHairline + 3 }}>
+        <Text color={theme.colors.textSecondary} variant="xs" weight="bold">
+          {labels.rating}
+        </Text>
+        <View style={styles.ratingRow}>
+          {ratings.map((item) => (
+            <Chip
+              key={item.value}
+              label={item.label}
+              shape="block"
+              selected={value.minRating === item.value}
+              onPress={() => {
+                if (value.minRating === item.value) {
+                  const { minRating: _removed, ...rest } = value;
+                  onChange(rest);
+                } else {
+                  onChange({ ...value, minRating: item.value });
+                }
+              }}
+            />
+          ))}
+        </View>
       </View>
       <Button
+        fullWidth
         label={`${labels.apply} · ${matchCount} ${labels.results}`}
         onPress={() => onApply(filterDraftToCriteria(value))}
       />
@@ -164,14 +168,69 @@ export function FilterSheetContent({
   );
 }
 
+/**
+ * The prototype's price field is one 44 px row holding a 10 px caption and the value, not a
+ * label stacked above an input.
+ */
+function InlineAmountField({
+  label,
+  value,
+  onChangeText,
+}: {
+  label: string;
+  value: string;
+  onChangeText: (value: string) => void;
+}) {
+  const { theme } = useTheme();
+  return (
+    <View
+      style={[
+        styles.amountField,
+        {
+          backgroundColor: theme.colors.surfaceField,
+          borderColor: theme.colors.border,
+          borderRadius: theme.radius.field,
+        },
+      ]}
+    >
+      <Text color={theme.colors.textMuted} variant="micro">
+        {label}
+      </Text>
+      <TextInput
+        accessibilityLabel={label}
+        keyboardType="decimal-pad"
+        onChangeText={onChangeText}
+        value={value}
+        style={[
+          styles.amountInput,
+          {
+            color: theme.colors.textPrimary,
+            fontFamily: theme.fontFamilies.latin.bold,
+            fontSize: theme.fontSizes.body,
+            // A price is a Latin run: it stays LTR whatever the app's reading direction.
+            direction: 'ltr',
+            textAlign: textStart(),
+            writingDirection: writingDirection(false),
+          },
+        ]}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  headingRow: {
+  amountField: {
     alignItems: 'center',
+    borderWidth: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: 6,
+    height: 44,
+    paddingHorizontal: 12,
   },
-  priceRow: { flexDirection: 'row' },
+  amountInput: { flex: 1, minWidth: 0, paddingVertical: 0 },
+  dash: { height: 1, width: 10 },
+  flex: { flex: 1 },
+  priceRow: { alignItems: 'center', flexDirection: 'row' },
   ratingRow: { flexDirection: 'row', gap: 8 },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
 });

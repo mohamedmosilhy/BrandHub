@@ -23,7 +23,7 @@ export function CategoryDebugScreen({
   const query = useCategoryDebug(repository);
 
   return (
-    <Screen accessibilityLabel={t('categoryDebugTitle')}>
+    <Screen accessibilityLabel={t('categoryDebugTitle')} bottomInset>
       <Text variant="h1" weight="bold">
         {t('categoryDebugTitle')}
       </Text>

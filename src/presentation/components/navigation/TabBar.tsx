@@ -69,9 +69,7 @@ export function BrandTabBar({
               <Icon
                 name={tab.icon}
                 size={theme.mobile.tabBar.iconSize}
-                color={
-                  active ? theme.colors.accent : theme.colors.textSecondary
-                }
+                color={active ? theme.colors.accent : theme.colors.textMuted}
               />
               {tab.badge ? (
                 <View
@@ -83,7 +81,7 @@ export function BrandTabBar({
                     minWidth: theme.mobile.tabBar.badgeSize,
                     paddingHorizontal: theme.spacing.x1,
                     position: 'absolute',
-                    end: -theme.spacing.x2,
+                    end: theme.mobile.gapHairline,
                     top: -2,
                   }}
                 >
@@ -99,7 +97,7 @@ export function BrandTabBar({
               ) : null}
             </View>
             <Text
-              color={active ? theme.colors.accent : theme.colors.textSecondary}
+              color={active ? theme.colors.accent : theme.colors.textMuted}
               variant="micro"
               weight="semibold"
             >

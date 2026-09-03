@@ -19,13 +19,30 @@ describe('presentation primitives', () => {
     expect(body.props['maxFontSizeMultiplier']).toBe(1.3);
   });
 
+  // `textAlign` is written pre-mirror: both renderers swap left/right themselves once the text
+  // node's layout direction is RTL, so `'left'` is the reading start and `'right'` the reading
+  // end. Asserting `'right'` for Arabic here is what produced left-aligned Arabic on device.
+  // See `presentation/theme/direction.ts` for the iOS and Android sources.
   it('aligns Arabic to the reading start without depending on native RTL state', async () => {
     await render(<Text testID="rtl-copy">محتوى عربي</Text>);
     const copy = screen.getByTestId('rtl-copy');
-    expect(copy).toHaveStyle({
-      writingDirection: 'rtl',
-    });
-    expect(StyleSheet.flatten(copy.props['style']).textAlign).toBe('right');
+    expect(copy).toHaveStyle({ writingDirection: 'rtl' });
+    const style = StyleSheet.flatten(copy.props['style']);
+    expect(style.textAlign).toBe('left');
+    // No `direction` override: the run inherits the screen's RTL node and is mirrored with it.
+    expect(style.direction).toBeUndefined();
+  });
+
+  it('aligns to the reading end when asked, still pre-mirror', async () => {
+    await render(
+      <Text align="end" testID="end-copy">
+        محتوى عربي
+      </Text>,
+    );
+    expect(
+      StyleSheet.flatten(screen.getByTestId('end-copy').props['style'])
+        .textAlign,
+    ).toBe('right');
   });
 
   it('keeps Latin-only runs LTR inside Arabic screens', async () => {
@@ -39,7 +56,10 @@ describe('presentation primitives', () => {
       fontFamily: 'PlusJakartaSans_400Regular',
       writingDirection: 'ltr',
     });
-    expect(StyleSheet.flatten(copy.props['style']).textAlign).toBe('left');
+    const style = StyleSheet.flatten(copy.props['style']);
+    // Its own LTR node, so the platform mirrors nothing and the digits keep Latin order.
+    expect(style.direction).toBe('ltr');
+    expect(style.textAlign).toBe('left');
   });
 
   it('gives every pressable at least a 44pt target', async () => {

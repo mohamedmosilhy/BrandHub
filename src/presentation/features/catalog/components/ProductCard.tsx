@@ -9,33 +9,132 @@ import {
   Image,
   Pressable,
   Text,
+  type TextVariant,
 } from '@presentation/components/primitives';
 import { formatPrice } from '@presentation/formatting';
 import { useTheme } from '@presentation/theme';
 
-export type ProductCardVariant = 'rail' | 'grid' | 'list' | 'compact';
+import { productArtworkSource } from './mockArtwork';
+
+/**
+ * The prototype draws the same product four ways and none of the four share a radius, an image
+ * height or a type size. Each row below is measured off `design-reference/BRANDHUB App.dc.html`:
+ *
+ * - `deal`   — home "Today's deals" grid: radius 18, 132 px image, 11 px title, 14.5 px price.
+ * - `grid`   — category screen grid: radius 16, 104 px image, 10.5 px title, 13 px price.
+ * - `compact`— browse pane grid: radius 14, 96 px image, 10 px title, 12.5 px price.
+ * - `list`   — search result row: radius 14, 68 px thumbnail, 11.5 px title, 13.5 px price.
+ *
+ * None of them carries a rating; the prototype shows ratings on the PDP only. `showRating`
+ * exists for that screen rather than being on by default here.
+ */
+export type ProductCardVariant = 'deal' | 'rail' | 'grid' | 'list' | 'compact';
+
+type Metrics = {
+  radius: number;
+  image: number;
+  thumbRadius?: number;
+  title: TextVariant;
+  price: TextVariant;
+  titleLineHeight: number;
+  showUnit: boolean;
+  padTop: number;
+  padX: number;
+  padBottom: number;
+  gap: number;
+};
+
+const METRICS: Record<ProductCardVariant, Metrics> = {
+  deal: {
+    radius: 18,
+    image: 132,
+    title: 'xs',
+    price: 'priceLg',
+    titleLineHeight: 17,
+    showUnit: true,
+    padTop: 9,
+    padX: 11,
+    padBottom: 12,
+    gap: 5,
+  },
+  rail: {
+    radius: 18,
+    image: 132,
+    title: 'xs',
+    price: 'priceLg',
+    titleLineHeight: 17,
+    showUnit: true,
+    padTop: 9,
+    padX: 11,
+    padBottom: 12,
+    gap: 5,
+  },
+  grid: {
+    radius: 16,
+    image: 104,
+    title: 'xxs',
+    price: 'body',
+    titleLineHeight: 17,
+    showUnit: false,
+    padTop: 9,
+    padX: 10,
+    padBottom: 11,
+    gap: 4,
+  },
+  compact: {
+    radius: 14,
+    image: 96,
+    title: 'micro',
+    price: 'sm',
+    titleLineHeight: 15,
+    showUnit: false,
+    padTop: 8,
+    padX: 9,
+    padBottom: 10,
+    gap: 4,
+  },
+  list: {
+    radius: 14,
+    image: 68,
+    thumbRadius: 11,
+    title: 'xs',
+    price: 'price',
+    titleLineHeight: 18,
+    showUnit: true,
+    padTop: 0,
+    padX: 0,
+    padBottom: 0,
+    gap: 5,
+  },
+};
+
+const GEOMETRY: Record<ProductCardVariant, ViewStyle> = {
+  deal: { flex: 1 },
+  rail: { width: 158 },
+  grid: { flex: 1 },
+  compact: { flex: 1 },
+  list: { width: '100%' },
+};
 
 export type ProductCardProps = {
   product: Product;
   variant?: ProductCardVariant;
+  /** The prototype's index-based tint behind the cut-out photo; see `theme.tones`. */
+  tone?: string;
   express?: boolean;
+  showRating?: boolean;
   onOpen: () => void;
   onPrefetch?: () => void;
   onWishlist?: () => void;
   onAdd?: () => void;
 };
 
-const geometry: Record<ProductCardVariant, ViewStyle> = {
-  rail: { width: 158 },
-  grid: { flex: 1 },
-  list: { width: '100%' },
-  compact: { width: 122 },
-};
-
 export const ProductCard = memo(function ProductCard({
   product,
   variant = 'grid',
+  tone,
   express = false,
+  showRating = false,
   onOpen,
   onPrefetch,
   onWishlist,
@@ -45,15 +144,13 @@ export const ProductCard = memo(function ProductCard({
   const { t } = useTranslation();
   const discount = discountPercent(product);
   const horizontal = variant === 'list';
-  const compact = variant === 'compact';
-  const imageSize = horizontal
-    ? 78
-    : compact
-      ? 92
-      : variant === 'rail'
-        ? 132
-        : 142;
+  const metrics = METRICS[variant];
   const image = product.images[0];
+  const imageSource = productArtworkSource(image?.url, product.id);
+  const background = tone ?? theme.colors.accentLight;
+  // The prototype clamps every card title to exactly two lines so a row of cards keeps one
+  // baseline; `numberOfLines` alone lets a one-line title shorten the card.
+  const titleLine = metrics.titleLineHeight;
 
   return (
     <Pressable
@@ -62,12 +159,12 @@ export const ProductCard = memo(function ProductCard({
       onPressIn={onPrefetch}
       style={[
         styles.card,
-        geometry[variant],
+        GEOMETRY[variant],
         horizontal && styles.horizontal,
         {
           backgroundColor: theme.colors.surface,
           borderColor: theme.colors.border,
-          borderRadius: theme.radius.lg,
+          borderRadius: metrics.radius,
         },
       ]}
     >
@@ -75,30 +172,30 @@ export const ProductCard = memo(function ProductCard({
         style={[
           styles.imageShell,
           {
-            backgroundColor: theme.colors.accentLight,
-            borderRadius: horizontal ? theme.radius.md : 0,
-            height: imageSize,
-            width: horizontal ? imageSize : '100%',
+            backgroundColor: background,
+            borderRadius: metrics.thumbRadius ?? 0,
+            height: metrics.image,
+            width: horizontal ? metrics.image : '100%',
           },
         ]}
       >
-        {image ? (
+        {imageSource ? (
           <Image
-            accessibilityLabel={image.alt || product.title}
-            source={{ uri: image.url }}
+            accessibilityLabel={image?.alt || product.title}
+            source={imageSource}
             style={styles.image}
             contentFit="contain"
           />
         ) : null}
-        {discount > 0 ? (
+        {discount > 0 && !horizontal && variant !== 'compact' ? (
           <View
             style={[
               styles.discount,
               {
                 backgroundColor: theme.colors.ink,
                 borderRadius: theme.radius.full,
-                insetInlineStart: theme.spacing.x2,
-                top: theme.spacing.x2,
+                insetInlineStart: 9,
+                top: 9,
               },
             ]}
           >
@@ -137,44 +234,56 @@ export const ProductCard = memo(function ProductCard({
         style={[
           styles.copy,
           {
-            gap: theme.mobile.gapMicro,
-            padding: compact ? theme.spacing.x2 : theme.mobile.gapItem,
+            gap: metrics.gap,
+            paddingBottom: metrics.padBottom,
+            paddingHorizontal: metrics.padX,
+            paddingTop: metrics.padTop,
           },
         ]}
       >
-        <View style={styles.badges}>
-          {express ? (
-            <Text
-              color={theme.colors.accentHover}
-              variant="micro"
-              weight="bold"
-            >
-              Hub Express
-            </Text>
-          ) : null}
-          <View style={styles.rating}>
-            <Icon
-              name="star"
-              color={theme.colors.rating}
-              filled
-              size={theme.iconSizes.xs}
-            />
-            <Text latin variant="micro" weight="semibold">
-              {product.rating.toFixed(1)} ({product.reviewCount})
-            </Text>
+        {express || showRating ? (
+          <View style={styles.badges}>
+            {express ? (
+              <Text
+                color={theme.colors.accentHover}
+                variant="micro"
+                weight="bold"
+              >
+                Hub Express
+              </Text>
+            ) : null}
+            {showRating ? (
+              <View style={styles.rating}>
+                <Icon
+                  name="star"
+                  color={theme.colors.rating}
+                  filled
+                  size={theme.iconSizes.xs}
+                />
+                <Text latin variant="micro" weight="semibold">
+                  {product.rating.toFixed(1)} ({product.reviewCount})
+                </Text>
+              </View>
+            ) : null}
           </View>
-        </View>
-        <Text numberOfLines={2} variant={compact ? 'xxs' : 'xs'}>
+        ) : null}
+        <Text
+          numberOfLines={2}
+          style={{ height: titleLine * 2, lineHeight: titleLine }}
+          variant={metrics.title}
+        >
           {product.title}
         </Text>
         <View style={styles.priceRow}>
-          <Text latin variant={compact ? 'xs' : 'sm'} weight="extrabold">
+          <Text latin variant={metrics.price} weight="extrabold">
             {formatPrice(product.price.toDecimal())}
           </Text>
-          <Text color={theme.colors.textSecondary} variant="micro">
-            {t('omr')}
-          </Text>
-          {product.originalPrice ? (
+          {metrics.showUnit ? (
+            <Text color={theme.colors.textSecondary} variant="micro">
+              {t('omr')}
+            </Text>
+          ) : null}
+          {product.originalPrice && variant !== 'compact' ? (
             <Text
               color={theme.colors.textMuted}
               latin
@@ -226,9 +335,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
   },
-  horizontal: { flexDirection: 'row', padding: 8 },
+  // The search row is `display: flex; gap: 12px; padding: 8px` around a 68 px thumbnail.
+  horizontal: { flexDirection: 'row', gap: 12, padding: 8 },
   image: { height: '100%', width: '100%' },
-  imageShell: { overflow: 'hidden' },
+  imageShell: { flexShrink: 0, overflow: 'hidden' },
   oldPrice: { textDecorationLine: 'line-through' },
   priceRow: { alignItems: 'baseline', flexDirection: 'row', gap: 5 },
   rating: { alignItems: 'center', flexDirection: 'row', gap: 3 },

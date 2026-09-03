@@ -34,7 +34,6 @@ describe('FilterSheetContent', () => {
           matchCount={7}
           labels={labels}
           onChange={setValue}
-          onClear={() => setValue(emptyFilterDraft)}
           onApply={onApply}
         />
       );
@@ -42,7 +41,7 @@ describe('FilterSheetContent', () => {
     await renderWithProviders(<Harness />);
 
     await fireEvent.press(screen.getByLabelText('السعر: الأقل أولاً'));
-    await fireEvent(screen.getByLabelText('المتوفر فقط'), 'valueChange', true);
+    await fireEvent.press(screen.getByLabelText('المتوفر فقط'));
     await fireEvent.changeText(screen.getByLabelText('أدنى'), '10.500');
     await fireEvent.changeText(screen.getByLabelText('أعلى'), '30');
     await fireEvent.press(screen.getByLabelText('4 نجوم وأكثر'));

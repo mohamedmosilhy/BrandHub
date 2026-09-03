@@ -14,6 +14,7 @@ describe('ProductCard', () => {
       <ProductCard
         product={product}
         express
+        showRating
         onOpen={onOpen}
         onPrefetch={onPrefetch}
         onWishlist={onWishlist}
@@ -36,5 +37,15 @@ describe('ProductCard', () => {
     expect(onOpen).toHaveBeenCalledTimes(1);
     expect(onWishlist).toHaveBeenCalledTimes(1);
     expect(onAdd).toHaveBeenCalledTimes(1);
+  });
+
+  it('omits the rating, as every catalogue card in the prototype does', async () => {
+    const product = buildProduct();
+    await renderWithProviders(
+      <ProductCard product={product} onOpen={jest.fn()} />,
+    );
+
+    expect(screen.getByText(product.title)).toBeOnTheScreen();
+    expect(screen.queryByText('4.8 (42)')).toBeNull();
   });
 });

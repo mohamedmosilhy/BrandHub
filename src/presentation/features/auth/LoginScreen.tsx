@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: spacing.x4,
   },
-  backAction: { alignItems: 'center', justifyContent: 'center' },
+  backAction: { alignItems: 'flex-start', justifyContent: 'center' },
   content: { flexGrow: 1, paddingBottom: mobile.auth.screenBottom },
   divider: {
     alignItems: 'center',

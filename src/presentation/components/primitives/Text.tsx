@@ -16,8 +16,12 @@ export type TextVariant =
   | 'display'
   | 'h1'
   | 'h2'
+  | 'h2Compact'
   | 'h3'
+  | 'section'
   | 'bodyLg'
+  | 'priceLg'
+  | 'price'
   | 'body'
   | 'sm'
   | 'xs'
@@ -46,7 +50,13 @@ export type TextProps = {
   testID?: string | undefined;
 };
 
-const HEADINGS = new Set<TextVariant>(['display', 'h1', 'h2', 'h3']);
+const HEADINGS = new Set<TextVariant>([
+  'display',
+  'h1',
+  'h2',
+  'h2Compact',
+  'h3',
+]);
 
 export function Text({
   children,
@@ -86,15 +96,20 @@ export function Text({
           fontFamily,
           fontSize,
           lineHeight: Math.ceil(fontSize * multiplier),
-          // Resolved explicitly: `auto` leaves Arabic left-aligned whenever the native RTL
-          // flag has not been applied, which is every Expo Go session. See theme/direction.
+          // Resolved explicitly rather than left to `auto`: `auto` aligns from the string's
+          // first strong character, which puts a heading that opens with a numeral or a Latin
+          // brand name on the wrong edge. Values are pre-mirror; see theme/direction.
           textAlign:
             align === 'center' || align === 'justify'
               ? align
               : align === 'end'
-                ? textEnd(runRTL)
-                : textStart(runRTL),
+                ? textEnd()
+                : textStart(),
           writingDirection: writingDirection(runRTL),
+          // A Latin run gets its own LTR node so the platform does not mirror its alignment
+          // and its digits keep Latin order inside an Arabic screen — the prototype's
+          // `direction: ltr` span, exactly.
+          ...(latin ? { direction: 'ltr' as const } : {}),
         },
         style,
       ]}

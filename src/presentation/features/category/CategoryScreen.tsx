@@ -9,7 +9,7 @@ import type {
   SearchCriteria,
 } from '@domain/catalog';
 
-import { Chip, Switch } from '@presentation/components/controls';
+import { Button, Chip, Switch } from '@presentation/components/controls';
 import { ErrorState, Skeleton } from '@presentation/components/feedback';
 import { Screen } from '@presentation/components/layout';
 import {
@@ -21,6 +21,7 @@ import {
 import { Sheet } from '@presentation/components/surfaces';
 import {
   emptyFilterDraft,
+  categoryArtworkSource,
   filterDraftToCriteria,
   FilterSheetContent,
   type FilterDraft,
@@ -32,7 +33,7 @@ import {
   useCategoryProducts,
   useProductPrefetch,
 } from '@presentation/features/catalog/useCatalogQueries';
-import { useTheme } from '@presentation/theme';
+import { toneAt, useTheme } from '@presentation/theme';
 
 export function CategoryScreen({
   categoryId,
@@ -93,14 +94,25 @@ export function CategoryScreen({
     apply: t('applyFilters'),
     results: t('results'),
   };
+  // `category.tone` in the prototype: the hero band takes the category's own tint from the
+  // `TONES` rotation. The prototype indexes by list position, which this screen does not have,
+  // so the id is folded into the same five-step rotation — stable per category either way.
+  const heroTone = toneAt(
+    [...categoryId].reduce((sum, char) => sum + char.charCodeAt(0), 0),
+  );
 
   return (
     <Screen
       accessibilityLabel={category.data?.title ?? t('category')}
+      background={theme.colors.surface}
+      edgeToEdge
+      gap={0}
       scroll={false}
     >
       {category.isPending ? (
-        <Skeleton accessibilityLabel={t('loading')} height={150} />
+        <View style={styles.heroLoading}>
+          <Skeleton accessibilityLabel={t('loading')} height={150} />
+        </View>
       ) : category.isError ? (
         <ErrorState
           title={t('states:genericErrorTitle')}
@@ -109,27 +121,13 @@ export function CategoryScreen({
           onAction={() => void category.refetch()}
         />
       ) : category.data ? (
-        <View
-          style={[
-            styles.hero,
-            {
-              backgroundColor: theme.colors.accentLight,
-              borderRadius: theme.radius.lg,
-            },
-          ]}
-        >
+        <View style={[styles.hero, { backgroundColor: heroTone }]}>
           <View style={styles.heroActions}>
             <Pressable
               accessibilityLabel={t('back')}
               compact
               onPress={onBack}
-              style={[
-                styles.iconButton,
-                {
-                  backgroundColor: theme.colors.surface,
-                  borderRadius: theme.radius.full,
-                },
-              ]}
+              style={[styles.iconButton, { borderRadius: theme.radius.full }]}
             >
               <Icon name="arrow-back" size={theme.iconSizes.sm} />
             </Pressable>
@@ -137,28 +135,22 @@ export function CategoryScreen({
               accessibilityLabel={t('search')}
               compact
               onPress={() => onSearch(categoryId)}
-              style={[
-                styles.iconButton,
-                {
-                  backgroundColor: theme.colors.surface,
-                  borderRadius: theme.radius.full,
-                },
-              ]}
+              style={[styles.iconButton, { borderRadius: theme.radius.full }]}
             >
               <Icon name="search" size={theme.iconSizes.sm} />
             </Pressable>
           </View>
           <View style={styles.heroBody}>
             <View style={[styles.flex, { gap: theme.mobile.gapHairline }]}>
-              <Text variant="h1" weight="extrabold">
+              <Text variant="h2Compact" weight="extrabold">
                 {category.data.title}
               </Text>
               <Text color={theme.colors.textSecondary} variant="xs">
                 {t('categoryDescription')}
               </Text>
+              {/* "12 منتج" is an Arabic run with a numeral in it, not a Latin run. */}
               <Text
                 color={theme.colors.accentHover}
-                latin
                 variant="xxs"
                 weight="bold"
               >
@@ -168,13 +160,13 @@ export function CategoryScreen({
             <Image
               accessibilityLabel={category.data.title}
               contentFit="contain"
-              source={{ uri: category.data.imageUrl }}
+              source={categoryArtworkSource(
+                category.data.imageUrl,
+                category.data.id,
+              )}
               style={[
                 styles.heroImage,
-                {
-                  backgroundColor: theme.colors.surface,
-                  borderRadius: theme.radius.lg,
-                },
+                { borderRadius: theme.mobile.categoryHero.imageRadius },
               ]}
             />
           </View>
@@ -184,13 +176,15 @@ export function CategoryScreen({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={[styles.chipRow, { borderBottomColor: theme.colors.border }]}
         contentContainerStyle={styles.chips}
       >
-        <Chip label={t('allProducts')} selected />
+        <Chip label={t('allProducts')} selected tone="muted" />
         {(category.data?.children ?? []).map((child) => (
           <Chip
             key={child.id}
             label={child.title}
+            tone="muted"
             onPress={() => onSearch(child.id)}
           />
         ))}
@@ -251,6 +245,7 @@ export function CategoryScreen({
         ) : (
           <ProductGrid
             products={items}
+            gap={12}
             onOpen={onOpenProduct}
             onPrefetch={prefetch}
             onEndReached={() =>
@@ -266,6 +261,16 @@ export function CategoryScreen({
               setFilters({ sort: 'relevance' });
               setDraft(emptyFilterDraft);
             }}
+            footer={
+              <Button
+                fullWidth
+                label={t('allProducts')}
+                size="md"
+                style={styles.allProducts}
+                variant="secondary"
+                onPress={() => onSearch(categoryId)}
+              />
+            }
           />
         )}
       </View>
@@ -273,7 +278,9 @@ export function CategoryScreen({
       <Sheet
         visible={sheetOpen}
         title={t('filters')}
+        actionLabel={t('clearFilters')}
         closeLabel={t('close')}
+        onAction={() => setDraft(emptyFilterDraft)}
         onClose={() => setSheetOpen(false)}
       >
         <FilterSheetContent
@@ -281,7 +288,6 @@ export function CategoryScreen({
           matchCount={previewTotal}
           labels={filterLabels}
           onChange={setDraft}
-          onClear={() => setDraft(emptyFilterDraft)}
           onApply={(criteria) => {
             setFilters(criteria);
             setSheetOpen(false);
@@ -293,11 +299,18 @@ export function CategoryScreen({
 }
 
 const styles = StyleSheet.create({
-  chips: { gap: 8 },
+  /** `height: 46px; border-radius: 14px` page-end action, measured off the prototype. */
+  allProducts: { height: 46 },
+  // `padding: 12px 16px; border-bottom: 1px solid #E8E8EC` sub-category rail.
+  chipRow: { borderBottomWidth: 1, flexGrow: 0 },
+  chips: { gap: 8, paddingHorizontal: 16, paddingVertical: 12 },
   controls: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingBottom: 6,
+    paddingHorizontal: 16,
+    paddingTop: 12,
   },
   filterButton: {
     alignItems: 'center',
@@ -308,16 +321,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
   },
   flex: { flex: 1 },
-  hero: { gap: 12, padding: 14 },
+  // `padding: 14px 16px 20px` on the category's own tint, full bleed and square-cornered.
+  hero: { gap: 14, paddingBottom: 20, paddingHorizontal: 16, paddingTop: 14 },
   heroActions: { flexDirection: 'row', justifyContent: 'space-between' },
   heroBody: { alignItems: 'flex-end', flexDirection: 'row', gap: 12 },
-  heroImage: { height: 78, width: 78 },
+  heroImage: {
+    backgroundColor: 'rgba(255,255,255,0.72)',
+    height: 78,
+    width: 78,
+  },
+  heroLoading: { padding: 16 },
   iconButton: {
     alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.7)',
     height: 32,
     justifyContent: 'center',
     width: 32,
   },
   list: { flex: 1 },
-  loading: { flexDirection: 'row', gap: 12, padding: 10 },
+  loading: { flexDirection: 'row', gap: 12, padding: 16 },
 });

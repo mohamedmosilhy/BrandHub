@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Switch as NativeSwitch, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Icon, Pressable, Text } from '@presentation/components/primitives';
 import { spacing, useTheme } from '@presentation/theme';
@@ -87,41 +87,78 @@ export type ChipProps = {
   label: string;
   selected?: boolean;
   removable?: boolean;
+  /**
+   * `surface` is the sort/rating chip on white; `muted` is the trending and sub-category chip,
+   * which the prototype fills `#F5F5F7` so it reads against a white screen.
+   */
+  tone?: 'surface' | 'muted';
+  /** `block` is the sheet's rating chip: an equal-width 12 px-radius button, not a pill. */
+  shape?: 'pill' | 'block';
+  /** The Browse reference uses a denser 10 px label with 5x11 px insets. */
+  density?: 'default' | 'browse';
   onPress?: (() => void) | undefined;
   onRemove?: (() => void) | undefined;
   removeAccessibilityLabel?: string;
 };
 
+/**
+ * `padding: 7px 13px; border-radius: 99px; font-size: 11px; font-weight: 600`. Selected chips
+ * turn `#EEEDF9` on a `#7F77DD` border with accent-coloured text — the prototype never fills a
+ * chip solid.
+ */
 export function Chip({
   label,
   selected = false,
   removable = false,
+  tone = 'surface',
+  shape = 'pill',
+  density = 'default',
   onPress,
   onRemove,
   removeAccessibilityLabel,
 }: ChipProps) {
   const { theme } = useTheme();
+  const block = shape === 'block';
+  const browse = density === 'browse';
   return (
     <Pressable
       accessibilityLabel={label}
       accessibilityRole="button"
       accessibilityState={{ selected }}
+      compact
+      {...(browse ? { compactSize: 28 } : {})}
       onPress={onPress}
       style={[
         styles.chip,
+        block && styles.chipBlock,
         {
           backgroundColor: selected
             ? theme.colors.accentLight
-            : theme.colors.surface,
+            : tone === 'muted'
+              ? theme.colors.background
+              : theme.colors.surface,
           borderColor: selected ? theme.colors.accent : theme.colors.border,
-          borderRadius: theme.radius.full,
-          paddingHorizontal: theme.spacing.x3,
+          borderRadius: block ? theme.radius.field : theme.radius.full,
+          paddingHorizontal: block
+            ? theme.mobile.gapHairline
+            : browse
+              ? 11
+              : theme.mobile.chipPaddingX,
+          // Measured off the running prototype: a pill chip is 38 px tall (`padding: 7-8px
+          // 13px` around an 11 px label), a block chip 39.
+          paddingVertical: block
+            ? theme.mobile.gapItem
+            : browse
+              ? 5
+              : theme.spacing.x2,
         },
       ]}
     >
       <Text
-        color={selected ? theme.colors.textPrimary : undefined}
-        variant="sm"
+        align={block ? 'center' : 'auto'}
+        color={selected ? theme.colors.accentHover : theme.colors.textSecondary}
+        variant={block ? 'xxs' : browse ? 'micro' : 'xs'}
+        weight="semibold"
       >
         {label}
       </Text>
@@ -225,27 +262,71 @@ export function SegmentedControl({
 export type SwitchProps = {
   label: string;
   value: boolean;
+  /**
+   * The prototype puts the toggle *before* its label and sizes it 34x20 — a platform switch is
+   * half again as wide and lands the label on the wrong side. `spread` keeps the settings-row
+   * arrangement for screens that genuinely want label-then-control.
+   */
+  layout?: 'inline' | 'spread';
   onValueChange?: (value: boolean) => void;
 };
 
-export function Switch({ label, value, onValueChange }: SwitchProps) {
+export function Switch({
+  label,
+  value,
+  layout = 'inline',
+  onValueChange,
+}: SwitchProps) {
   const { theme } = useTheme();
-  return (
-    <View style={styles.switchRow}>
-      <Text>{label}</Text>
-      <NativeSwitch
-        accessibilityLabel={label}
-        accessibilityRole="switch"
-        accessibilityState={{ checked: value }}
-        onValueChange={onValueChange}
-        thumbColor={theme.colors.surface}
-        trackColor={{
-          false: theme.colors.borderStrong,
-          true: theme.colors.accent,
+  const toggle = theme.mobile.toggle;
+  const track = (
+    <View
+      style={{
+        backgroundColor: value
+          ? theme.colors.accent
+          : theme.colors.borderStrong,
+        borderRadius: theme.radius.full,
+        height: toggle.trackHeight,
+        padding: toggle.inset,
+        width: toggle.trackWidth,
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: theme.colors.white,
+          borderRadius: theme.radius.full,
+          height: toggle.knobSize,
+          marginInlineStart: value
+            ? toggle.trackWidth - toggle.knobSize - toggle.inset * 2
+            : 0,
+          width: toggle.knobSize,
         }}
-        value={value}
       />
     </View>
+  );
+  return (
+    <Pressable
+      accessibilityLabel={label}
+      accessibilityRole="switch"
+      accessibilityState={{ checked: value }}
+      compact
+      onPress={() => onValueChange?.(!value)}
+      style={layout === 'spread' ? styles.switchRow : styles.switchInline}
+    >
+      {layout === 'spread' ? (
+        <>
+          <Text>{label}</Text>
+          {track}
+        </>
+      ) : (
+        <>
+          {track}
+          <Text variant="xs" weight="semibold">
+            {label}
+          </Text>
+        </>
+      )}
+    </Pressable>
   );
 }
 
@@ -314,6 +395,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.x1,
   },
+  chipBlock: { flex: 1, justifyContent: 'center' },
   markRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.x2 },
   remove: { alignItems: 'center', justifyContent: 'center' },
   segment: { alignItems: 'center', flex: 1, justifyContent: 'center' },
@@ -323,6 +405,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  switchInline: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.x2,
   },
   switchRow: {
     alignItems: 'center',

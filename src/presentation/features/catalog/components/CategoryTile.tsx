@@ -5,11 +5,19 @@ import type { Category } from '@domain/catalog';
 import { Image, Pressable, Text } from '@presentation/components/primitives';
 import { useTheme } from '@presentation/theme';
 
+import { categoryArtworkSource } from './mockArtwork';
+
+/**
+ * `catTiles` in the prototype: a four-column grid of square, 16 px-radius tiles, each on its
+ * own tint from the `TONES` rotation, with the artwork inset to 74 % of the tile.
+ */
 export function CategoryTile({
   category,
+  tone,
   onPress,
 }: {
   category: Category;
+  tone?: string;
   onPress: () => void;
 }) {
   const { theme } = useTheme();
@@ -23,7 +31,7 @@ export function CategoryTile({
         style={[
           styles.imageShell,
           {
-            backgroundColor: theme.colors.accentLight,
+            backgroundColor: tone ?? theme.colors.accentLight,
             borderRadius: theme.radius.lg,
           },
         ]}
@@ -31,7 +39,7 @@ export function CategoryTile({
         <Image
           accessibilityLabel={category.title}
           contentFit="contain"
-          source={{ uri: category.imageUrl }}
+          source={categoryArtworkSource(category.imageUrl, category.id)}
           style={styles.image}
         />
       </View>
@@ -43,7 +51,13 @@ export function CategoryTile({
 }
 
 const styles = StyleSheet.create({
-  image: { height: '100%', width: '100%' },
-  imageShell: { aspectRatio: 1, overflow: 'hidden', width: '100%' },
+  image: { height: '74%', width: '74%' },
+  imageShell: {
+    alignItems: 'center',
+    aspectRatio: 1,
+    justifyContent: 'center',
+    overflow: 'hidden',
+    width: '100%',
+  },
   root: { alignItems: 'center', flexBasis: '22%', flexGrow: 1, gap: 7 },
 });

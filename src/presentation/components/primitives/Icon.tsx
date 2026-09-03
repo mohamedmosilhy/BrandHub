@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import Svg, { Circle, Line, Path, Polyline } from 'react-native-svg';
+import Svg, { Circle, Line, Path, Polyline, Rect } from 'react-native-svg';
 
 import { useTheme } from '@presentation/theme';
 
@@ -13,7 +13,9 @@ export type IconName =
   | 'close'
   | 'eye'
   | 'eye-off'
+  | 'chevron-forward'
   | 'filter'
+  | 'grid'
   | 'heart'
   | 'home'
   | 'map-pin'
@@ -24,7 +26,30 @@ export type IconName =
   | 'star'
   | 'warning';
 
-const directional = new Set<IconName>(['arrow-back']);
+const directional = new Set<IconName>(['arrow-back', 'chevron-forward']);
+
+/**
+ * The prototype draws each glyph at its own weight — 1.8 for chrome and tab icons, 2 for the
+ * back chevron and the filter rule, 2.4 for the toast check. Flattening them all to one weight
+ * makes the tab bar look heavy and the toast check look thin, so the reference's per-icon
+ * `stroke-width` is carried here verbatim. 1.8 is the prototype's most common value.
+ */
+const STROKE: Partial<Record<IconName, number>> = {
+  'arrow-back': 2,
+  'chevron-forward': 2,
+  check: 2.4,
+  close: 2,
+  filter: 2,
+  minus: 2,
+  plus: 2,
+  search: 1.9,
+  eye: 1.9,
+  'eye-off': 1.9,
+};
+const DEFAULT_STROKE = 1.8;
+
+/** Glyphs the prototype paints as a solid shape rather than stroking. */
+const SOLID = new Set<IconName>(['star', 'heart']);
 
 function Glyph({ name }: { name: IconName }): ReactNode {
   switch (name) {
@@ -49,6 +74,17 @@ function Glyph({ name }: { name: IconName }): ReactNode {
       return <Polyline points="5 12.5 9.5 17 19 7.5" />;
     case 'chevron-down':
       return <Polyline points="5 9 12 16 19 9" />;
+    case 'chevron-forward':
+      return <Path d="m9 5 7 7-7 7" />;
+    case 'grid':
+      return (
+        <>
+          <Rect x="3" y="3" width="7.5" height="7.5" rx="1.5" />
+          <Rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5" />
+          <Rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5" />
+          <Rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5" />
+        </>
+      );
     case 'close':
       return (
         <>
@@ -163,8 +199,9 @@ export function Icon({
         height={resolvedSize}
         viewBox="0 0 24 24"
         fill={filled ? resolvedColor : 'none'}
-        stroke={resolvedColor}
-        strokeWidth={1.9}
+        // A filled star or heart is drawn solid in the prototype, with no outline on top of it.
+        stroke={filled && SOLID.has(name) ? 'none' : resolvedColor}
+        strokeWidth={STROKE[name] ?? DEFAULT_STROKE}
         strokeLinecap="round"
         strokeLinejoin="round"
       >
