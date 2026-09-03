@@ -197,6 +197,32 @@ describe('auth and developer controls', () => {
     ).toBe(401);
   });
 
+  it('keeps new seller accounts pending and without a session', async () => {
+    const email = 'pending.seller@brandhub.om';
+    const registered = await request(app)
+      .post('/api/v1/auth/register/seller')
+      .send({
+        name: 'Pending Store',
+        email,
+        phoneNumber: '+96899112233',
+        password: 'Password123!',
+      });
+
+    expect(registered.status).toBe(201);
+    expect(registered.body).toMatchObject({
+      success: true,
+      data: { email, role: 'ROLE_SELLER', status: 'PENDING_APPROVAL' },
+    });
+    expect(registered.body.data.accessToken).toBeUndefined();
+    expect(registered.body.data.refreshToken).toBeUndefined();
+
+    const login = await request(app)
+      .post('/api/v1/auth/login')
+      .send({ email, password: 'Password123!' });
+    expect(login.status).toBe(403);
+    expect(login.body.error).toBe('SELLER_PENDING_APPROVAL');
+  });
+
   it('injects status, empty, timeout and a non-zero default latency', async () => {
     expect(
       (await request(app).get('/api/v1/products').set('x-mock-fail', '500'))

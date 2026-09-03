@@ -155,6 +155,14 @@ function registerAuthRoutes(app: Express, store: MockStore): void {
         'INVALID_CREDENTIALS',
         'Email or password is incorrect',
       );
+    if (user['status'] === 'PENDING_APPROVAL') {
+      return error(
+        response,
+        403,
+        'SELLER_PENDING_APPROVAL',
+        'Seller account is pending administrator approval',
+      );
+    }
     const accessToken = issueToken(
       stringValue(user['id']),
       stringValue(user['role']),
@@ -199,6 +207,38 @@ function registerAuthRoutes(app: Express, store: MockStore): void {
     store.write();
     response.status(201).json(envelope(userView(user)));
   });
+
+  app.post(
+    '/api/v1/auth/register/seller',
+    (request: RouteRequest, response) => {
+      if (
+        store.data.users.some((user) => user['email'] === request.body['email'])
+      ) {
+        return error(
+          response,
+          409,
+          'EMAIL_EXISTS',
+          'An account already uses this email',
+        );
+      }
+      const user = {
+        id: nextId(store.data.users, 'seller-user'),
+        email: request.body['email'],
+        password: request.body['password'],
+        firstName: request.body['name'],
+        lastName: '',
+        name: request.body['name'],
+        storeName: request.body['name'],
+        phoneNumber: request.body['phoneNumber'],
+        role: 'ROLE_SELLER',
+        status: 'PENDING_APPROVAL',
+        walletBalance: 0,
+      };
+      store.data.users.push(user);
+      store.write();
+      response.status(201).json(envelope(userView(user)));
+    },
+  );
 
   app.post('/api/v1/auth/refresh', (request: RouteRequest, response) => {
     const token = stringValue(request.body['refreshToken']);

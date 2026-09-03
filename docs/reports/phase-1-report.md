@@ -1,7 +1,8 @@
 # Phase 1 — Technical foundation · Completion report
 
 **Date:** 2026-09-02 · **Status:** Complete locally, with two environment-dependent criteria unverified
-**Amended:** 2026-09-02, retargeted from Expo SDK 57 to SDK 54 so the project runs in Expo Go on the review device. See _SDK change_ at the end.
+**Amended:** 2026-09-03, Phase 5 restored Expo SDK 57 after the review phone moved to SDK 57. The
+SDK 54 section remains below as historical context; current versions are recorded at the end.
 **Re-audited before Phase 2:** 2026-09-02. `npm run verify` passed all 35 Phase 1 tests and every
 local executable gate. The repository now has commits and an `origin` remote; no pull-request CI
 run was inspected during this audit, so AC1.11 remains unverified rather than being failed.
@@ -11,7 +12,7 @@ run was inspected during this audit, so AC1.11 remains unverified rather than be
 
 ## What was implemented
 
-A running Expo SDK 54 / React Native 0.81 / TypeScript application whose Clean Architecture
+At Phase 1 completion, a running Expo SDK 54 / React Native 0.81 / TypeScript application whose Clean Architecture
 boundaries are enforced by tooling before any feature code exists. The app builds for both
 platforms, reads validated configuration, and renders it on a diagnostics screen.
 
@@ -140,7 +141,7 @@ than defects.
 2. **Confirm decision 2 above** — domain and core denying every external package by default, with an
    empty allowlist. It is stricter than the plan specified. It is easy to relax and hard to
    retrofit, which is why it went in this way.
-3. **Confirm the pinned versions.** Expo 54.0.37, React Native 0.81.5, React 19.1.0, TypeScript 5.9,
+3. **Historical version review (superseded in Phase 5).** Expo 54.0.37, React Native 0.81.5, React 19.1.0, TypeScript 5.9,
    ESLint 9.39.5. ESLint is held at 9 because `eslint-plugin-import` does not yet support ESLint 10.
    The SDK is held at 54 for the reason in _SDK change_ below.
 4. **Review the layer READMEs.** They are the rules the next twelve phases are written against, and
@@ -155,7 +156,7 @@ force logical properties from the first component.
 
 ---
 
-## SDK change: 57 to 54
+## Historical SDK change: 57 to 54
 
 **Why.** The review device runs an Expo Go capped at SDK 54, and the App Store offers no update for
 it. An SDK 57 project cannot load in an SDK 54 Expo Go, because the runtime is compiled into the
@@ -188,3 +189,11 @@ which is what the review device's Expo Go requires.
 Go: secure store, image, font, FlashList, SVG and safe-area-context. Navigation, i18next, TanStack
 Query and Axios are pure JavaScript. So Expo Go can carry the project to about Phase 13, where
 release builds and the Maestro end-to-end suite need a real development build regardless.
+
+## Phase 5 amendment: restored SDK 57
+
+On 2026-09-03 the review phone's Expo Go runtime moved to SDK 57, removing the reason for the
+temporary downgrade. Phase 5 restored Expo 57.0.19, React Native 0.86.3, React 19.2.3, TypeScript
+6.0.3, Jest Expo 57.0.5 and the matching Expo native-module versions. The iOS deployment target
+moved from 15.1 to 16.4 because SDK 57 enforces that minimum; Android remains API 26. The complete
+upgrade and verification record is in [`phase-5-report.md`](./phase-5-report.md).

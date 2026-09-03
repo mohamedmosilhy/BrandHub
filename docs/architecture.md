@@ -1,6 +1,6 @@
 # BRANDHUB Mobile — Technical Architecture
 
-**Status:** **Approved and implemented through Phase 4** · **Date:** 2026-09-03
+**Status:** **Approved and implemented through Phase 5** · **Date:** 2026-09-03
 **Author:** AI agent acting as architect · **Reviewer / decision maker:** repository owner
 **Decision record:** all 17 open questions were reviewed and approved as recommended on 2026-09-02.
 
@@ -8,8 +8,8 @@
 > It is derived **only** from what is present in `design-reference/`.
 > Every question this document raised has been decided; §34 now records those decisions as
 > **D1–D22**, and the work they hand to other teams as **FA1–FA5**.
-> The technical foundation, shared UI system, contract mock and reusable data spine now exist. Phase
-> 5 of `plan.md` is cleared to begin;
+> The technical foundation, shared UI system, contract mock, reusable data spine, identity/session
+> slice and navigation shell now exist. Phase 6 of `plan.md` is cleared to begin;
 > Phase reports live in `docs/reports/`.
 
 ---
@@ -107,7 +107,7 @@ not part of v1.
 | C6  | RTL is the default direction; layout must mirror.                                                                            | `dir="rtl"`, `marginInlineStart`, `insetInlineEnd` throughout. |
 | C7  | No real backend work in this project.                                                                                        | Requirement.                                                   |
 | C8  | Brand palette, type scale and spacing are fixed by `tokens.css`.                                                             | Reference.                                                     |
-| C9  | Minimum supported platforms are iOS 15 and Android 8.0 (API 26).                                                             | Decision D15.                                                  |
+| C9  | Minimum supported platforms are iOS 16.4 and Android 8.0 (API 26).                                                           | Decision D15, amended for Expo SDK 57.                         |
 | C10 | Arabic renders in Noto Kufi Arabic; GE Dinar One is a drop-in only if its licence is obtained.                               | Decision D16.                                                  |
 | C11 | Sign-in is email and password in v1. Phone + OTP is built against mock-only endpoints.                                       | Decision D12.                                                  |
 | C12 | Notifications are an in-app list only. No push delivery in v1.                                                               | Decision D17.                                                  |
@@ -1632,7 +1632,7 @@ interim behaviour that lets the app be built and tested now.
 | **D12**                     | **Email and password ship in v1.** The phone + OTP screen is built against mock-only endpoints.                             | The onboarding screen is faithful to the reference, including the `+968` phone field and the Apple and Google buttons, but only the email path reaches a real backend. The OTP endpoints the backend would need are specified in `INVENTED_ENDPOINTS.md` (FA1).                                                   | §4 F1, Phase 5         |
 | **D13**                     | **The UI's address shape is the domain entity.**                                                                            | `Address` carries label, recipient name, phone, details and city. The mapper fills the API's `addressLine1`, `city`, `country` and leaves `state` and `postalCode` optional, defaulting `country` to Oman. Nothing the UI collects is lost, and nothing the API needs is missing.                                 | §11.1, Phase 9         |
 | **D14**                     | **`averageRating` and `reviewCount` belong on the product DTO.**                                                            | The mock serves both on every product, so cards and the PDP render ratings from a single request. The backend is asked to add them (FA2). There is no N+1 fetch and no fallback path that issues one.                                                                                                             | §13, Phase 6           |
-| **D15**                     | **Minimum platforms: iOS 15 and Android 8.0 (API 26).**                                                                     | Sets the library floor, the performance budget's reference device, and the CI simulator matrix.                                                                                                                                                                                                                   | §29, Phase 1           |
+| **D15**                     | **Minimum platforms: iOS 16.4 and Android 8.0 (API 26).**                                                                   | Expo SDK 57 raises the iOS native deployment floor to 16.4; Android remains deliberately pinned to API 26. This sets the library floor, the performance budget's reference device, and the CI simulator matrix.                                                                                                   | §29, Phases 1 and 5    |
 | **D16**                     | **Noto Kufi Arabic is the shipped Arabic face.**                                                                            | It is what the prototype actually renders with, and GE Dinar One is neither present in the reference nor licensed. The theme exposes the Arabic face as one token, so a later swap is a one-line change (FA4).                                                                                                    | §3.2, Phase 2          |
 | **D17**                     | **Notifications are an in-app list only.**                                                                                  | No push infrastructure, no permission prompt, no device-token registration in v1. The list refreshes on open and on pull-to-refresh.                                                                                                                                                                              | §4 F13, Phase 11       |
 

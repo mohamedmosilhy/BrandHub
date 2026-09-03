@@ -7,8 +7,7 @@ import { PlusJakartaSans_500Medium } from '@expo-google-fonts/plus-jakarta-sans/
 import { PlusJakartaSans_600SemiBold } from '@expo-google-fonts/plus-jakarta-sans/600SemiBold';
 import { PlusJakartaSans_700Bold } from '@expo-google-fonts/plus-jakarta-sans/700Bold';
 import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -19,6 +18,7 @@ import { ThemeProvider } from '@presentation/theme';
 
 import { ContainerProvider } from '@app/di';
 import { QueryProvider } from '@app/providers/QueryProvider';
+import { SessionProvider } from '@app/providers/SessionProvider';
 
 const fonts = {
   NotoKufiArabic_400Regular,
@@ -33,9 +33,6 @@ const fonts = {
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const [loaded, error] = useFonts(fonts);
-  useEffect(() => {
-    if (loaded || error) void SplashScreen.hideAsync();
-  }, [error, loaded]);
   if (!loaded && !error) return null;
 
   return (
@@ -44,7 +41,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
         <I18nextProvider i18n={i18n}>
           <SafeAreaProvider>
             <ThemeProvider>
-              <ToastProvider>{children}</ToastProvider>
+              <ToastProvider>
+                <SessionProvider>{children}</SessionProvider>
+              </ToastProvider>
             </ThemeProvider>
           </SafeAreaProvider>
         </I18nextProvider>

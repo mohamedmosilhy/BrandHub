@@ -11,21 +11,18 @@
  *
  * Covers plan.md AC1.3, AC1.4, AC1.5 and AC1.6.
  */
+import { spawnSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-
-import { ESLint } from 'eslint';
 
 const projectRoot = path.resolve(__dirname, '..', '..', '..');
 
 /** Temp folders are named so a crashed run is obvious and easy to sweep. */
 const TMP = '__arch_tmp__';
 
-let eslint: ESLint;
 const written: string[] = [];
 
 beforeAll(() => {
-  eslint = new ESLint({ cwd: projectRoot });
   sweep();
 });
 
@@ -69,8 +66,27 @@ function writeTarget(relativePath: string): void {
   write(relativePath, 'export const target = 1;\n');
 }
 
-async function lint(absolutePath: string): Promise<ESLint.LintResult[]> {
-  return eslint.lintFiles([absolutePath]);
+type LintResult = {
+  messages: { ruleId: string | null; message: string }[];
+};
+
+async function lint(absolutePath: string): Promise<LintResult[]> {
+  const eslintBin = path.join(
+    projectRoot,
+    'node_modules',
+    'eslint',
+    'bin',
+    'eslint.js',
+  );
+  const result = spawnSync(
+    process.execPath,
+    [eslintBin, absolutePath, '--format', 'json'],
+    { cwd: projectRoot, encoding: 'utf8' },
+  );
+  if (!result.stdout) {
+    throw new Error(result.stderr || 'ESLint produced no output');
+  }
+  return JSON.parse(result.stdout) as LintResult[];
 }
 
 async function ruleIdsOf(absolutePath: string): Promise<string[]> {

@@ -1,5 +1,6 @@
-# Navigation
+# App — navigation
 
-**May contain:** Navigators, param lists, guards and linking configuration.
+**May contain:** Typed root, modal, tab and per-tab stack composition, linking configuration, and
+authentication guards.
 
-**May not contain:** Screen implementations.
+**May not contain:** Feature business logic, DTOs, repository construction, or screen UI.

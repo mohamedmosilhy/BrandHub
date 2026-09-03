@@ -19,6 +19,10 @@ connections to 3001.
 The seeded customer signs in with `customer@brandhub.om` / `Password123!`. Access tokens live for
 five minutes; refresh tokens live for one day and can be revoked by logout.
 
+Phone onboarding uses the mock-only `/auth/phone/send-otp` and `/auth/phone/verify-otp` pair; every
+challenge accepts `123456`. Seller registration returns `PENDING_APPROVAL` without tokens, and a
+pending seller login is rejected until a future admin flow changes that status.
+
 ## Fault controls
 
 Every route accepts these headers:

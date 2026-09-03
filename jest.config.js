@@ -17,6 +17,9 @@ module.exports = {
     '^@presentation/(.*)$': '<rootDir>/src/presentation/$1',
     '^@test/(.*)$': '<rootDir>/src/test/$1',
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|expo-.*|@expo(nent)?/.*|@expo-google-fonts/.*|@react-navigation/.*|react-native-.*|@hookform/.*)/)',
+  ],
   collectCoverageFrom: [
     'src/domain/**/*.{ts,tsx}',
     'src/data/**/mappers/**/*.{ts,tsx}',

@@ -1,12 +1,6 @@
-/**
- * Covers the "displays the resolved environment name and API base URL" half of
- * plan.md AC1.9. The other half — launching on a simulator and an emulator —
- * needs Xcode and the Android SDK and is verified by hand.
- *
- * `expo-constants` is mocked because a test process has no Expo manifest; the
- * mock stands in for what `app.config.ts` publishes at build time.
- */
-import { renderWithProviders, screen } from '@test/render';
+import { sessionStore } from '@presentation/features/auth';
+
+import { fireEvent, renderWithProviders, screen } from '@test/render';
 
 import App from './App';
 
@@ -25,26 +19,46 @@ jest.mock('expo-constants', () => ({
   },
 }));
 
-describe('App', () => {
-  it('renders the environment resolved from configuration', async () => {
-    await renderWithProviders(<App />);
-
-    expect(screen.getByText('staging')).toBeOnTheScreen();
+describe('App identity shell', () => {
+  beforeEach(() => {
+    sessionStore.setState({
+      status: 'loading',
+      session: null,
+      onboardingComplete: false,
+    });
   });
 
-  it('renders the API base URL the app will call', async () => {
+  it('shows onboarding after a cold start with no session', async () => {
     await renderWithProviders(<App />);
-
     expect(
-      screen.getByText('https://staging-api.brandhub.om/api/v1'),
+      await screen.findByText('كل ما تحبه من متاجر عُمان في مكان واحد'),
     ).toBeOnTheScreen();
+    expect(screen.queryAllByRole('tab')).toHaveLength(0);
   });
 
-  it('renders the remaining configuration values', async () => {
+  it('enters the five-tab shell as a guest while keeping cart public', async () => {
     await renderWithProviders(<App />);
+    await fireEvent.press(await screen.findByLabelText('المتابعة كزائر'));
+    const tabs = await screen.findAllByRole('tab');
+    expect(tabs.map((tab) => tab.props['accessibilityLabel'])).toEqual([
+      'الرئيسية',
+      'الفئات',
+      'المؤثرون',
+      'العربة',
+      'حسابي',
+    ]);
+  });
 
-    expect(screen.getByText('ar')).toBeOnTheScreen();
-    expect(screen.getByText('15000 ms')).toBeOnTheScreen();
-    expect(screen.getByText('disabled')).toBeOnTheScreen();
+  it('opens email registration in the auth stack with sign-up active', async () => {
+    await renderWithProviders(<App />);
+    await fireEvent.press(await screen.findByLabelText('البريد الإلكتروني'));
+
+    expect(await screen.findByText('أنشئ حسابك')).toBeOnTheScreen();
+    expect(
+      screen.getByRole('radio', { name: 'حساب جديد' }).props[
+        'accessibilityState'
+      ],
+    ).toMatchObject({ selected: true });
+    expect(screen.queryAllByRole('tab')).toHaveLength(0);
   });
 });

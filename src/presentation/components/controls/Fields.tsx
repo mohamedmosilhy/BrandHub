@@ -97,19 +97,35 @@ export function Input({
   );
 }
 
-export function PasswordInput(props: Omit<InputProps, 'secureTextEntry'>) {
+export function PasswordInput({
+  showPasswordLabel,
+  hidePasswordLabel,
+  ...props
+}: Omit<InputProps, 'secureTextEntry'> & {
+  showPasswordLabel?: string;
+  hidePasswordLabel?: string;
+}) {
   const [visible, setVisible] = useState(false);
+  const { t } = useTranslation();
   const { theme } = useTheme();
   return (
     <View>
       <Input {...props} secureTextEntry={!visible} />
       <View style={[styles.passwordAction, { marginTop: theme.spacing.x2 }]}>
         <Pressable
-          accessibilityLabel={visible ? 'Hide password' : 'Show password'}
+          accessibilityLabel={
+            visible
+              ? (hidePasswordLabel ?? t('hidePassword'))
+              : (showPasswordLabel ?? t('showPassword'))
+          }
           onPress={() => setVisible((current) => !current)}
           style={styles.iconAction}
+          testID="password-visibility-toggle"
         >
-          <Icon name={visible ? 'eye-off' : 'eye'} />
+          <Icon
+            name={visible ? 'eye-off' : 'eye'}
+            testID={visible ? 'password-visible-icon' : 'password-hidden-icon'}
+          />
         </Pressable>
       </View>
     </View>

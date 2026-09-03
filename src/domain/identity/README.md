@@ -1,5 +1,6 @@
 # Domain — identity
 
-**May contain:** Entities, value objects, repository ports and use cases for this slice.
+**May contain:** Immutable identity entities, validated value objects, authentication repository
+ports, and session use cases.
 
-**May not contain:** Any dependency outside `domain` and `core`.
+**May not contain:** React, navigation, HTTP, storage, DTOs, or implementation-specific concerns.

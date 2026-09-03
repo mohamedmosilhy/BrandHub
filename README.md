@@ -6,37 +6,37 @@ Design and planning live in [`docs/architecture.md`](docs/architecture.md) and
 [`docs/plan.md`](docs/plan.md). The UI/UX source of truth is `design-reference/`, which is read-only
 and never modified.
 
-**Current state: Phase 4 (core infrastructure and data plumbing) implemented.** Development builds
-open developer tools with the live category-pipeline diagnostic and the bilingual component gallery;
-production configuration keeps the environment diagnostic until the navigation shell arrives in
-Phase 5.
+**Current state: Phase 5 (identity, session and navigation shell) implemented.** The app opens on
+Arabic onboarding, supports guest browsing, email/password customer sign-in and sign-up, pending
+seller registration, mock phone OTP, secure session restoration, five persistent tab stacks and
+typed deep links.
 
 ## Requirements
 
 | Tool           | Version                                         |
 | -------------- | ----------------------------------------------- |
 | Node           | 22 or newer                                     |
-| Expo Go        | An SDK 54 build, to run on a physical phone     |
+| Expo Go        | An SDK 57 build, to run on a physical phone     |
 | Xcode          | Only for the iOS simulator or a local iOS build |
 | Android Studio | Only for the Android emulator or a local build  |
 
-The project targets **Expo SDK 54**, held there deliberately so it runs in Expo Go on the review
-device. The reasoning is in `docs/reports/phase-1-report.md`. Minimum supported platforms are
-iOS 15.1 and Android 8.0 (API 26), set by the `expo-build-properties` plugin.
+The project targets **Expo SDK 57**, React Native 0.86 and React 19.2. Minimum supported platforms
+are iOS 16.4 and Android 8.0 (API 26), set by the `expo-build-properties` plugin. The upgrade record
+is in [`docs/reports/phase-5-report.md`](docs/reports/phase-5-report.md).
 
 ## Running on a physical phone
 
 Put the phone and this machine on the same Wi-Fi, then:
 
 ```bash
-npx expo start --go
+npm start
 ```
 
 Scan the QR code with the Camera app on iOS, or from inside Expo Go on Android. If the network
 isolates clients from each other, add `--tunnel`.
 
-`npm start` is different: it runs `--dev-client` and expects a custom development build, which is
-the path from Phase 13 onward.
+`npm start` explicitly runs Expo Go. Use `npm run start:dev-client` only when a custom development
+build is installed.
 
 ## Getting started
 
@@ -44,15 +44,20 @@ the path from Phase 13 onward.
 npm install
 cp .env.example .env.development
 npm run mock             # terminal 1
-npm start
+npm start                # terminal 2; scan the Expo Go QR code
 ```
 
-`npm start` launches the Expo dev server against a development client. The first run on a device
-needs a native build:
+On a physical phone, replace `localhost` in `.env.development` with this computer's LAN IP before
+starting Metro, for example `http://192.168.1.20:3001/api/v1`. Onboarding and guest mode do not need
+the mock; sign-in, registration and OTP do. The seeded login is
+`customer@brandhub.om` / `Password123!`, and the mock OTP is `123456`.
+
+A native development client is optional and can be generated when native debugging is needed:
 
 ```bash
 npx expo prebuild        # generates ios/ and android/
 npx expo run:ios         # or: npx expo run:android
+npm run start:dev-client
 ```
 
 ## Environments
@@ -72,18 +77,19 @@ the field. Nothing else in the codebase reads `process.env`.
 
 ## Everyday commands
 
-| Command                 | What it does                                         |
-| ----------------------- | ---------------------------------------------------- |
-| `npm run verify`        | Everything below, in order. Run this before pushing. |
-| `npm run typecheck`     | TypeScript, no emit                                  |
-| `npm run lint`          | ESLint, including the architecture boundary rules    |
-| `npm run format`        | Prettier, writing changes                            |
-| `npm run boundaries`    | dependency-cruiser: layer graph and cycle detection  |
-| `npm test`              | Unit, component and architecture tests               |
-| `npm run test:coverage` | Same, with coverage for the domain and mappers       |
-| `npm run test:contract` | Validate DTO schemas against the live contract mock  |
-| `npm run mock`          | Contract mock at `http://localhost:3001/api/v1`      |
-| `npm run mock:reset`    | Rebuild the deterministic mock database              |
+| Command                    | What it does                                         |
+| -------------------------- | ---------------------------------------------------- |
+| `npm run verify`           | Everything below, in order. Run this before pushing. |
+| `npm run typecheck`        | TypeScript, no emit                                  |
+| `npm run lint`             | ESLint, including the architecture boundary rules    |
+| `npm run format`           | Prettier, writing changes                            |
+| `npm run boundaries`       | dependency-cruiser: layer graph and cycle detection  |
+| `npm test`                 | Unit, component and architecture tests               |
+| `npm run test:coverage`    | Same, with coverage for the domain and mappers       |
+| `npm run test:contract`    | Validate DTO schemas against the live contract mock  |
+| `npm run mock`             | Contract mock at `http://localhost:3001/api/v1`      |
+| `npm run mock:reset`       | Rebuild the deterministic mock database              |
+| `npm run start:dev-client` | Start Metro for an installed development build       |
 
 Git hooks run lint-staged on commit, and type-check, boundaries and tests on push.
 
@@ -91,10 +97,10 @@ The mock deliberately uses port 3001 so it can run beside Metro on 8081. Its see
 physical-device LAN setup, fault controls and invented endpoint contracts are documented in
 [`mock-server/README.md`](mock-server/README.md).
 
-Phase 4 adds the shared `Result`, `AppError` and integer-baisa `Money` types; an Axios adapter with
-bearer/locale/correlation headers and single-flight token refresh; SecureStore/AsyncStorage ports;
-redacting logs; TanStack Query defaults; and the typed dependency container. The development
-category diagnostic proves the complete HTTP → DTO validation → mapper → repository → UI chain.
+Phase 5 adds the identity domain and HTTP repository, SecureStore-backed session restoration,
+onboarding and bilingual RHF/Zod auth, the auth boundary, five-tab React Navigation shell, sign-out
+cleanup and the `brandhub://` deep-link map. Future feature screens are typed shell destinations so
+subsequent phases can fill them without changing route contracts.
 
 ## Architecture in one screen
 
@@ -125,6 +131,6 @@ src/
 
 ## Notes
 
-- `NODE_OPTIONS=--experimental-vm-modules` is set in the test scripts. ESLint 9 loads its flat
-  config through a dynamic import, and the architecture tests run ESLint inside Jest's VM.
 - `design-reference/` is excluded from TypeScript, ESLint, Prettier and Jest.
+- `npx expo-doctor --verbose` validates the Expo config and SDK dependency matrix; app configuration
+  loads `.env.<APP_ENV>` quietly so machine-readable Expo checks are not polluted by dotenv output.

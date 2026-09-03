@@ -1,12 +1,12 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Implemented through Phase 4 — Phase 5 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
+**Status:** **Implemented through Phase 5 — Phase 6 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
 **Date:** 2026-09-03 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
-> Phases 1–4 are implemented. Their completion reports are in `docs/reports/`.
+> Phases 1–5 are implemented. Their completion reports are in `docs/reports/`.
 > All 17 open questions were approved as recommended on 2026-09-02 and are recorded as decisions
-> **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 5.**
+> **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 6.**
 
 ---
 
@@ -58,11 +58,11 @@ behaviour. They are collected at the end of this document under
 | Phase | Name                                             | Depends on | Rough size |
 | ----- | ------------------------------------------------ | ---------- | ---------- |
 | 0     | Discovery, requirements and architecture         | —          | Done       |
-| 1     | Technical foundation                             | 0          | Small      |
-| 2     | Design system and UI foundation                  | 1          | Medium     |
-| 3     | Mock backend and API contract                    | 1          | Medium     |
-| 4     | Core infrastructure and data plumbing            | 1, 3       | Medium     |
-| 5     | Identity, session and navigation shell           | 2, 4       | Medium     |
+| 1     | Technical foundation                             | 0          | Done       |
+| 2     | Design system and UI foundation                  | 1          | Done       |
+| 3     | Mock backend and API contract                    | 1          | Done       |
+| 4     | Core infrastructure and data plumbing            | 1, 3       | Done       |
+| 5     | Identity, session and navigation shell           | 2, 4       | Done       |
 | 6     | Catalogue and discovery                          | 5          | **Large**  |
 | 7     | Product detail and wishlist                      | 6          | Medium     |
 | 8     | Cart and checkout                                | 7          | **Large**  |
@@ -145,7 +145,7 @@ enforced by tooling — so that no later phase can violate them by accident.
 
 ### Prerequisites
 
-Phase 0 approved. Scope is the customer app only (D1); platform floor is iOS 15 and Android 8.0 / API 26 (D15).
+Phase 0 approved. Scope is the customer app only (D1); the current SDK 57 platform floor is iOS 16.4 and Android 8.0 / API 26 (D15).
 
 ### Tasks
 
@@ -198,7 +198,7 @@ Phase 0 approved. Scope is the customer app only (D1); platform floor is iOS 15 
 - [x] Boundary rules match `architecture.md` §9 exactly.
 - [x] Folder structure matches §10; no extra `utils/` or `common/`.
 - [x] `.env` files are git-ignored and `.env.example` is committed.
-- [x] Minimum OS versions are iOS 15 and Android 8.0 / API 26 (D15).
+- [x] Minimum OS versions are iOS 16.4 and Android 8.0 / API 26 (D15, amended for SDK 57).
 - [ ] CI workflow exists and passes locally; a pull-request run was not inspected.
 
 ### Definition of done
@@ -456,6 +456,8 @@ is available only when the development menu is enabled.
 
 ## Phase 5 — Identity, session and navigation shell
 
+**Status:** Implemented 2026-09-03. See [`reports/phase-5-report.md`](./reports/phase-5-report.md).
+
 ### Objective
 
 The complete navigation structure and the authentication boundary, with onboarding and the login /
@@ -514,16 +516,17 @@ Phases 2 and 4 done. Auth boundaries are set by D3, including the guest cart; pe
 
 ### Review checklist
 
-- [ ] Compare Onboarding and Login against the prototype: spacing, weight, order, copy.
-- [ ] Is the auth boundary applied exactly per D3, with the cart open to guests?
-- [ ] Do tabs preserve their stacks, and does re-tapping the active tab reset it (D4)?
-- [ ] Is the session restored before the first paint, with no flash of the wrong stack?
-- [ ] Are tokens absent from every log?
+- [x] Compare Onboarding and Login against the prototype: spacing, weight, order, copy.
+- [x] Is the auth boundary applied exactly per D3, with the cart open to guests?
+- [x] Do tabs preserve their stacks, and does re-tapping the active tab reset it (D4)?
+- [x] Is the session restored before the first paint, with no flash of the wrong stack?
+- [x] Are tokens absent from every log?
 
 ### Definition of done
 
-All fifteen criteria pass; both screens are approved against the reference; navigation is complete
-and typed; the session survives a restart.
+**Met.** All seventeen criteria pass; both screens follow the reference; navigation is complete and
+typed; the session survives a restart. Physical Expo Go smoke testing remains a release risk tracked
+in the completion report, not a Phase 6 blocker.
 
 ---
 

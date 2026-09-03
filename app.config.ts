@@ -35,7 +35,7 @@ if (!existsSync(envFile)) {
     `Missing environment file ".env.${appEnv}". Copy .env.example and fill it in.`,
   );
 }
-loadEnv({ path: envFile, override: true });
+loadEnv({ path: envFile, override: true, quiet: true });
 
 const BUNDLE_IDS: Record<AppEnv, string> = {
   development: 'om.brandhub.app.dev',
@@ -86,11 +86,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     [
-      // D15: minimum supported platforms. On SDK 54 these are set through the
+      // D15: minimum supported platforms. On SDK 57 these are set through the
       // build-properties plugin rather than on the ios/android config objects.
       'expo-build-properties',
       {
-        ios: { deploymentTarget: '15.1' },
+        ios: { deploymentTarget: '16.4' },
         android: { minSdkVersion: 26 },
       },
     ],

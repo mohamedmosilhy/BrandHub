@@ -1,5 +1,19 @@
+import {
+  PhoneOtpUseCase,
+  RefreshSessionUseCase,
+  RestoreSessionUseCase,
+  SignInUseCase,
+  SignOutUseCase,
+  SignUpUseCase,
+} from '@domain/identity';
+
 import { CategoryRemoteDataSource } from '@data/catalog/datasources';
 import { CategoryRepositoryImpl } from '@data/catalog/repositories';
+import {
+  AuthRemoteDataSource,
+  HttpAuthRepository,
+  SessionLocalDataSource,
+} from '@data/identity';
 
 import { appConfig } from '@infrastructure/config';
 import { AxiosHttpClient } from '@infrastructure/http';
@@ -27,6 +41,21 @@ const httpClient = new AxiosHttpClient({
 });
 const categoryDataSource = new CategoryRemoteDataSource(httpClient);
 const categoryRepository = new CategoryRepositoryImpl(categoryDataSource);
+const authRemoteDataSource = new AuthRemoteDataSource(httpClient);
+const sessionLocalDataSource = new SessionLocalDataSource(
+  secureStore,
+  tokenStore,
+);
+const authRepository = new HttpAuthRepository(
+  authRemoteDataSource,
+  sessionLocalDataSource,
+);
+const signIn = new SignInUseCase(authRepository);
+const signUp = new SignUpUseCase(authRepository);
+const signOut = new SignOutUseCase(authRepository);
+const restoreSession = new RestoreSessionUseCase(authRepository);
+const refreshSession = new RefreshSessionUseCase(authRepository);
+const phoneOtp = new PhoneOtpUseCase(authRepository);
 const queryClient = createAppQueryClient(logger);
 
 export const container = Object.freeze({
@@ -37,6 +66,13 @@ export const container = Object.freeze({
   tokenStore,
   httpClient,
   categoryRepository,
+  authRepository,
+  signIn,
+  signUp,
+  signOut,
+  restoreSession,
+  refreshSession,
+  phoneOtp,
   queryClient,
 });
 
