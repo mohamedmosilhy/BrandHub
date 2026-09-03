@@ -5,4 +5,5 @@ import type { Category } from '@domain/catalog/entities';
 
 export interface CategoryRepository {
   getTree(): Promise<Result<readonly Category[], AppError>>;
+  getById(id: string): Promise<Result<Category, AppError>>;
 }

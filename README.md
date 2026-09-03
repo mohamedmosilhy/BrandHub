@@ -6,10 +6,10 @@ Design and planning live in [`docs/architecture.md`](docs/architecture.md) and
 [`docs/plan.md`](docs/plan.md). The UI/UX source of truth is `design-reference/`, which is read-only
 and never modified.
 
-**Current state: Phase 5 (identity, session and navigation shell) implemented.** The app opens on
-Arabic onboarding, supports guest browsing, email/password customer sign-in and sign-up, pending
-seller registration, mock phone OTP, secure session restoration, five persistent tab stacks and
-typed deep links.
+**Current state: Phase 6 (catalogue and discovery) implemented.** The app opens on Arabic
+onboarding, supports the Phase 5 identity/navigation shell, and now replaces its Home, Browse,
+Category and Search placeholders with locale-scoped catalogue data, filters, sorting, paginated
+FlashList grids, independent async states and product-detail prefetching.
 
 ## Requirements
 
@@ -97,10 +97,12 @@ The mock deliberately uses port 3001 so it can run beside Metro on 8081. Its see
 physical-device LAN setup, fault controls and invented endpoint contracts are documented in
 [`mock-server/README.md`](mock-server/README.md).
 
-Phase 5 adds the identity domain and HTTP repository, SecureStore-backed session restoration,
-onboarding and bilingual RHF/Zod auth, the auth boundary, five-tab React Navigation shell, sign-out
-cleanup and the `brandhub://` deep-link map. Future feature screens are typed shell destinations so
-subsequent phases can fill them without changing route contracts.
+Phase 6 adds the product/search domain, strict catalogue DTO validation, HTTP repositories, query
+parameter translation and the four public discovery screens. Search supports live text, trending
+terms, seller scope, four sort orders, stock/price/rating filters and infinite pages. Product cards
+share rail, grid, list and compact geometry, format OMR to three decimals, render response-provided
+ratings and prefetch detail data on press-in. See
+[`docs/reports/phase-6-report.md`](docs/reports/phase-6-report.md).
 
 ## Architecture in one screen
 

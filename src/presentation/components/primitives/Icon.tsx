@@ -13,8 +13,10 @@ export type IconName =
   | 'close'
   | 'eye'
   | 'eye-off'
+  | 'filter'
   | 'heart'
   | 'home'
+  | 'map-pin'
   | 'minus'
   | 'person'
   | 'plus'
@@ -67,6 +69,8 @@ function Glyph({ name }: { name: IconName }): ReactNode {
           <Path d="M3 3l18 18M10.6 5.7A9.9 9.9 0 0 1 12 5.5c6.4 0 10 6.5 10 6.5a17 17 0 0 1-2.2 3.1M6.2 6.2C3.5 8.1 2 12 2 12s3.6 6.5 10 6.5c1.1 0 2.1-.2 3-.5" />
         </>
       );
+    case 'filter':
+      return <Path d="M4 7h16M7 12h10M10 17h4" />;
     case 'heart':
       return (
         <Path d="M12 20s-7-4.6-7-9.4A4.1 4.1 0 0 1 12 8a4.1 4.1 0 0 1 7 2.6C19 15.4 12 20 12 20z" />
@@ -76,6 +80,13 @@ function Glyph({ name }: { name: IconName }): ReactNode {
         <>
           <Path d="M3 10.5 12 3l9 7.5" />
           <Path d="M5 9.5V21h14V9.5" />
+        </>
+      );
+    case 'map-pin':
+      return (
+        <>
+          <Path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" />
+          <Circle cx="12" cy="10" r="2.6" />
         </>
       );
     case 'minus':

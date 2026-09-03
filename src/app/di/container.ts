@@ -1,4 +1,9 @@
 import {
+  GetCategoryProductsUseCase,
+  GetHomeSectionsUseCase,
+  SearchProductsUseCase,
+} from '@domain/catalog';
+import {
   PhoneOtpUseCase,
   RefreshSessionUseCase,
   RestoreSessionUseCase,
@@ -7,8 +12,14 @@ import {
   SignUpUseCase,
 } from '@domain/identity';
 
-import { CategoryRemoteDataSource } from '@data/catalog/datasources';
-import { CategoryRepositoryImpl } from '@data/catalog/repositories';
+import {
+  CategoryRemoteDataSource,
+  ProductRemoteDataSource,
+} from '@data/catalog/datasources';
+import {
+  CategoryRepositoryImpl,
+  HttpProductRepository,
+} from '@data/catalog/repositories';
 import {
   AuthRemoteDataSource,
   HttpAuthRepository,
@@ -39,8 +50,26 @@ const httpClient = new AxiosHttpClient({
   tokenStore,
   localeProvider: () => i18n.language,
 });
+const resolveAssetUrl = (value: string) =>
+  value.startsWith('/')
+    ? new URL(value, appConfig.apiBaseUrl).toString()
+    : value;
 const categoryDataSource = new CategoryRemoteDataSource(httpClient);
-const categoryRepository = new CategoryRepositoryImpl(categoryDataSource);
+const categoryRepository = new CategoryRepositoryImpl(
+  categoryDataSource,
+  resolveAssetUrl,
+);
+const productDataSource = new ProductRemoteDataSource(httpClient);
+const productRepository = new HttpProductRepository(
+  productDataSource,
+  resolveAssetUrl,
+);
+const searchProducts = new SearchProductsUseCase(productRepository);
+const getCategoryProducts = new GetCategoryProductsUseCase(productRepository);
+const getHomeSections = new GetHomeSectionsUseCase(
+  productRepository,
+  categoryRepository,
+);
 const authRemoteDataSource = new AuthRemoteDataSource(httpClient);
 const sessionLocalDataSource = new SessionLocalDataSource(
   secureStore,
@@ -66,6 +95,10 @@ export const container = Object.freeze({
   tokenStore,
   httpClient,
   categoryRepository,
+  productRepository,
+  searchProducts,
+  getCategoryProducts,
+  getHomeSections,
   authRepository,
   signIn,
   signUp,

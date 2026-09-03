@@ -108,6 +108,48 @@ function catalogueMatches(product: Row, query: string): boolean {
   );
 }
 
+function cataloguePrice(product: Row): number {
+  return numberValue(product['salePrice'] ?? product['basePrice']);
+}
+
+function filterCatalogue(products: Row[], request: Request): Row[] {
+  const query = stringValue(request.query['q']);
+  const categoryId = stringValue(request.query['categoryId']);
+  const sellerId = stringValue(request.query['sellerId']);
+  const minPrice = numberValue(request.query['minPrice'] ?? 0);
+  const maxPrice = numberValue(
+    request.query['maxPrice'] ?? Number.MAX_SAFE_INTEGER,
+  );
+  const minRating = numberValue(request.query['minRating'] ?? 0);
+  const inStock = request.query['inStock'] === 'true';
+  const express = request.query['express'] === 'true';
+  const filtered = products.filter(
+    (product) =>
+      catalogueMatches(product, query) &&
+      (!categoryId || product['categoryId'] === categoryId) &&
+      (!sellerId || product['sellerId'] === sellerId) &&
+      (!inStock || numberValue(product['stock']) > 0) &&
+      !express &&
+      cataloguePrice(product) >= minPrice &&
+      cataloguePrice(product) <= maxPrice &&
+      numberValue(product['averageRating']) >= minRating,
+  );
+  switch (stringValue(request.query['sort'])) {
+    case 'top-rated':
+      return filtered.sort(
+        (a, b) =>
+          numberValue(b['averageRating']) - numberValue(a['averageRating']) ||
+          numberValue(b['reviewCount']) - numberValue(a['reviewCount']),
+      );
+    case 'price-asc':
+      return filtered.sort((a, b) => cataloguePrice(a) - cataloguePrice(b));
+    case 'price-desc':
+      return filtered.sort((a, b) => cataloguePrice(b) - cataloguePrice(a));
+    default:
+      return filtered;
+  }
+}
+
 function cartFor(store: MockStore, request: Request, response: Response): Row {
   const userId = authenticatedUserId(response);
   const items = store.data.cartItems
@@ -360,21 +402,17 @@ function registerCatalogueRoutes(app: Express, store: MockStore): void {
     );
   });
   app.get('/api/v1/products/search', (request, response) => {
-    const query = stringValue(request.query['q']);
     response.json(
-      listProducts(
-        request,
-        store.data.products.filter((product) =>
-          catalogueMatches(product, query),
-        ),
-      ),
+      listProducts(request, filterCatalogue(store.data.products, request)),
     );
   });
   app.get('/api/v1/products/category/:categoryId', (request, response) => {
     const items = store.data.products.filter(
       (product) => product['categoryId'] === request.params.categoryId,
     );
-    response.json(pageOf(listProducts(request, items), request));
+    response.json(
+      pageOf(listProducts(request, filterCatalogue(items, request)), request),
+    );
   });
   app.get('/api/v1/products/slug/:slug', (request, response) => {
     const product = store.data.products.find(
@@ -400,15 +438,9 @@ function registerCatalogueRoutes(app: Express, store: MockStore): void {
     response.json(pageOf(listProducts(request, filtered), request));
   });
   app.get('/api/v1/search/products', (request, response) => {
-    const query = stringValue(request.query['q']);
     response.json(
       pageOf(
-        listProducts(
-          request,
-          store.data.products.filter((product) =>
-            catalogueMatches(product, query),
-          ),
-        ),
+        listProducts(request, filterCatalogue(store.data.products, request)),
         request,
       ),
     );

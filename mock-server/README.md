@@ -46,5 +46,10 @@ Product and category content is stored as `{ ar, en }`. Responses use `Accept-La
 only a single `name`/`description` string. Areas and their shipping economics are plain database
 records, so changing and restarting `db.json` changes the API without a code edit.
 
+Catalogue discovery accepts `q`, `categoryId`, `sellerId`, `sort`, `inStock`, `minPrice`,
+`maxPrice`, `minRating`, `page` and `size`. The supported sort values are `relevance`, `top-rated`,
+`price-asc` and `price-desc`. `express=true` intentionally yields no matches because no delivery
+express field exists in the authoritative contract (D21 / GAP-15); the v1 UI does not expose it.
+
 Only the endpoints in [`INVENTED_ENDPOINTS.md`](./INVENTED_ENDPOINTS.md) are not backed by the
 authoritative Postman collection.

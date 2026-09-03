@@ -28,6 +28,15 @@ describe('CategoryDebugScreen', () => {
           },
         ]),
       ),
+      getById: jest.fn(async () =>
+        ok({
+          id: 'electronics',
+          title: 'الإلكترونيات',
+          slug: 'electronics',
+          imageUrl: '/category.png',
+          children: [],
+        }),
+      ),
     };
     await renderWithProviders(<CategoryDebugScreen repository={repository} />);
 

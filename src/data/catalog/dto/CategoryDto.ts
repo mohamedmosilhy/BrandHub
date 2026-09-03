@@ -16,7 +16,7 @@ export const categoryDtoSchema: z.ZodType<CategoryDto> = z.lazy(() =>
     slug: z.string().min(1),
     name: z.string().min(1),
     imageUrl: z.string().min(1),
-    children: z.array(categoryDtoSchema),
+    children: z.array(categoryDtoSchema).default([]),
   }),
 );
 

@@ -111,6 +111,44 @@ describe('catalogue contract', () => {
     ).toBe(true);
   });
 
+  it('filters, sorts and paginates catalogue discovery criteria', async () => {
+    const response = await request(app)
+      .get(
+        '/api/v1/search/products?categoryId=cat-electronics&sellerId=seller-a2&inStock=true&minPrice=5&maxPrice=60&minRating=4&sort=price-desc&page=0&size=5',
+      )
+      .set('Accept-Language', 'en');
+
+    expect(response.status).toBe(200);
+    expect(response.body.content.length).toBeLessThanOrEqual(5);
+    expect(
+      response.body.content.every(
+        (product: {
+          categoryId: string;
+          sellerId: string;
+          stock: number;
+          averageRating: number;
+          basePrice: number;
+          salePrice: number | null;
+        }) => {
+          const price = product.salePrice ?? product.basePrice;
+          return (
+            product.categoryId === 'cat-electronics' &&
+            product.sellerId === 'seller-a2' &&
+            product.stock > 0 &&
+            product.averageRating >= 4 &&
+            price >= 5 &&
+            price <= 60
+          );
+        },
+      ),
+    ).toBe(true);
+    const prices = response.body.content.map(
+      (product: { basePrice: number; salePrice: number | null }) =>
+        product.salePrice ?? product.basePrice,
+    );
+    expect(prices).toEqual([...prices].sort((a, b) => b - a));
+  });
+
   it('returns a nested category tree covering every product category', async () => {
     const [treeResponse, productsResponse] = await Promise.all([
       request(app).get('/api/v1/categories/tree'),

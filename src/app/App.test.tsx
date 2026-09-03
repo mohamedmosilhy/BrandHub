@@ -4,6 +4,10 @@ import { fireEvent, renderWithProviders, screen } from '@test/render';
 
 import App from './App';
 
+// App-shell tests exercise auth/navigation only; catalogue HTTP behavior has
+// dedicated Phase 6 integration and screen suites.
+jest.mock('@presentation/features/home', () => ({ HomeScreen: () => null }));
+
 jest.mock('expo-constants', () => ({
   __esModule: true,
   default: {

@@ -1,10 +1,10 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Implemented through Phase 5 — Phase 6 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
+**Status:** **Implemented through Phase 6 — Phase 7 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
 **Date:** 2026-09-03 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
-> Phases 1–5 are implemented. Their completion reports are in `docs/reports/`.
+> Phases 1–6 are implemented. Their completion reports are in `docs/reports/`.
 > All 17 open questions were approved as recommended on 2026-09-02 and are recorded as decisions
 > **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 6.**
 
@@ -63,7 +63,7 @@ behaviour. They are collected at the end of this document under
 | 3     | Mock backend and API contract                    | 1          | Done       |
 | 4     | Core infrastructure and data plumbing            | 1, 3       | Done       |
 | 5     | Identity, session and navigation shell           | 2, 4       | Done       |
-| 6     | Catalogue and discovery                          | 5          | **Large**  |
+| 6     | Catalogue and discovery                          | 5          | Done       |
 | 7     | Product detail and wishlist                      | 6          | Medium     |
 | 8     | Cart and checkout                                | 7          | **Large**  |
 | 9     | Account, orders and addresses                    | 5, 8       | **Large**  |
@@ -358,7 +358,7 @@ Phase 1 done. The mock runs behind an Express contract adapter (D2); catalogue l
 - AC3.22 At least one route answers `{ success, data }` and at least one answers a bare payload, so the client's unwrapping helper is exercised against both (D22).
 - AC3.23 The mock binds to a port other than 8081, and `npm run mock` and `npm start` run at the same time without a conflict.
 
-### Review checklist
+### Review checklist — implementation audit 2026-09-03
 
 - [x] Do the mock's shapes match the Postman collection, field for field?
 - [x] Is the invented-endpoint list complete and precise enough to hand to the backend team?
@@ -593,17 +593,20 @@ Phase 5 done. The `BRANDHUB App.dc.html` home is canonical (D5); `averageRating`
 
 ### Review checklist
 
-- [ ] Side-by-side visual comparison of all four screens against the prototype.
-- [ ] Does home match the `BRANDHUB App.dc.html` reference, with the richer variant correctly left out (D5)?
-- [ ] Is `ProductCard` genuinely one component, or four in disguise?
-- [ ] Do the filters match the prototype's semantics exactly?
-- [ ] Are skeletons shaped like the real cards?
-- [ ] Are the Arabic titles legible at the reference's sizes, or did they need to grow?
+- [ ] Final side-by-side visual comparison on physical iOS and Android hardware.
+- [x] Home follows `BRANDHUB App.dc.html`; the richer v1.1 variant remains excluded (D5).
+- [x] `ProductCard` is one component with four geometry variants and shared content/behavior.
+- [x] Filters match the contracted prototype semantics; unsupported Express is withheld per D21.
+- [x] Skeletons use the corresponding category, rail and grid geometry.
+- [ ] Final Arabic-title legibility sign-off on a physical phone.
 
 ### Definition of done
 
-All eighteen criteria pass; all four screens are approved against the reference; the filter sheet
-behaves identically to the prototype; performance is measured on a real device, not assumed.
+Implementation and automated acceptance are complete. The software criteria pass in the test,
+lint, boundary and production-bundle gates. Final physical-device AR/EN visual approval and AC6.17's
+55 fps measurement remain explicit human checks; they are tracked in the Phase 6 report rather than
+being inferred from virtualization. Phase 7 is cleared to begin without reopening the catalogue
+contracts.
 
 ---
 

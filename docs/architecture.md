@@ -1,6 +1,6 @@
 # BRANDHUB Mobile — Technical Architecture
 
-**Status:** **Approved and implemented through Phase 5** · **Date:** 2026-09-03
+**Status:** **Approved and implemented through Phase 6** · **Date:** 2026-09-03
 **Author:** AI agent acting as architect · **Reviewer / decision maker:** repository owner
 **Decision record:** all 17 open questions were reviewed and approved as recommended on 2026-09-02.
 
@@ -9,8 +9,8 @@
 > Every question this document raised has been decided; §34 now records those decisions as
 > **D1–D22**, and the work they hand to other teams as **FA1–FA5**.
 > The technical foundation, shared UI system, contract mock, reusable data spine, identity/session
-> slice and navigation shell now exist. Phase 6 of `plan.md` is cleared to begin;
-> Phase reports live in `docs/reports/`.
+> shell and catalogue/discovery slice now exist. Phase 7 of `plan.md` is cleared to begin; phase
+> reports live in `docs/reports/`.
 
 ---
 

@@ -89,6 +89,7 @@ export type ChipProps = {
   removable?: boolean;
   onPress?: (() => void) | undefined;
   onRemove?: (() => void) | undefined;
+  removeAccessibilityLabel?: string;
 };
 
 export function Chip({
@@ -97,6 +98,7 @@ export function Chip({
   removable = false,
   onPress,
   onRemove,
+  removeAccessibilityLabel,
 }: ChipProps) {
   const { theme } = useTheme();
   return (
@@ -125,7 +127,7 @@ export function Chip({
       </Text>
       {removable ? (
         <Pressable
-          accessibilityLabel={`Remove ${label}`}
+          accessibilityLabel={removeAccessibilityLabel ?? `Remove ${label}`}
           onPress={onRemove}
           style={styles.remove}
         >

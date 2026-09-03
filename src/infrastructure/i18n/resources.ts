@@ -110,6 +110,7 @@ const ar = {
     phaseComingSoon: 'سيُنفّذ محتوى هذه الشاشة في مرحلته المخصصة.',
     signedInAs: 'تم تسجيل الدخول باسم',
     checkoutRequiresAuth: 'سجّل الدخول لإتمام الدفع',
+    categoryDescription: 'اكتشف مختارات هذه الفئة من متاجر عُمانية موثّقة.',
   },
   states: {
     genericErrorTitle: 'تعذّر تحميل المحتوى',
@@ -239,6 +240,7 @@ const en = {
     phaseComingSoon: 'This screen’s content arrives in its scheduled phase.',
     signedInAs: 'Signed in as',
     checkoutRequiresAuth: 'Sign in to continue to checkout',
+    categoryDescription: 'Explore this category from verified Omani stores.',
   },
   states: {
     genericErrorTitle: 'We couldn\u2019t load this content',

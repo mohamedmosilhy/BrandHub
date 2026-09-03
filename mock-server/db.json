@@ -131,18 +131,18 @@
         {
           "id": "product-1-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-1-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -229,12 +229,18 @@
         {
           "id": "product-2-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-2-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -321,12 +327,18 @@
         {
           "id": "product-3-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-3-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -413,12 +425,18 @@
         {
           "id": "product-4-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-4-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -505,12 +523,18 @@
         {
           "id": "product-5-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-5-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -597,12 +621,18 @@
         {
           "id": "product-6-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-6-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -689,12 +719,18 @@
         {
           "id": "product-7-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-7-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -781,12 +817,18 @@
         {
           "id": "product-8-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-8-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -873,18 +915,18 @@
         {
           "id": "product-9-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-9-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -971,12 +1013,18 @@
         {
           "id": "product-10-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-10-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -1063,12 +1111,18 @@
         {
           "id": "product-11-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-11-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -1155,12 +1209,18 @@
         {
           "id": "product-12-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-12-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -1247,12 +1307,18 @@
         {
           "id": "product-13-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-13-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -1339,12 +1405,18 @@
         {
           "id": "product-14-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-14-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -1431,12 +1503,18 @@
         {
           "id": "product-15-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-15-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -1523,12 +1601,18 @@
         {
           "id": "product-16-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-16-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -1615,18 +1699,18 @@
         {
           "id": "product-17-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-17-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -1713,12 +1797,18 @@
         {
           "id": "product-18-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-18-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -1805,12 +1895,18 @@
         {
           "id": "product-19-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-19-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -1897,12 +1993,18 @@
         {
           "id": "product-20-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-20-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -1989,12 +2091,18 @@
         {
           "id": "product-21-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-21-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -2081,12 +2189,18 @@
         {
           "id": "product-22-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-22-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -2173,12 +2287,18 @@
         {
           "id": "product-23-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-23-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -2265,12 +2385,18 @@
         {
           "id": "product-24-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-24-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -2357,18 +2483,18 @@
         {
           "id": "product-25-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-25-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -2455,12 +2581,18 @@
         {
           "id": "product-26-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-26-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -2547,12 +2679,18 @@
         {
           "id": "product-27-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-27-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -2639,12 +2777,18 @@
         {
           "id": "product-28-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-28-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -2731,12 +2875,18 @@
         {
           "id": "product-29-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-29-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -2823,12 +2973,18 @@
         {
           "id": "product-30-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-30-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -2915,12 +3071,18 @@
         {
           "id": "product-31-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-31-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -3007,12 +3169,18 @@
         {
           "id": "product-32-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-32-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -3099,18 +3267,18 @@
         {
           "id": "product-33-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-33-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -3197,12 +3365,18 @@
         {
           "id": "product-34-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-34-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -3289,12 +3463,18 @@
         {
           "id": "product-35-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-35-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -3381,12 +3561,18 @@
         {
           "id": "product-36-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-36-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -3473,12 +3659,18 @@
         {
           "id": "product-37-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-37-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -3565,12 +3757,18 @@
         {
           "id": "product-38-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-38-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -3657,12 +3855,18 @@
         {
           "id": "product-39-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-39-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -3749,12 +3953,18 @@
         {
           "id": "product-40-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-40-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -3841,18 +4051,18 @@
         {
           "id": "product-41-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-41-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -3939,12 +4149,18 @@
         {
           "id": "product-42-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-42-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -4031,12 +4247,18 @@
         {
           "id": "product-43-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-43-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -4123,12 +4345,18 @@
         {
           "id": "product-44-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-44-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -4215,12 +4443,18 @@
         {
           "id": "product-45-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-45-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -4307,12 +4541,18 @@
         {
           "id": "product-46-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-46-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -4399,12 +4639,18 @@
         {
           "id": "product-47-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-47-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -4491,12 +4737,18 @@
         {
           "id": "product-48-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-48-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -4583,18 +4835,18 @@
         {
           "id": "product-49-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-49-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -4681,12 +4933,18 @@
         {
           "id": "product-50-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-50-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -4773,12 +5031,18 @@
         {
           "id": "product-51-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-51-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -4865,12 +5129,18 @@
         {
           "id": "product-52-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-52-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -4957,12 +5227,18 @@
         {
           "id": "product-53-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-53-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -5049,12 +5325,18 @@
         {
           "id": "product-54-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-54-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -5141,12 +5423,18 @@
         {
           "id": "product-55-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-55-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -5233,12 +5521,18 @@
         {
           "id": "product-56-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-56-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -5325,18 +5619,18 @@
         {
           "id": "product-57-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-57-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -5423,12 +5717,18 @@
         {
           "id": "product-58-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-58-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -5515,12 +5815,18 @@
         {
           "id": "product-59-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-59-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -5607,12 +5913,18 @@
         {
           "id": "product-60-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-60-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -5699,12 +6011,18 @@
         {
           "id": "product-61-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-61-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -5791,12 +6109,18 @@
         {
           "id": "product-62-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-62-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -5883,12 +6207,18 @@
         {
           "id": "product-63-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-63-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -5975,12 +6305,18 @@
         {
           "id": "product-64-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-64-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -6067,18 +6403,18 @@
         {
           "id": "product-65-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-65-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -6165,12 +6501,18 @@
         {
           "id": "product-66-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-66-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -6257,12 +6599,18 @@
         {
           "id": "product-67-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-67-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -6349,12 +6697,18 @@
         {
           "id": "product-68-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-68-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -6441,12 +6795,18 @@
         {
           "id": "product-69-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-69-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -6533,12 +6893,18 @@
         {
           "id": "product-70-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-70-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -6625,12 +6991,18 @@
         {
           "id": "product-71-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-71-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -6717,12 +7089,18 @@
         {
           "id": "product-72-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-72-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -6809,18 +7187,18 @@
         {
           "id": "product-73-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-73-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -6907,12 +7285,18 @@
         {
           "id": "product-74-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-74-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -6999,12 +7383,18 @@
         {
           "id": "product-75-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-75-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -7091,12 +7481,18 @@
         {
           "id": "product-76-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-76-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -7183,12 +7579,18 @@
         {
           "id": "product-77-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-77-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -7275,12 +7677,18 @@
         {
           "id": "product-78-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-78-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -7367,12 +7775,18 @@
         {
           "id": "product-79-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-79-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -7459,12 +7873,18 @@
         {
           "id": "product-80-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-80-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -7551,18 +7971,18 @@
         {
           "id": "product-81-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-81-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -7649,12 +8069,18 @@
         {
           "id": "product-82-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-82-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -7741,12 +8167,18 @@
         {
           "id": "product-83-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-83-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -7833,12 +8265,18 @@
         {
           "id": "product-84-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-84-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -7925,12 +8363,18 @@
         {
           "id": "product-85-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-85-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -8017,12 +8461,18 @@
         {
           "id": "product-86-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-86-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -8109,12 +8559,18 @@
         {
           "id": "product-87-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-87-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -8201,12 +8657,18 @@
         {
           "id": "product-88-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-88-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -8293,18 +8755,18 @@
         {
           "id": "product-89-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-89-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -8391,12 +8853,18 @@
         {
           "id": "product-90-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-90-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -8483,12 +8951,18 @@
         {
           "id": "product-91-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-91-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -8575,12 +9049,18 @@
         {
           "id": "product-92-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-92-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -8667,12 +9147,18 @@
         {
           "id": "product-93-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-93-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -8759,12 +9245,18 @@
         {
           "id": "product-94-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-94-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -8851,12 +9343,18 @@
         {
           "id": "product-95-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-95-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -8943,12 +9441,18 @@
         {
           "id": "product-96-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-96-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -9035,18 +9539,18 @@
         {
           "id": "product-97-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-97-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -9133,12 +9637,18 @@
         {
           "id": "product-98-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-98-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -9225,12 +9735,18 @@
         {
           "id": "product-99-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-99-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -9317,12 +9833,18 @@
         {
           "id": "product-100-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-100-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -9409,12 +9931,18 @@
         {
           "id": "product-101-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-101-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -9501,12 +10029,18 @@
         {
           "id": "product-102-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-102-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -9593,12 +10127,18 @@
         {
           "id": "product-103-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-103-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -9685,12 +10225,18 @@
         {
           "id": "product-104-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-104-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -9777,18 +10323,18 @@
         {
           "id": "product-105-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-105-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -9875,12 +10421,18 @@
         {
           "id": "product-106-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-106-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -9967,12 +10519,18 @@
         {
           "id": "product-107-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-107-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -10059,12 +10617,18 @@
         {
           "id": "product-108-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-108-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -10151,12 +10715,18 @@
         {
           "id": "product-109-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-109-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -10243,12 +10813,18 @@
         {
           "id": "product-110-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-110-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -10335,12 +10911,18 @@
         {
           "id": "product-111-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-111-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -10427,12 +11009,18 @@
         {
           "id": "product-112-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-112-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -10519,18 +11107,18 @@
         {
           "id": "product-113-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-113-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -10617,12 +11205,18 @@
         {
           "id": "product-114-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-114-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -10709,12 +11303,18 @@
         {
           "id": "product-115-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-115-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -10801,12 +11401,18 @@
         {
           "id": "product-116-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-116-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -10893,12 +11499,18 @@
         {
           "id": "product-117-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-117-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -10985,12 +11597,18 @@
         {
           "id": "product-118-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-118-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -11077,12 +11695,18 @@
         {
           "id": "product-119-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-119-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -11169,12 +11793,18 @@
         {
           "id": "product-120-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-120-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -11261,18 +11891,18 @@
         {
           "id": "product-121-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-121-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -11359,12 +11989,18 @@
         {
           "id": "product-122-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-122-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -11451,12 +12087,18 @@
         {
           "id": "product-123-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-123-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -11543,12 +12185,18 @@
         {
           "id": "product-124-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-124-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -11635,12 +12283,18 @@
         {
           "id": "product-125-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-125-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -11727,12 +12381,18 @@
         {
           "id": "product-126-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-126-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -11819,12 +12479,18 @@
         {
           "id": "product-127-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-127-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -11911,12 +12577,18 @@
         {
           "id": "product-128-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-128-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -12003,18 +12675,18 @@
         {
           "id": "product-129-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-129-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -12101,12 +12773,18 @@
         {
           "id": "product-130-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-130-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -12193,12 +12871,18 @@
         {
           "id": "product-131-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-131-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -12285,12 +12969,18 @@
         {
           "id": "product-132-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-132-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -12377,12 +13067,18 @@
         {
           "id": "product-133-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-133-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -12469,12 +13165,18 @@
         {
           "id": "product-134-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-134-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -12561,12 +13263,18 @@
         {
           "id": "product-135-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-135-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -12653,12 +13361,18 @@
         {
           "id": "product-136-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-136-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -12745,18 +13459,18 @@
         {
           "id": "product-137-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-137-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -12843,12 +13557,18 @@
         {
           "id": "product-138-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-138-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -12935,12 +13655,18 @@
         {
           "id": "product-139-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-139-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -13027,12 +13753,18 @@
         {
           "id": "product-140-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-140-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -13119,12 +13851,18 @@
         {
           "id": "product-141-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-141-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -13211,12 +13949,18 @@
         {
           "id": "product-142-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-142-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -13303,12 +14047,18 @@
         {
           "id": "product-143-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-143-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -13395,12 +14145,18 @@
         {
           "id": "product-144-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-144-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -13487,18 +14243,18 @@
         {
           "id": "product-145-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-145-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -13585,12 +14341,18 @@
         {
           "id": "product-146-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-146-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -13677,12 +14439,18 @@
         {
           "id": "product-147-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-147-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -13769,12 +14537,18 @@
         {
           "id": "product-148-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-148-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -13861,12 +14635,18 @@
         {
           "id": "product-149-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-149-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -13953,12 +14733,18 @@
         {
           "id": "product-150-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-150-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -14045,12 +14831,18 @@
         {
           "id": "product-151-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-151-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -14137,12 +14929,18 @@
         {
           "id": "product-152-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-152-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -14229,18 +15027,18 @@
         {
           "id": "product-153-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-153-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -14327,12 +15125,18 @@
         {
           "id": "product-154-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-154-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -14419,12 +15223,18 @@
         {
           "id": "product-155-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-155-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -14511,12 +15321,18 @@
         {
           "id": "product-156-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-156-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -14603,12 +15419,18 @@
         {
           "id": "product-157-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-157-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -14695,12 +15517,18 @@
         {
           "id": "product-158-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-158-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -14787,12 +15615,18 @@
         {
           "id": "product-159-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-159-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -14879,12 +15713,18 @@
         {
           "id": "product-160-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-160-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -14971,18 +15811,18 @@
         {
           "id": "product-161-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-161-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -15069,12 +15909,18 @@
         {
           "id": "product-162-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-162-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -15161,12 +16007,18 @@
         {
           "id": "product-163-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-163-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -15253,12 +16105,18 @@
         {
           "id": "product-164-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-164-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -15345,12 +16203,18 @@
         {
           "id": "product-165-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-165-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -15437,12 +16301,18 @@
         {
           "id": "product-166-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-166-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -15529,12 +16399,18 @@
         {
           "id": "product-167-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-167-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -15621,12 +16497,18 @@
         {
           "id": "product-168-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-168-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -15713,18 +16595,18 @@
         {
           "id": "product-169-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-169-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -15811,12 +16693,18 @@
         {
           "id": "product-170-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-170-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -15903,12 +16791,18 @@
         {
           "id": "product-171-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-171-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -15995,12 +16889,18 @@
         {
           "id": "product-172-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-172-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -16087,12 +16987,18 @@
         {
           "id": "product-173-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-173-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -16179,12 +17085,18 @@
         {
           "id": "product-174-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-174-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -16271,12 +17183,18 @@
         {
           "id": "product-175-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-175-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -16363,12 +17281,18 @@
         {
           "id": "product-176-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-176-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -16455,18 +17379,18 @@
         {
           "id": "product-177-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-177-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -16553,12 +17477,18 @@
         {
           "id": "product-178-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-178-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -16645,12 +17575,18 @@
         {
           "id": "product-179-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-179-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -16737,12 +17673,18 @@
         {
           "id": "product-180-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-180-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -16829,12 +17771,18 @@
         {
           "id": "product-181-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-181-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -16921,12 +17869,18 @@
         {
           "id": "product-182-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-182-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -17013,12 +17967,18 @@
         {
           "id": "product-183-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-183-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -17105,12 +18065,18 @@
         {
           "id": "product-184-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-184-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -17197,18 +18163,18 @@
         {
           "id": "product-185-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-185-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -17295,12 +18261,18 @@
         {
           "id": "product-186-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-186-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -17387,12 +18359,18 @@
         {
           "id": "product-187-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-187-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -17479,12 +18457,18 @@
         {
           "id": "product-188-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-188-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -17571,12 +18555,18 @@
         {
           "id": "product-189-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-189-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -17663,12 +18653,18 @@
         {
           "id": "product-190-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-190-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -17755,12 +18751,18 @@
         {
           "id": "product-191-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-191-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -17847,12 +18849,18 @@
         {
           "id": "product-192-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-192-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -17939,18 +18947,18 @@
         {
           "id": "product-193-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-193-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -18037,12 +19045,18 @@
         {
           "id": "product-194-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-194-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -18129,12 +19143,18 @@
         {
           "id": "product-195-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-195-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -18221,12 +19241,18 @@
         {
           "id": "product-196-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-196-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -18313,12 +19339,18 @@
         {
           "id": "product-197-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-197-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -18405,12 +19437,18 @@
         {
           "id": "product-198-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-198-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -18497,12 +19535,18 @@
         {
           "id": "product-199-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-199-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -18589,12 +19633,18 @@
         {
           "id": "product-200-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-200-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -18681,18 +19731,18 @@
         {
           "id": "product-201-image-1",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-201-image-2",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -18779,12 +19829,18 @@
         {
           "id": "product-202-image-1",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-202-image-2",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -18871,12 +19927,18 @@
         {
           "id": "product-203-image-1",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-203-image-2",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -18963,12 +20025,18 @@
         {
           "id": "product-204-image-1",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-204-image-2",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -19055,12 +20123,18 @@
         {
           "id": "product-205-image-1",
           "url": "/api/v1/mock-assets/product-5.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-205-image-2",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -19147,12 +20221,18 @@
         {
           "id": "product-206-image-1",
           "url": "/api/v1/mock-assets/product-6.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-206-image-2",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -19239,12 +20319,18 @@
         {
           "id": "product-207-image-1",
           "url": "/api/v1/mock-assets/product-7.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-207-image-2",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -19331,12 +20417,18 @@
         {
           "id": "product-208-image-1",
           "url": "/api/v1/mock-assets/product-8.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-208-image-2",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -19423,18 +20515,18 @@
         {
           "id": "product-209-image-1",
           "url": "/api/v1/mock-assets/product-9.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-209-image-2",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -19521,12 +20613,18 @@
         {
           "id": "product-210-image-1",
           "url": "/api/v1/mock-assets/product-10.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-210-image-2",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -19613,12 +20711,18 @@
         {
           "id": "product-211-image-1",
           "url": "/api/v1/mock-assets/product-11.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-211-image-2",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -19705,12 +20809,18 @@
         {
           "id": "product-212-image-1",
           "url": "/api/v1/mock-assets/product-12.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-212-image-2",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [
@@ -19797,12 +20907,18 @@
         {
           "id": "product-213-image-1",
           "url": "/api/v1/mock-assets/product-13.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         },
         {
           "id": "product-213-image-2",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": ["ساعة ذكية رياضية", "Sport smart watch"]
+          "alt": {
+            "ar": "ساعة ذكية رياضية",
+            "en": "Sport smart watch"
+          }
         }
       ],
       "variants": [
@@ -19889,12 +21005,18 @@
         {
           "id": "product-214-image-1",
           "url": "/api/v1/mock-assets/product-14.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         },
         {
           "id": "product-214-image-2",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حقيبة جلدية يومية", "Everyday leather bag"]
+          "alt": {
+            "ar": "حقيبة جلدية يومية",
+            "en": "Everyday leather bag"
+          }
         }
       ],
       "variants": [
@@ -19981,12 +21103,18 @@
         {
           "id": "product-215-image-1",
           "url": "/api/v1/mock-assets/product-15.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         },
         {
           "id": "product-215-image-2",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["طقم أواني خزفي", "Ceramic cookware set"]
+          "alt": {
+            "ar": "طقم أواني خزفي",
+            "en": "Ceramic cookware set"
+          }
         }
       ],
       "variants": [
@@ -20073,12 +21201,18 @@
         {
           "id": "product-216-image-1",
           "url": "/api/v1/mock-assets/product-16.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         },
         {
           "id": "product-216-image-2",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["واقي شمس معدني", "Mineral sunscreen"]
+          "alt": {
+            "ar": "واقي شمس معدني",
+            "en": "Mineral sunscreen"
+          }
         }
       ],
       "variants": [
@@ -20165,18 +21299,18 @@
         {
           "id": "product-217-image-1",
           "url": "/api/v1/mock-assets/product-17.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         },
         {
           "id": "product-217-image-2",
           "url": "/api/v1/mock-assets/product-1.png",
-          "alt": [
-            "سماعات لاسلكية عازلة للضوضاء",
-            "Noise-cancelling wireless headphones"
-          ]
+          "alt": {
+            "ar": "سماعات لاسلكية عازلة للضوضاء",
+            "en": "Noise-cancelling wireless headphones"
+          }
         }
       ],
       "variants": [
@@ -20263,12 +21397,18 @@
         {
           "id": "product-218-image-1",
           "url": "/api/v1/mock-assets/product-18.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         },
         {
           "id": "product-218-image-2",
           "url": "/api/v1/mock-assets/product-2.png",
-          "alt": ["حذاء رياضي خفيف", "Lightweight running shoes"]
+          "alt": {
+            "ar": "حذاء رياضي خفيف",
+            "en": "Lightweight running shoes"
+          }
         }
       ],
       "variants": [
@@ -20355,12 +21495,18 @@
         {
           "id": "product-219-image-1",
           "url": "/api/v1/mock-assets/product-19.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         },
         {
           "id": "product-219-image-2",
           "url": "/api/v1/mock-assets/product-3.png",
-          "alt": ["آلة قهوة عربية", "Arabic coffee maker"]
+          "alt": {
+            "ar": "آلة قهوة عربية",
+            "en": "Arabic coffee maker"
+          }
         }
       ],
       "variants": [
@@ -20447,12 +21593,18 @@
         {
           "id": "product-220-image-1",
           "url": "/api/v1/mock-assets/product-20.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         },
         {
           "id": "product-220-image-2",
           "url": "/api/v1/mock-assets/product-4.png",
-          "alt": ["مصل ترطيب للوجه", "Hydrating face serum"]
+          "alt": {
+            "ar": "مصل ترطيب للوجه",
+            "en": "Hydrating face serum"
+          }
         }
       ],
       "variants": [

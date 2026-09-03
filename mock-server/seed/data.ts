@@ -101,12 +101,12 @@ const products = Array.from({ length: 220 }, (_, index) => {
       {
         id: `${id}-image-1`,
         url: `/api/v1/mock-assets/product-${(index % 20) + 1}.png`,
-        alt: name,
+        alt: { ar: name[0], en: name[1] },
       },
       {
         id: `${id}-image-2`,
         url: `/api/v1/mock-assets/product-${((index + 4) % 20) + 1}.png`,
-        alt: name,
+        alt: { ar: name[0], en: name[1] },
       },
     ],
     variants: [

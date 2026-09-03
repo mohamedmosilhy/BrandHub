@@ -6,7 +6,9 @@ import {
   NavigationContainer,
   StackActions,
   createNavigationContainerRef,
+  type NavigationProp,
   type RouteProp,
+  useNavigation,
   useRoute,
 } from '@react-navigation/native';
 import {
@@ -25,8 +27,12 @@ import {
   sessionStore,
   useSessionStore,
 } from '@presentation/features/auth';
+import { BrowseScreen } from '@presentation/features/browse';
+import { CategoryScreen } from '@presentation/features/category';
+import { HomeScreen } from '@presentation/features/home';
 import { AccountScreen, ShellScreen } from '@presentation/features/navigation';
 import { OnboardingScreen } from '@presentation/features/onboarding';
+import { SearchScreen } from '@presentation/features/search';
 import { useTheme } from '@presentation/theme';
 
 import { useContainer } from '@app/di';
@@ -122,22 +128,42 @@ function LoginRoute({
 function HomeRoute({
   navigation,
 }: NativeStackScreenProps<HomeStackParamList, 'Home'>) {
-  const { t } = useTranslation();
+  const { categoryRepository, productRepository } = useContainer();
   return (
-    <ShellScreen
-      title={t('tabHome')}
-      action={{
-        label: t('discover'),
-        onPress: () =>
-          navigation.navigate('Product', { productId: 'product-1' }),
-      }}
+    <HomeScreen
+      categoryRepository={categoryRepository}
+      productRepository={productRepository}
+      onSearch={() => navigation.navigate('Search')}
+      onNotifications={() => navigation.navigate('Notifications')}
+      onBrowse={() => navigationRef.navigate('Main', { screen: 'BrowseTab' })}
+      onOpenCategory={(categoryId, categoryName) =>
+        navigation.navigate('Category', { categoryId, categoryName })
+      }
+      onOpenProduct={(productId) =>
+        navigation.navigate('Product', { productId })
+      }
+      onOpenInfluencer={(influencerId) =>
+        navigation.navigate('Influencer', { influencerId })
+      }
     />
   );
 }
 
-function BrowseRoute() {
-  const { t } = useTranslation();
-  return <ShellScreen title={t('tabCats')} />;
+function BrowseRoute({
+  navigation,
+}: NativeStackScreenProps<BrowseStackParamList, 'Browse'>) {
+  const { categoryRepository, productRepository, getCategoryProducts } =
+    useContainer();
+  return (
+    <BrowseScreen
+      categoryRepository={categoryRepository}
+      productRepository={productRepository}
+      getCategoryProducts={getCategoryProducts}
+      onOpenProduct={(productId) =>
+        navigation.navigate('Product', { productId })
+      }
+    />
+  );
 }
 
 function InfluencersRoute() {
@@ -166,10 +192,46 @@ function ProductRoute() {
 }
 
 function CategoryRoute() {
-  const { t } = useTranslation();
+  const { categoryRepository, productRepository, getCategoryProducts } =
+    useContainer();
+  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const route =
     useRoute<RouteProp<{ Category: { categoryId: string } }, 'Category'>>();
-  return <ShellScreen title={t('category')} detail={route.params.categoryId} />;
+  return (
+    <CategoryScreen
+      categoryId={route.params.categoryId}
+      categoryRepository={categoryRepository}
+      productRepository={productRepository}
+      getCategoryProducts={getCategoryProducts}
+      onBack={() => navigation.goBack()}
+      onSearch={(categoryId) => navigation.navigate('Search', { categoryId })}
+      onOpenProduct={(productId) =>
+        navigation.navigate('Product', { productId })
+      }
+    />
+  );
+}
+
+function SearchRoute() {
+  const { productRepository, searchProducts } = useContainer();
+  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
+  const route =
+    useRoute<RouteProp<{ Search: HomeStackParamList['Search'] }, 'Search'>>();
+  return (
+    <SearchScreen
+      {...(route.params?.query ? { initialQuery: route.params.query } : {})}
+      {...(route.params?.sellerId ? { sellerId: route.params.sellerId } : {})}
+      {...(route.params?.categoryId
+        ? { categoryId: route.params.categoryId }
+        : {})}
+      productRepository={productRepository}
+      searchProducts={searchProducts}
+      onBack={() => navigation.goBack()}
+      onOpenProduct={(productId) =>
+        navigation.navigate('Product', { productId })
+      }
+    />
+  );
 }
 
 function GenericRoute() {
@@ -262,7 +324,7 @@ function HomeNavigator() {
     <HomeStack.Navigator screenOptions={screenOptions}>
       <HomeStack.Screen name="Home" component={HomeRoute} />
       <HomeStack.Screen name="Category" component={CategoryRoute} />
-      <HomeStack.Screen name="Search" component={GenericRoute} />
+      <HomeStack.Screen name="Search" component={SearchRoute} />
       <HomeStack.Screen name="Product" component={ProductRoute} />
       <HomeStack.Screen name="Seller" component={GenericRoute} />
       <HomeStack.Screen name="Influencer" component={GenericRoute} />
@@ -276,7 +338,7 @@ function BrowseNavigator() {
     <BrowseStack.Navigator screenOptions={screenOptions}>
       <BrowseStack.Screen name="Browse" component={BrowseRoute} />
       <BrowseStack.Screen name="Category" component={CategoryRoute} />
-      <BrowseStack.Screen name="Search" component={GenericRoute} />
+      <BrowseStack.Screen name="Search" component={SearchRoute} />
       <BrowseStack.Screen name="Product" component={ProductRoute} />
     </BrowseStack.Navigator>
   );

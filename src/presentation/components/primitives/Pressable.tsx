@@ -12,6 +12,7 @@ export type PressableProps = {
   accessibilityLabel: string;
   children: ReactNode;
   onPress?: (() => void) | undefined;
+  onPressIn?: (() => void) | undefined;
   accessibilityRole?: AccessibilityRole;
   accessibilityState?: {
     disabled?: boolean;
@@ -35,6 +36,7 @@ export function Pressable({
   accessibilityLabel,
   children,
   onPress,
+  onPressIn,
   accessibilityRole = 'button',
   accessibilityState,
   disabled = false,
@@ -58,6 +60,7 @@ export function Pressable({
       disabled={disabled}
       hitSlop={slop}
       onPress={onPress}
+      onPressIn={onPressIn}
       testID={testID}
       style={({ pressed }) => [
         compact
