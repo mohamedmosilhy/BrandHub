@@ -128,6 +128,10 @@ describe('ProductScreen', () => {
     expect(screen.getByText('خصم 20%')).toBeOnTheScreen();
     expect(screen.getAllByText('19.900').length).toBeGreaterThan(0);
     expect(screen.getAllByText('25.000').length).toBeGreaterThan(0);
+    expect(screen.getByLabelText('المفضلة')).toHaveStyle({
+      minHeight: 36,
+      minWidth: 36,
+    });
     expect(screen.getByText('المواصفات')).toBeOnTheScreen();
     await waitFor(
       () => expect(screen.getByText('A2 Official Store')).toBeOnTheScreen(),

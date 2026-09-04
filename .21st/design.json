@@ -65,6 +65,14 @@
     {
       "decision": "Preserve the approved BRANDHUB reference direction and implement it as native React Native primitives.",
       "reason": "The project architecture and prototype already fix the visual direction; no redesign was requested."
+    },
+    {
+      "decision": "On the seller store, overlap the cover with the 68 pt store tile only; keep seller copy and actions wholly below the cover.",
+      "reason": "The original shared-row overlap caused the store name, verification line, and follow action to straddle the hero boundary on device."
+    },
+    {
+      "decision": "Compact controls must render at their declared visual size and use hit slop only for the remainder of the 44 pt touch target.",
+      "reason": "Using compactSize only in the hit-slop calculation collapsed icon buttons to the glyph size, making PDP and card wishlist actions visibly too small."
     }
   ],
   "evidence": [

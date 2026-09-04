@@ -29,20 +29,23 @@ export function StoreTile({
   size,
   radius,
   textVariant,
+  backgroundColor,
 }: {
   storeName: string;
   size: number;
   radius: number;
   textVariant: 'sm' | 'h2';
+  backgroundColor?: string;
 }) {
   const { theme } = useTheme();
   return (
     <View
+      accessibilityLabel={storeName}
       accessibilityRole="image"
       style={[
         styles.tile,
         {
-          backgroundColor: theme.colors.accentLight,
+          backgroundColor: backgroundColor ?? theme.colors.accentLight,
           borderRadius: radius,
           height: size,
           width: size,

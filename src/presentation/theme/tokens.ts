@@ -303,6 +303,11 @@ export const mobile = {
     tileRadius: 18,
     tileBorder: 3,
     tileOverlap: -34,
+    /** Keep the seller copy below the cover; only the store tile crosses the boundary. */
+    identityContentTop: 14,
+    identityMinHeight: 56,
+    identityGap: 12,
+    tileShadow: '0 6px 18px rgba(26,26,46,0.16)',
     paddingX: 18,
     /** `height: 34px; padding: 0 16px; border-radius: 99px` follow action. */
     followHeight: 34,

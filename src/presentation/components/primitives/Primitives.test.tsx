@@ -73,4 +73,15 @@ describe('presentation primitives', () => {
       minWidth: layout.minimumTouchTarget,
     });
   });
+
+  it('draws compact controls at their declared size and completes the target with hit slop', async () => {
+    await render(
+      <Pressable accessibilityLabel="Compact action" compact compactSize={36}>
+        <Text>+</Text>
+      </Pressable>,
+    );
+    const action = screen.getByRole('button', { name: 'Compact action' });
+    expect(action).toHaveStyle({ minHeight: 36, minWidth: 36 });
+    expect(action.props['hitSlop']).toBe(4);
+  });
 });

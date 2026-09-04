@@ -32,10 +32,17 @@ import {
   useSessionStore,
 } from '@presentation/features/auth';
 import { BrowseScreen } from '@presentation/features/browse';
+import {
+  CartProvider,
+  CartScreen,
+  useCartContext,
+} from '@presentation/features/cart';
 import { CategoryScreen } from '@presentation/features/category';
+import { CheckoutScreen } from '@presentation/features/checkout';
 import { HomeScreen } from '@presentation/features/home';
 import { AccountScreen, ShellScreen } from '@presentation/features/navigation';
 import { OnboardingScreen } from '@presentation/features/onboarding';
+import { OrderConfirmationScreen } from '@presentation/features/orders';
 import { ProductScreen } from '@presentation/features/product';
 import { SearchScreen } from '@presentation/features/search';
 import { SellerStoreScreen } from '@presentation/features/sellerStore';
@@ -185,14 +192,13 @@ function InfluencersRoute() {
 }
 
 function CartRoute() {
-  const { t } = useTranslation();
+  const { shippingAreaRepository, calculateCartTotals } = useContainer();
   return (
-    <ShellScreen
-      title={t('tabCart')}
-      action={{
-        label: t('checkout'),
-        onPress: () => navigationRef.navigate('Checkout'),
-      }}
+    <CartScreen
+      shippingAreaRepository={shippingAreaRepository}
+      calculateTotals={calculateCartTotals}
+      onCheckout={() => navigationRef.navigate('Checkout')}
+      onDiscover={() => navigationRef.navigate('Main', { screen: 'BrowseTab' })}
     />
   );
 }
@@ -204,6 +210,8 @@ function ProductRoute() {
     reviewRepository,
     sellerRepository,
   } = useContainer();
+  const cart = useCartContext();
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
@@ -220,9 +228,23 @@ function ProductRoute() {
       onCart={() => navigationRef.navigate('Main', { screen: 'CartTab' })}
       onOpenProduct={(productId) => navigation.push('Product', { productId })}
       onOpenSeller={(sellerId) => navigation.navigate('Seller', { sellerId })}
-      // Phase 8 owns the cart mutation; until then the bar confirms without navigating (AC7.12).
-      onAddedToCart={(message) => showToast({ message, tone: 'success' })}
-      onBuyNow={() => navigationRef.navigate('Checkout')}
+      onAddedToCart={(product, variant) => {
+        void cart.add(product, variant).then((failure) =>
+          showToast({
+            message: failure ? t('cartUpdateFailed') : t('addedToCart'),
+            tone: failure ? 'error' : 'success',
+          }),
+        );
+      }}
+      onBuyNow={(product, variant) => {
+        void cart.add(product, variant).then((failure) => {
+          if (failure) {
+            showToast({ message: t('cartUpdateFailed'), tone: 'error' });
+          } else {
+            navigationRef.navigate('Checkout');
+          }
+        });
+      }}
     />
   );
 }
@@ -257,6 +279,12 @@ function WishlistRoute() {
           navigationRef.navigate('Main', { screen: 'BrowseTab' })
         }
         onOpenProduct={(productId) =>
+          navigationRef.navigate('Main', {
+            screen: 'HomeTab',
+            params: { screen: 'Product', params: { productId } },
+          })
+        }
+        onAddToCart={(productId) =>
           navigationRef.navigate('Main', {
             screen: 'HomeTab',
             params: { screen: 'Product', params: { productId } },
@@ -376,11 +404,47 @@ function AccountGatedRoute() {
 }
 
 function CheckoutRoute() {
-  const { t } = useTranslation();
+  const {
+    checkoutAddressRepository,
+    shippingAreaRepository,
+    calculateCartTotals,
+    placeOrder,
+  } = useContainer();
   const returnTo = { kind: 'checkout' } as const;
   return (
     <RequireAuth returnTo={returnTo} onRequireAuth={requestAuth}>
-      <ShellScreen title={t('checkoutTitle')} />
+      <CheckoutScreen
+        addressRepository={checkoutAddressRepository}
+        shippingAreaRepository={shippingAreaRepository}
+        calculateTotals={calculateCartTotals}
+        placeOrder={placeOrder}
+        onBack={() => navigationRef.goBack()}
+        onPlaced={(orderId) =>
+          navigationRef.dispatch(
+            StackActions.replace('OrderConfirmation', { orderId }),
+          )
+        }
+      />
+    </RequireAuth>
+  );
+}
+
+function OrderConfirmationRoute() {
+  const { orderRepository } = useContainer();
+  const route = useRoute<RouteProp<RootStackParamList, 'OrderConfirmation'>>();
+  const returnTo = { kind: 'account' } as const;
+  return (
+    <RequireAuth returnTo={returnTo} onRequireAuth={requestAuth}>
+      <OrderConfirmationScreen
+        orderId={route.params.orderId}
+        repository={orderRepository}
+        onContinue={() =>
+          navigationRef.resetRoot({
+            index: 0,
+            routes: [{ name: 'Main', params: { screen: 'HomeTab' } }],
+          })
+        }
+      />
     </RequireAuth>
   );
 }
@@ -463,6 +527,7 @@ function AccountNavigator() {
 
 function MainTabBar({ state, navigation }: BottomTabBarProps) {
   const { t } = useTranslation();
+  const cart = useCartContext();
   const focused = state.routes[state.index];
   if (focused) {
     if (hidesTabBar(getFocusedRouteNameFromRoute(focused))) return null;
@@ -472,7 +537,7 @@ function MainTabBar({ state, navigation }: BottomTabBarProps) {
     // The prototype's tab glyphs: a four-square grid for categories and a star for creators.
     { key: 'BrowseTab', label: t('tabCats'), icon: 'grid' },
     { key: 'InfluencersTab', label: t('tabInf'), icon: 'star' },
-    { key: 'CartTab', label: t('tabCart'), icon: 'cart', badge: 0 },
+    { key: 'CartTab', label: t('tabCart'), icon: 'cart', badge: cart.count },
     { key: 'AccountTab', label: t('tabMe'), icon: 'person' },
   ];
   return (
@@ -551,6 +616,29 @@ function AppWishlistProvider({ children }: { children: ReactNode }) {
   );
 }
 
+function AppCartProvider({ children }: { children: ReactNode }) {
+  const {
+    cartRepository,
+    addToCart,
+    updateCartLine,
+    removeCartLine,
+    applyCoupon,
+  } = useContainer();
+  const status = useSessionStore((state) => state.status);
+  return (
+    <CartProvider
+      repository={cartRepository}
+      addToCart={addToCart}
+      updateCartLine={updateCartLine}
+      removeCartLine={removeCartLine}
+      applyCoupon={applyCoupon}
+      sessionKey={status}
+    >
+      {children}
+    </CartProvider>
+  );
+}
+
 export function AppNavigator() {
   const { direction } = useTheme();
   const status = useSessionStore((state) => state.status);
@@ -561,34 +649,36 @@ export function AppNavigator() {
   return (
     <View style={{ direction, flex: 1 }}>
       <AppWishlistProvider>
-        <NavigationContainer ref={navigationRef} linking={linking}>
-          <Root.Navigator
-            key={onboardingComplete ? 'main' : 'auth'}
-            initialRouteName={onboardingComplete ? 'Main' : 'Auth'}
-            screenOptions={screenOptions}
-          >
-            <Root.Screen name="Auth" component={AuthNavigator} />
-            <Root.Screen name="Main" component={MainTabs} />
-            <Root.Group
-              screenOptions={{ headerShown: false, presentation: 'modal' }}
+        <AppCartProvider>
+          <NavigationContainer ref={navigationRef} linking={linking}>
+            <Root.Navigator
+              key={onboardingComplete ? 'main' : 'auth'}
+              initialRouteName={onboardingComplete ? 'Main' : 'Auth'}
+              screenOptions={screenOptions}
             >
-              <Root.Screen name="Checkout" component={CheckoutRoute} />
-              <Root.Screen
-                name="OrderConfirmation"
-                component={RootGatedRoute}
-              />
-              <Root.Screen name="PaymentResult" component={RootGatedRoute} />
-            </Root.Group>
-            <Root.Group
-              screenOptions={{
-                headerShown: false,
-                presentation: 'transparentModal',
-              }}
-            >
-              <Root.Screen name="FilterSheet" component={GenericRoute} />
-            </Root.Group>
-          </Root.Navigator>
-        </NavigationContainer>
+              <Root.Screen name="Auth" component={AuthNavigator} />
+              <Root.Screen name="Main" component={MainTabs} />
+              <Root.Group
+                screenOptions={{ headerShown: false, presentation: 'modal' }}
+              >
+                <Root.Screen name="Checkout" component={CheckoutRoute} />
+                <Root.Screen
+                  name="OrderConfirmation"
+                  component={OrderConfirmationRoute}
+                />
+                <Root.Screen name="PaymentResult" component={RootGatedRoute} />
+              </Root.Group>
+              <Root.Group
+                screenOptions={{
+                  headerShown: false,
+                  presentation: 'transparentModal',
+                }}
+              >
+                <Root.Screen name="FilterSheet" component={GenericRoute} />
+              </Root.Group>
+            </Root.Navigator>
+          </NavigationContainer>
+        </AppCartProvider>
       </AppWishlistProvider>
     </View>
   );

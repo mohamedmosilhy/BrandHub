@@ -1,0 +1,47 @@
+import { Money } from '@core/money';
+
+import type { Order, OrderStatus } from '@domain/orders';
+
+import { mapCart } from '@data/cart/mappers';
+import type { AssetUrlResolver } from '@data/catalog/mappers';
+import type { OrderDto } from '@data/orders/dto';
+
+const statuses = new Set<OrderStatus>([
+  'PENDING',
+  'CONFIRMED',
+  'PROCESSING',
+  'SHIPPED',
+  'DELIVERED',
+  'CANCELLED',
+]);
+
+export function mapOrder(dto: OrderDto, resolveUrl?: AssetUrlResolver): Order {
+  const cart = mapCart(
+    {
+      id: `cart-order-${dto.id}`,
+      userId: dto.userId,
+      items: dto.items,
+      subtotal: dto.subtotal,
+      currency: 'OMR',
+    },
+    resolveUrl,
+  );
+  return {
+    id: dto.id,
+    orderNumber: dto.orderNumber,
+    status: statuses.has(dto.status as OrderStatus)
+      ? (dto.status as OrderStatus)
+      : 'UNKNOWN',
+    lines: cart.lines,
+    subtotal: Money.fromDecimal(dto.subtotal),
+    vat: Money.fromDecimal(dto.vat),
+    shipping: Money.fromDecimal(dto.shipping),
+    paymentFee: Money.fromDecimal(dto.paymentFee),
+    discount: Money.fromDecimal(dto.discount),
+    total: Money.fromDecimal(dto.total),
+    shippingAddressId: dto.shippingAddressId,
+    paymentMethod: dto.paymentMethod,
+    deliveryOtp: dto.deliveryOtp,
+    createdAt: dto.createdAt,
+  };
+}

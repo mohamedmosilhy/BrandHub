@@ -8,6 +8,8 @@ import {
   resolveVariant,
   type GetProductDetailUseCase,
   type GetRelatedProductsUseCase,
+  type Product,
+  type ProductVariant,
   type ReviewRepository,
   type SellerRepository,
 } from '@domain/catalog';
@@ -71,8 +73,8 @@ export function ProductScreen({
   onCart: () => void;
   onOpenProduct: (id: string) => void;
   onOpenSeller: (id: string) => void;
-  onAddedToCart: (message: string) => void;
-  onBuyNow: () => void;
+  onAddedToCart: (product: Product, variant: ProductVariant) => void;
+  onBuyNow: (product: Product, variant: ProductVariant) => void;
 }) {
   const { t, i18n } = useTranslation();
   const { theme } = useTheme();
@@ -306,8 +308,12 @@ export function ProductScreen({
       <BuyBar
         hint={addLabel}
         disabled={needsChoice || soldOut}
-        onAddToCart={() => onAddedToCart(t('addedToCart'))}
-        onBuyNow={onBuyNow}
+        onAddToCart={() => {
+          if (variant) onAddedToCart(product, variant);
+        }}
+        onBuyNow={() => {
+          if (variant) onBuyNow(product, variant);
+        }}
       />
     </Screen>
   );

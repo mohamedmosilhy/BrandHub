@@ -1,10 +1,19 @@
 import {
+  AddToCartUseCase,
+  RemoveCartLineUseCase,
+  UpdateCartLineUseCase,
+} from '@domain/cart';
+import {
   GetCategoryProductsUseCase,
   GetHomeSectionsUseCase,
   GetProductDetailUseCase,
   GetRelatedProductsUseCase,
   SearchProductsUseCase,
 } from '@domain/catalog';
+import {
+  ApplyCouponUseCase,
+  CalculateCartTotalsUseCase,
+} from '@domain/checkout';
 import {
   PhoneOtpUseCase,
   RefreshSessionUseCase,
@@ -13,8 +22,15 @@ import {
   SignOutUseCase,
   SignUpUseCase,
 } from '@domain/identity';
+import { PlaceOrderUseCase } from '@domain/orders';
 import { ToggleWishlistUseCase } from '@domain/wishlist';
 
+import {
+  CartRemoteDataSource,
+  CartRepositoryImpl,
+  LocalCartDataSource,
+  SessionAwareCartRepository,
+} from '@data/cart';
 import {
   CategoryRemoteDataSource,
   ProductRemoteDataSource,
@@ -28,10 +44,17 @@ import {
   HttpSellerRepository,
 } from '@data/catalog/repositories';
 import {
+  CheckoutRemoteDataSource,
+  HttpCheckoutAddressRepository,
+  HttpCouponRepository,
+  HttpShippingAreaRepository,
+} from '@data/checkout';
+import {
   AuthRemoteDataSource,
   HttpAuthRepository,
   SessionLocalDataSource,
 } from '@data/identity';
+import { HttpOrderRepository, OrderRemoteDataSource } from '@data/orders';
 import {
   HttpWishlistRepository,
   WishlistRemoteDataSource,
@@ -110,6 +133,37 @@ const signOut = new SignOutUseCase(authRepository);
 const restoreSession = new RestoreSessionUseCase(authRepository);
 const refreshSession = new RefreshSessionUseCase(authRepository);
 const phoneOtp = new PhoneOtpUseCase(authRepository);
+const localCartRepository = new CartRepositoryImpl(
+  new LocalCartDataSource(keyValueStore),
+  resolveAssetUrl,
+);
+const remoteCartRepository = new CartRepositoryImpl(
+  new CartRemoteDataSource(httpClient),
+  resolveAssetUrl,
+);
+const cartRepository = new SessionAwareCartRepository(
+  localCartRepository,
+  remoteCartRepository,
+  tokenStore,
+);
+const addToCart = new AddToCartUseCase(cartRepository);
+const updateCartLine = new UpdateCartLineUseCase(cartRepository);
+const removeCartLine = new RemoveCartLineUseCase(cartRepository);
+const checkoutDataSource = new CheckoutRemoteDataSource(httpClient);
+const couponRepository = new HttpCouponRepository(checkoutDataSource);
+const shippingAreaRepository = new HttpShippingAreaRepository(
+  checkoutDataSource,
+);
+const checkoutAddressRepository = new HttpCheckoutAddressRepository(
+  checkoutDataSource,
+);
+const calculateCartTotals = new CalculateCartTotalsUseCase();
+const applyCoupon = new ApplyCouponUseCase(couponRepository);
+const orderRepository = new HttpOrderRepository(
+  new OrderRemoteDataSource(httpClient),
+  resolveAssetUrl,
+);
+const placeOrder = new PlaceOrderUseCase(cartRepository, orderRepository);
 const queryClient = createAppQueryClient(logger);
 
 export const container = Object.freeze({
@@ -137,6 +191,17 @@ export const container = Object.freeze({
   restoreSession,
   refreshSession,
   phoneOtp,
+  cartRepository,
+  addToCart,
+  updateCartLine,
+  removeCartLine,
+  couponRepository,
+  shippingAreaRepository,
+  checkoutAddressRepository,
+  calculateCartTotals,
+  applyCoupon,
+  orderRepository,
+  placeOrder,
   queryClient,
 });
 

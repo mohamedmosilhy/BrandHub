@@ -115,7 +115,7 @@ Live mock (npm run mock), manual request pass
 | AC7.9     | Pass                          | "View all" navigates to `Search` with `sellerId`, which the Phase 6 screen already renders as a removable scope chip.                        |
 | AC7.10    | Pass                          | Enforced in `GetRelatedProductsUseCase` as well as the data source, and asserted at the screen.                                              |
 | AC7.11    | Implemented; device check     | The bar is outside the scroller and the screen takes the bottom inset with the tab bar stood down; notch and gesture-bar behaviour is human. |
-| AC7.12    | Pass                          | "Buy now" navigates to Checkout; add-to-cart raises the toast without navigating. Phase 8 owns the cart mutation itself.                     |
+| AC7.12    | Pass                          | "Buy now" adds the resolved variant then navigates to Checkout; add-to-cart persists it and raises the success toast without navigating.     |
 | AC7.13    | Pass                          | The empty state renders the discover action and the test asserts the callback.                                                               |
 | AC7.14    | Pass                          | Reviewer name, stars, relative time and text render; an unreviewed product shows the empty line. Both covered.                               |
 | AC7.15    | Implemented; sign-off pending | Layout is logical-direction and token based throughout and both bundles pass; the AR/EN device comparison is still a human check.            |
@@ -124,9 +124,8 @@ Live mock (npm run mock), manual request pass
 
 - **AC7.11 and AC7.15 need hardware.** The sticky bar on a notched device and with the Android
   gesture bar, and the AR/EN side-by-side, are not inferred from passing bundles or inset code.
-- **Add-to-cart does not add to the cart yet.** The bar confirms with a toast; Phase 8 owns the
-  mutation, the quantity guard and the totals. This is the one place the PDP is deliberately
-  incomplete, and it is visible to anyone using the app.
+- **Resolved in Phase 8:** add-to-cart now writes the live guest/authenticated cart, enforces the
+  quantity guard, updates the badge and feeds the shared totals calculation.
 - **A seller is read from the directory page**, not by id — see architecture §33 item 15.
 - **Reviewer names depend on a mock addition** — see §33 item 14 and `INVENTED_ENDPOINTS.md`.
 - **Only three products carry reviews** in the seed (`product-1` … `product-3`), which is enough to
@@ -176,3 +175,17 @@ Phase 8 can consume the resolved `ProductVariant` the PDP already computes (D8's
 what `POST /cart/items` requires), the `Money` prices on both product and variant, and the wishlist
 provider for the cart's own save-for-later affordances. Nothing in the discovery screens or the
 transport contracts has to change.
+
+## Rendered-layout correction (follow-up, 2026-09-04)
+
+The declared-value pass above exposed two implementation details that were not visible from token
+tests alone:
+
+- `Pressable.compactSize` was used to calculate hit slop but was not applied to the rendered box.
+  PDP actions declared as 36 pt therefore collapsed to their 19–20 pt glyphs; seller and card icon
+  actions had the same problem. Compact controls now render at least their declared size and use
+  hit slop only for the balance of the 44 pt target.
+- The seller tile was passed to `StoreTile` at 68 pt and then wrapped in 3 pt padding, producing a
+  74 pt outer tile. The outer frame is now exactly 68 pt, its inner face is 62 pt, and it alone is
+  positioned across the cover boundary. Seller name, verification/rating copy, and follow action
+  start below the hero instead of straddling it.

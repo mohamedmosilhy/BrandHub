@@ -103,6 +103,9 @@ describe('BRANDHUB theme tokens', () => {
       tileRadius: 18,
       tileBorder: 3,
       tileOverlap: -34,
+      identityContentTop: 14,
+      identityMinHeight: 56,
+      identityGap: 12,
       paddingX: 18,
       // `height: 34px; padding: 0 16px` follow pill.
       followHeight: 34,

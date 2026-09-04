@@ -26,7 +26,10 @@ export type PressableProps = {
    * `hitSlop`, so the drawing matches the reference and AC2.10 still holds.
    */
   compact?: boolean;
-  /** Drawn height of a compact control, used to size the hit slop. Defaults to 32. */
+  /**
+   * Minimum drawn width and height of a compact control. The remaining area needed to reach the
+   * 44 pt touch target is supplied by hit slop. Defaults to 32.
+   */
   compactSize?: number;
   style?: StyleProp<ViewStyle> | undefined;
   testID?: string | undefined;
@@ -64,7 +67,11 @@ export function Pressable({
       testID={testID}
       style={({ pressed }) => [
         compact
-          ? { opacity: pressed ? 0.72 : disabled ? 0.5 : 1 }
+          ? {
+              minHeight: drawn,
+              minWidth: drawn,
+              opacity: pressed ? 0.72 : disabled ? 0.5 : 1,
+            }
           : {
               minHeight: target,
               minWidth: target,

@@ -287,6 +287,27 @@ describe('auth and developer controls', () => {
 });
 
 describe('stateful and money-moving contracts', () => {
+  it('rejects unavailable cart quantities with a product-specific 409', async () => {
+    const tokens = await signIn();
+    const response = await request(app)
+      .put('/api/v1/cart/items/cart-item-1?quantity=999')
+      .set('Authorization', tokens.authorization);
+
+    expect(response.status).toBe(409);
+    expect(response.body).toMatchObject({
+      error: 'INSUFFICIENT_STOCK',
+      details: {
+        productId: 'product-1',
+        productName: expect.any(String),
+        available: expect.any(Number),
+      },
+    });
+    const cart = await request(app)
+      .get('/api/v1/cart')
+      .set('Authorization', tokens.authorization);
+    expect(cart.body.items[0].quantity).toBe(1);
+  });
+
   it('places one idempotent order, computes BR3 totals and clears the cart', async () => {
     const tokens = await signIn();
     const before = await request(app)

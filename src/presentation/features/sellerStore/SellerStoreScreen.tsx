@@ -114,21 +114,37 @@ export function SellerStoreScreen({
         />
       ) : (
         <>
-          <View style={styles.identity}>
+          <View
+            style={[
+              styles.identity,
+              {
+                minHeight: store.identityMinHeight,
+                paddingInlineEnd: store.paddingX,
+                paddingInlineStart:
+                  store.paddingX + store.tileSize + store.identityGap,
+                paddingTop: store.identityContentTop,
+              },
+            ]}
+          >
             <View
               style={[
                 styles.tileFrame,
                 {
                   backgroundColor: theme.colors.surface,
                   borderRadius: store.tileRadius,
-                  boxShadow: theme.shadows.md.boxShadow,
+                  boxShadow: store.tileShadow,
+                  height: store.tileSize,
+                  insetInlineStart: store.paddingX,
                   padding: store.tileBorder,
+                  top: store.tileOverlap,
+                  width: store.tileSize,
                 },
               ]}
             >
               <StoreTile
+                backgroundColor={theme.colors.surface}
                 storeName={seller.data.storeName}
-                size={store.tileSize}
+                size={store.tileSize - store.tileBorder * 2}
                 radius={store.tileRadius - store.tileBorder}
                 textVariant="h2"
               />
@@ -148,13 +164,15 @@ export function SellerStoreScreen({
               influencer follows only — so it states the relationship without claiming to
               persist it, and is disabled rather than silently doing nothing.
             */}
-            <View
+            <Pressable
               accessibilityLabel={t('follow')}
               accessibilityState={{ disabled: true }}
+              compact
+              compactSize={store.followHeight}
               style={[
                 styles.follow,
                 {
-                  backgroundColor: theme.colors.accentHover,
+                  backgroundColor: theme.colors.accent,
                   borderRadius: theme.radius.full,
                   height: store.followHeight,
                   paddingHorizontal: store.followPaddingX,
@@ -164,7 +182,7 @@ export function SellerStoreScreen({
               <Text color={theme.colors.textInverse} variant="xs" weight="bold">
                 {t('follow')}
               </Text>
-            </View>
+            </Pressable>
           </View>
 
           <View style={styles.stats}>
@@ -265,16 +283,15 @@ const styles = StyleSheet.create({
   follow: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 4,
+    marginTop: 5,
   },
   identity: {
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     flexDirection: 'row',
-    gap: 12,
-    marginTop: mobile.sellerStore.tileOverlap,
-    paddingHorizontal: mobile.sellerStore.paddingX,
+    gap: mobile.sellerStore.identityGap,
+    position: 'relative',
   },
-  identityCopy: { flex: 1, gap: 3, paddingBottom: 4 },
+  identityCopy: { flex: 1, gap: 3 },
   loading: { padding: mobile.sellerStore.paddingX },
   stat: { flex: 1, gap: 3 },
   stats: {
@@ -285,7 +302,7 @@ const styles = StyleSheet.create({
   },
   storeName: { fontSize: 14 },
   /** The prototype's `border: 3px solid #fff` around the tile, drawn as padding on a white box. */
-  tileFrame: {},
+  tileFrame: { position: 'absolute' },
   tab: { paddingBottom: mobile.sellerStore.tabPaddingBottom },
   tabs: {
     alignItems: 'flex-end',

@@ -112,8 +112,9 @@ function error(
   status: number,
   code: string,
   message: string,
+  details?: Readonly<Record<string, unknown>>,
 ): void {
-  response.status(status).json(apiError(status, code, message));
+  response.status(status).json(apiError(status, code, message, details));
 }
 
 function byId(collection: Row[], id: string): Row | undefined {
@@ -621,8 +622,21 @@ function registerCartAndOrderRoutes(app: Express, store: MockStore): void {
       (item) =>
         item['userId'] === userId && item['variantId'] === variant['id'],
     );
-    if (existing)
-      existing['quantity'] = numberValue(existing['quantity']) + quantity;
+    const nextQuantity = numberValue(existing?.['quantity'] ?? 0) + quantity;
+    if (nextQuantity > numberValue(variant['stock'])) {
+      return error(
+        response,
+        409,
+        'INSUFFICIENT_STOCK',
+        'The requested quantity is no longer available',
+        {
+          productId: product['id'],
+          productName: localise(product['name'], localeOf(request)),
+          available: variant['stock'],
+        },
+      );
+    }
+    if (existing) existing['quantity'] = nextQuantity;
     else
       store.data.cartItems.push({
         id: nextId(store.data.cartItems, 'cart-item'),
@@ -644,6 +658,24 @@ function registerCartAndOrderRoutes(app: Express, store: MockStore): void {
         'INVALID_QUANTITY',
         'Quantity must be a positive integer',
       );
+    const product = byId(store.data.products, stringValue(item['productId']));
+    const variant = byId(
+      (product?.['variants'] ?? []) as Row[],
+      stringValue(item['variantId']),
+    );
+    if (!product || !variant || quantity > numberValue(variant['stock'])) {
+      return error(
+        response,
+        409,
+        'INSUFFICIENT_STOCK',
+        'The requested quantity is no longer available',
+        {
+          productId: item['productId'],
+          productName: localise(product?.['name'], localeOf(request)),
+          available: variant?.['stock'] ?? 0,
+        },
+      );
+    }
     item['quantity'] = quantity;
     store.write();
     response.json(cartFor(store, request, response));
@@ -679,6 +711,32 @@ function registerCartAndOrderRoutes(app: Express, store: MockStore): void {
     const items = cart['items'] as Row[];
     if (items.length === 0)
       return error(response, 400, 'EMPTY_CART', 'The cart is empty');
+    for (const item of items) {
+      const product = byId(store.data.products, stringValue(item['productId']));
+      const variant = byId(
+        (product?.['variants'] ?? []) as Row[],
+        stringValue(item['variantId']),
+      );
+      if (
+        !product ||
+        !variant ||
+        numberValue(item['quantity']) > numberValue(variant['stock'])
+      ) {
+        return error(
+          response,
+          409,
+          'INSUFFICIENT_STOCK',
+          'An item in the cart is no longer available in the requested quantity',
+          {
+            productId: item['productId'],
+            productName: product
+              ? localise(product['name'], localeOf(request))
+              : item['productId'],
+            available: variant?.['stock'] ?? 0,
+          },
+        );
+      }
+    }
     const address = byId(
       store.data.addresses,
       stringValue(request.body['shippingAddressId']),
@@ -763,6 +821,19 @@ function registerCartAndOrderRoutes(app: Express, store: MockStore): void {
       });
     }
     store.data.orders.push(order);
+    for (const item of items) {
+      const product = byId(store.data.products, stringValue(item['productId']));
+      const variant = byId(
+        (product?.['variants'] ?? []) as Row[],
+        stringValue(item['variantId']),
+      );
+      if (variant) {
+        variant['stock'] = Math.max(
+          0,
+          numberValue(variant['stock']) - numberValue(item['quantity']),
+        );
+      }
+    }
     store.data.cartItems = store.data.cartItems.filter(
       (item) => item['userId'] !== userId,
     );

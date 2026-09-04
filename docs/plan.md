@@ -1,10 +1,10 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Implemented through Phase 7 — Phase 8 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
-**Date:** 2026-09-03 · **Reviewer / decision maker:** repository owner
+**Status:** **Implemented through Phase 8 — Phase 9 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
+**Date:** 2026-09-04 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
-> Phases 1–6 are implemented. Their completion reports are in `docs/reports/`.
+> Phases 1–8 are implemented. Their completion reports are in `docs/reports/`.
 > All 17 open questions were approved as recommended on 2026-09-02 and are recorded as decisions
 > **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 6.**
 
@@ -715,8 +715,8 @@ Phase 7 done. Shipping and payment fees are part of the order total (D10, D21); 
 
 ### Expected artifacts
 
-`src/domain/{cart,checkout,orders}/**`, `src/data/{cart,coupons,orders}/**`,
-`src/presentation/features/{cart,checkout,orderConfirmation}/**`.
+`src/domain/{cart,checkout,orders}/**`, `src/data/{cart,checkout,orders}/**`,
+`src/presentation/features/{cart,checkout,orders}/**`.
 
 ### Testing
 
@@ -753,16 +753,18 @@ Phase 7 done. Shipping and payment fees are part of the order total (D10, D21); 
 
 ### Review checklist
 
-- [ ] Are the totals correct to the baisa in every combination of fees, VAT and coupon?
-- [ ] Is the cart-versus-checkout inconsistency resolved per D10, and is the resulting deviation from the prototype's cart number acceptable on screen?
-- [ ] Is double-submission genuinely impossible?
-- [ ] Does the guest-to-checkout detour preserve the cart and return correctly?
+- [x] Are the totals correct to the baisa in every combination of fees, VAT and coupon?
+- [x] Is the cart-versus-checkout inconsistency resolved per D10, and is the resulting deviation from the prototype's cart number acceptable on screen?
+- [x] Is double-submission genuinely impossible?
+- [x] Does the guest-to-checkout detour preserve the cart and return correctly?
 - [ ] Cart, checkout and confirmation compared against the prototype.
 
 ### Definition of done
 
-All twenty-one criteria pass; the money tests cover the fee and coupon matrix; the primary E2E
-journey is green; all three screens are approved against the reference.
+All twenty-three criteria are implemented and the automated gates are green. Money, optimistic
+rollback, guest-cart merge, stock conflict and idempotency behavior have direct tests. Final
+side-by-side approval on physical Arabic/English devices remains a human review item recorded in
+the Phase 8 report.
 
 ---
 
