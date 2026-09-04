@@ -3,6 +3,7 @@ import { ok } from '@core/result';
 import type { AuthRepository } from './AuthRepository';
 import { InvalidCredentialsError } from './errors';
 import {
+  UpdateProfileUseCase,
   PhoneOtpUseCase,
   RefreshSessionUseCase,
   RestoreSessionUseCase,
@@ -33,6 +34,10 @@ function repository(): jest.Mocked<AuthRepository> {
       ok({ kind: 'authenticated' as const, session }),
     ),
     signOut: jest.fn(async () => ok(undefined)),
+    updateProfile: jest.fn(
+      async (_input: Parameters<AuthRepository['updateProfile']>[0]) =>
+        ok(session),
+    ),
     restoreSession: jest.fn(async () => ok(session)),
     refreshSession: jest.fn(async () => ok(session)),
     sendPhoneOtp: jest.fn(
@@ -101,5 +106,45 @@ describe('identity use cases', () => {
     expect(repo.refreshSession).toHaveBeenCalledTimes(1);
     expect(repo.sendPhoneOtp).toHaveBeenCalledWith(phone.value);
     expect(repo.verifyPhoneOtp).toHaveBeenCalledWith('otp-1', '123456');
+  });
+});
+
+describe('UpdateProfileUseCase', () => {
+  const input = {
+    firstName: 'Sara',
+    lastName: 'Ali',
+    email: 'Person@Example.com',
+    phone: '+968 9911 2233',
+  };
+
+  it('saves a valid profile with the email and phone normalised', async () => {
+    const repo = repository();
+
+    const result = await new UpdateProfileUseCase(repo).execute(input);
+
+    expect(result.ok).toBe(true);
+    expect(repo.updateProfile).toHaveBeenCalledWith({
+      firstName: 'Sara',
+      lastName: 'Ali',
+      email: 'person@example.com',
+      phone: '+96899112233',
+    });
+  });
+
+  it.each([
+    [{ firstName: '  ' }, 'NAME_REQUIRED'],
+    [{ lastName: '' }, 'NAME_REQUIRED'],
+    [{ email: 'not-an-email' }, 'INVALID_EMAIL'],
+    [{ phone: '0501234567' }, 'INVALID_PHONE'],
+  ])('rejects %p and never reaches the repository', async (patch, code) => {
+    const repo = repository();
+
+    const result = await new UpdateProfileUseCase(repo).execute({
+      ...input,
+      ...patch,
+    });
+
+    expect(result.ok || result.error.code).toBe(code);
+    expect(repo.updateProfile).not.toHaveBeenCalled();
   });
 });

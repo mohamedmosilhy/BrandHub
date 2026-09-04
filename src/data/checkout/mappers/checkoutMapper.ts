@@ -32,7 +32,34 @@ export function mapShippingArea(dto: ShippingAreaDto): ShippingArea {
   };
 }
 
-export function mapShippingAddress(dto: ShippingAddressDto): ShippingAddress {
+/**
+ * The contained workaround for the missing address-to-area link (architecture.md §34.4). Nothing
+ * in the collection joins an address to the area that carries its delivery price, so the city is
+ * matched against the area's own name and then its governorate. The address form's city select is
+ * driven by `/areas`, so a city the app itself saved always matches by name; the governorate arm
+ * covers records seeded or created elsewhere.
+ *
+ * An explicit `areaId` from the server always wins, so the day the backend adds one this function
+ * degrades to returning it and can then be deleted. It is the single edit that replacement needs.
+ */
+export function resolveAddressArea(
+  address: { city: string; areaId?: string | undefined },
+  areas: readonly ShippingAreaDto[] = [],
+): string | null {
+  if (address.areaId) return address.areaId;
+  const city = address.city.trim().toLocaleLowerCase();
+  const matches = (value: string) => value.trim().toLocaleLowerCase() === city;
+  // Name before governorate, across the whole list: "Muscat" is both an area and the governorate
+  // of Seeb, and scanning field-by-field per area would hand Muscat's addresses to Seeb's price.
+  const byName = areas.find((area) => matches(area.name));
+  const byGovernorate = areas.find((area) => matches(area.governorate));
+  return (byName ?? byGovernorate)?.id ?? null;
+}
+
+export function mapShippingAddress(
+  dto: ShippingAddressDto,
+  areas: readonly ShippingAreaDto[] = [],
+): ShippingAddress {
   return {
     id: dto.id,
     fullName: dto.fullName,
@@ -43,7 +70,7 @@ export function mapShippingAddress(dto: ShippingAddressDto): ShippingAddress {
     state: dto.state ?? null,
     postalCode: dto.postalCode ?? null,
     country: dto.country,
-    areaId: dto.areaId,
+    areaId: resolveAddressArea(dto, areas),
     isDefault: dto.isDefault,
   };
 }

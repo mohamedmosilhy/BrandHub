@@ -2,7 +2,13 @@ import type { IdempotencyKey } from '@core/types';
 
 import type { CheckoutDraft } from '@domain/checkout';
 
-import { orderDtoSchema, type OrderDto } from '@data/orders/dto';
+import {
+  orderDtoSchema,
+  orderPageDtoSchema,
+  returnRequestDtoSchema,
+  type OrderDto,
+  type ReturnRequestDto,
+} from '@data/orders/dto';
 import { parseResponse } from '@data/shared';
 
 import type { HttpClient } from '@infrastructure/http';
@@ -42,6 +48,40 @@ export class OrderRemoteDataSource {
     });
     return parseResponse(
       orderDtoSchema,
+      response.data,
+      endpoint,
+      response.correlationId,
+    );
+  }
+
+  async list(page: number, size: number): Promise<readonly OrderDto[]> {
+    const endpoint = '/orders';
+    const response = await this.httpClient.request<unknown>({
+      method: 'GET',
+      endpoint,
+      query: { page, size },
+    });
+    return parseResponse(
+      orderPageDtoSchema,
+      response.data,
+      endpoint,
+      response.correlationId,
+    ).content;
+  }
+
+  /** The real contract (D19): `POST /returns` takes `{ orderId, reason }` and nothing else. */
+  async requestReturn(
+    orderId: string,
+    reason: string,
+  ): Promise<ReturnRequestDto> {
+    const endpoint = '/returns';
+    const response = await this.httpClient.request<unknown>({
+      method: 'POST',
+      endpoint,
+      body: { orderId, reason },
+    });
+    return parseResponse(
+      returnRequestDtoSchema,
       response.data,
       endpoint,
       response.correlationId,

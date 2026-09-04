@@ -6,13 +6,15 @@ Design and planning live in [`docs/architecture.md`](docs/architecture.md) and
 [`docs/plan.md`](docs/plan.md). The UI/UX source of truth is `design-reference/`, which is read-only
 and never modified.
 
-**Current state: Phase 8 (cart and checkout) implemented.** The app opens on Arabic
+**Current state: Phase 9 (account, orders and addresses) implemented.** The app opens on Arabic
 onboarding, supports the Phase 5 identity/navigation shell, and browses a live catalogue through
-Home, Browse, Category and Search. A product now opens a real detail page — image pager, variant
+Home, Browse, Category and Search. A product opens a real detail page — image pager, variant
 selector, seller strip, specifications, reviews, related products and a sticky buy bar — with the
-seller store and the wishlist behind it. The complete guest-cart purchase path now persists cart
-lines, merges them after sign-in, applies coupons and shipping/payment economics, places one
-idempotent order, and ends on the reference-aligned confirmation timeline.
+seller store and the wishlist behind it. The complete guest-cart purchase path persists cart lines,
+merges them after sign-in, applies coupons and shipping/payment economics, places one idempotent
+order, and ends on the reference-aligned confirmation timeline. After the sale, the account hub now
+carries live counts into order history and detail with its delivery-OTP panel, the return request,
+full address management and profile editing, and a language switch that survives a restart.
 
 ## Requirements
 

@@ -22,7 +22,7 @@ export type ShippingAddress = Readonly<{
   state: string | null;
   postalCode: string | null;
   country: string;
-  areaId: string;
+  areaId: string | null;
   isDefault: boolean;
 }>;
 

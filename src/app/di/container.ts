@@ -1,4 +1,9 @@
 import {
+  DeleteAddressUseCase,
+  SaveAddressUseCase,
+  SetDefaultAddressUseCase,
+} from '@domain/addresses';
+import {
   AddToCartUseCase,
   RemoveCartLineUseCase,
   UpdateCartLineUseCase,
@@ -21,10 +26,20 @@ import {
   SignInUseCase,
   SignOutUseCase,
   SignUpUseCase,
+  UpdateProfileUseCase,
 } from '@domain/identity';
-import { PlaceOrderUseCase } from '@domain/orders';
+import {
+  GetOrderDetailUseCase,
+  GetOrdersUseCase,
+  PlaceOrderUseCase,
+  RequestReturnUseCase,
+} from '@domain/orders';
 import { ToggleWishlistUseCase } from '@domain/wishlist';
 
+import {
+  AddressRemoteDataSource,
+  HttpAddressRepository,
+} from '@data/addresses';
 import {
   CartRemoteDataSource,
   CartRepositoryImpl,
@@ -50,7 +65,9 @@ import {
   HttpShippingAreaRepository,
 } from '@data/checkout';
 import {
+  AccountRemoteDataSource,
   AuthRemoteDataSource,
+  HttpAccountMetricsRepository,
   HttpAuthRepository,
   SessionLocalDataSource,
 } from '@data/identity';
@@ -133,6 +150,10 @@ const signOut = new SignOutUseCase(authRepository);
 const restoreSession = new RestoreSessionUseCase(authRepository);
 const refreshSession = new RefreshSessionUseCase(authRepository);
 const phoneOtp = new PhoneOtpUseCase(authRepository);
+const updateProfile = new UpdateProfileUseCase(authRepository);
+const accountMetricsRepository = new HttpAccountMetricsRepository(
+  new AccountRemoteDataSource(httpClient),
+);
 const localCartRepository = new CartRepositoryImpl(
   new LocalCartDataSource(keyValueStore),
   resolveAssetUrl,
@@ -164,6 +185,15 @@ const orderRepository = new HttpOrderRepository(
   resolveAssetUrl,
 );
 const placeOrder = new PlaceOrderUseCase(cartRepository, orderRepository);
+const getOrders = new GetOrdersUseCase(orderRepository);
+const getOrderDetail = new GetOrderDetailUseCase(orderRepository);
+const requestReturn = new RequestReturnUseCase(orderRepository);
+const addressRepository = new HttpAddressRepository(
+  new AddressRemoteDataSource(httpClient),
+);
+const saveAddress = new SaveAddressUseCase(addressRepository);
+const setDefaultAddress = new SetDefaultAddressUseCase(addressRepository);
+const deleteAddress = new DeleteAddressUseCase(addressRepository);
 const queryClient = createAppQueryClient(logger);
 
 export const container = Object.freeze({
@@ -191,6 +221,8 @@ export const container = Object.freeze({
   restoreSession,
   refreshSession,
   phoneOtp,
+  updateProfile,
+  accountMetricsRepository,
   cartRepository,
   addToCart,
   updateCartLine,
@@ -202,6 +234,13 @@ export const container = Object.freeze({
   applyCoupon,
   orderRepository,
   placeOrder,
+  getOrders,
+  getOrderDetail,
+  requestReturn,
+  addressRepository,
+  saveAddress,
+  setDefaultAddress,
+  deleteAddress,
   queryClient,
 });
 

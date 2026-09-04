@@ -41,8 +41,27 @@ describe('navigation shell contract', () => {
   it('stands the tab bar down on the screens that own their own bottom (AC7.11)', () => {
     expect(hidesTabBar('Product')).toBe(true);
     expect(hidesTabBar('Seller')).toBe(true);
+    // Every account-stack screen past the hub is a full-screen page with its own back header.
+    for (const route of [
+      'Orders',
+      'OrderDetail',
+      'ReturnForm',
+      'Addresses',
+      'AddressForm',
+      'Profile',
+      'Wallet',
+      'Gifts',
+      'Support',
+      'Ticket',
+      'Wishlist',
+      'Notifications',
+    ]) {
+      expect(hidesTabBar(route)).toBe(true);
+    }
     expect(hidesTabBar('Home')).toBe(false);
     expect(hidesTabBar('Category')).toBe(false);
+    // The account hub itself keeps the tabs; it is a tab root.
+    expect(hidesTabBar('Account')).toBe(false);
     // No nested state yet — the tabs stay up rather than flickering away on first render.
     expect(hidesTabBar(undefined)).toBe(false);
   });

@@ -35,6 +35,32 @@ or log the code, expire challenges after five minutes, and cap verification atte
 
 ---
 
+# Client-side conventions the contract has no field for (Phase 9)
+
+Neither of these is a mock route — both are shapes the **app** puts into contracted fields, recorded
+here so the backend team can replace them with real fields.
+
+## The address label
+
+`POST` and `PUT /users/me/addresses` carry the prototype's HOME/WORK/OTHER label in the optional
+`addressLine2` as the literal string `brandhub-label:HOME` (or `WORK`, `OTHER`). The API has no
+field for it and D13 forbids losing anything the UI collects. The app reads any _other_ text in
+that field back as part of the address details, so a record seeded with a real second line keeps
+its content.
+
+**To replace:** add a `label` field to the address payload. The client change is two functions in
+`src/data/addresses/mappers/addressMapper.ts`.
+
+## The address-to-area link
+
+Nothing in the collection joins an address to the shipping area that carries its delivery price.
+The app matches the address `city` against `area.name` first and `area.governorate` second, across
+the whole `/areas` list. The address form's city select is populated from `/areas`, so an address
+the app saved always matches by name.
+
+**To replace:** add `areaId` to the address payload. `resolveAddressArea` already returns an
+explicit `areaId` unchanged when one is present, so the function can then be deleted.
+
 # Contracted routes the mock had to shape (Phase 7)
 
 These routes **are** in `docs/ECommerce_API_Postman_Collection.json`, but it carries no response

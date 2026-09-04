@@ -41,7 +41,7 @@ export const shippingAddressDtoSchema = z.strictObject({
   state: z.string().nullish(),
   postalCode: z.string().nullish(),
   country: z.string().min(1),
-  areaId: z.string().min(1),
+  areaId: z.string().min(1).optional(),
   isDefault: z.boolean(),
 });
 

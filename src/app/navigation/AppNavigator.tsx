@@ -21,11 +21,21 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { changeLanguage } from '@infrastructure/i18n';
+
 import { useToast } from '@presentation/components/feedback';
 import {
   BrandTabBar,
   type NavigationTab,
 } from '@presentation/components/navigation';
+import {
+  AccountScreen,
+  type AccountDestination,
+} from '@presentation/features/account';
+import {
+  AddressesScreen,
+  AddressFormScreen,
+} from '@presentation/features/addresses';
 import {
   LoginScreen,
   sessionStore,
@@ -40,10 +50,16 @@ import {
 import { CategoryScreen } from '@presentation/features/category';
 import { CheckoutScreen } from '@presentation/features/checkout';
 import { HomeScreen } from '@presentation/features/home';
-import { AccountScreen, ShellScreen } from '@presentation/features/navigation';
+import { ShellScreen } from '@presentation/features/navigation';
 import { OnboardingScreen } from '@presentation/features/onboarding';
-import { OrderConfirmationScreen } from '@presentation/features/orders';
+import {
+  OrderConfirmationScreen,
+  OrderDetailScreen,
+  OrdersScreen,
+  ReturnFormScreen,
+} from '@presentation/features/orders';
 import { ProductScreen } from '@presentation/features/product';
+import { ProfileScreen } from '@presentation/features/profile';
 import { SearchScreen } from '@presentation/features/search';
 import { SellerStoreScreen } from '@presentation/features/sellerStore';
 import {
@@ -362,8 +378,20 @@ function NotificationsRoute() {
   );
 }
 
+/**
+ * Eight of the hub's nine rows are screens in this stack. `Following` is the influencers tab, so
+ * the mapping lives here rather than in the screen — the screen names a destination, the
+ * navigator decides what that means.
+ */
 function AccountRoute() {
-  const { signOut, queryClient } = useContainer();
+  const {
+    signOut,
+    queryClient,
+    getOrders,
+    addressRepository,
+    accountMetricsRepository,
+  } = useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
   const session = useSessionStore((state) => state.session);
   const reset = useSessionStore((state) => state.resetToOnboarding);
   const returnTo = { kind: 'account' } as const;
@@ -378,12 +406,156 @@ function AccountRoute() {
     });
   }
 
+  function go(destination: AccountDestination) {
+    if (destination === 'Following') {
+      navigationRef.navigate('Main', { screen: 'InfluencersTab' });
+      return;
+    }
+    navigation.navigate(destination);
+  }
+
   return (
     <RequireAuth returnTo={returnTo} onRequireAuth={requestAuth}>
       {session ? (
         <AccountScreen
           session={session}
+          getOrders={getOrders}
+          addressRepository={addressRepository}
+          metricsRepository={accountMetricsRepository}
+          onNavigate={go}
+          onChangeLanguage={(locale) => void changeLanguage(locale)}
           onSignOut={() => void performSignOut()}
+        />
+      ) : null}
+    </RequireAuth>
+  );
+}
+
+function OrdersRoute() {
+  const { getOrders } = useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'Orders' }}
+      onRequireAuth={requestAuth}
+    >
+      <OrdersScreen
+        getOrders={getOrders}
+        onBack={() => navigation.goBack()}
+        onOrder={(orderId) => navigation.navigate('OrderDetail', { orderId })}
+      />
+    </RequireAuth>
+  );
+}
+
+function OrderDetailRoute() {
+  const { getOrderDetail, addressRepository } = useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  const { orderId } =
+    useRoute<RouteProp<AccountStackParamList, 'OrderDetail'>>().params;
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'OrderDetail' }}
+      onRequireAuth={requestAuth}
+    >
+      <OrderDetailScreen
+        orderId={orderId}
+        getOrder={getOrderDetail}
+        addressRepository={addressRepository}
+        onBack={() => navigation.goBack()}
+        onReturn={(orderNumber) =>
+          navigation.navigate('ReturnForm', { orderId, orderNumber })
+        }
+        // AC9.12 — support opens with the order already selected.
+        onSupport={() => navigation.navigate('Support', { orderId })}
+      />
+    </RequireAuth>
+  );
+}
+
+function ReturnFormRoute() {
+  const { requestReturn } = useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  const { orderId, orderNumber } =
+    useRoute<RouteProp<AccountStackParamList, 'ReturnForm'>>().params;
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'ReturnForm' }}
+      onRequireAuth={requestAuth}
+    >
+      <ReturnFormScreen
+        orderId={orderId}
+        {...(orderNumber ? { orderNumber } : {})}
+        requestReturn={requestReturn}
+        onBack={() => navigation.goBack()}
+        // AC9.11 — a submitted return lands back on the orders list, not on the form.
+        onSubmitted={() => navigation.navigate('Orders')}
+      />
+    </RequireAuth>
+  );
+}
+
+function AddressesRoute() {
+  const { addressRepository, setDefaultAddress, deleteAddress } =
+    useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'Addresses' }}
+      onRequireAuth={requestAuth}
+    >
+      <AddressesScreen
+        repository={addressRepository}
+        setDefaultAddress={setDefaultAddress}
+        deleteAddress={deleteAddress}
+        onBack={() => navigation.goBack()}
+        onAdd={() => navigation.navigate('AddressForm')}
+        onEdit={(addressId) =>
+          navigation.navigate('AddressForm', { addressId })
+        }
+      />
+    </RequireAuth>
+  );
+}
+
+function AddressFormRoute() {
+  const { addressRepository, shippingAreaRepository, saveAddress } =
+    useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  const addressId =
+    useRoute<RouteProp<AccountStackParamList, 'AddressForm'>>().params
+      ?.addressId;
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'AddressForm' }}
+      onRequireAuth={requestAuth}
+    >
+      <AddressFormScreen
+        {...(addressId ? { addressId } : {})}
+        repository={addressRepository}
+        shippingAreaRepository={shippingAreaRepository}
+        saveAddress={saveAddress}
+        onBack={() => navigation.goBack()}
+      />
+    </RequireAuth>
+  );
+}
+
+function ProfileRoute() {
+  const { updateProfile } = useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  const session = useSessionStore((state) => state.session);
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'Profile' }}
+      onRequireAuth={requestAuth}
+    >
+      {session ? (
+        <ProfileScreen
+          session={session}
+          updateProfile={updateProfile}
+          onBack={() => navigation.goBack()}
+          onUpdated={(value) => sessionStore.getState().authenticate(value)}
         />
       ) : null}
     </RequireAuth>
@@ -509,16 +681,16 @@ function AccountNavigator() {
   return (
     <AccountStack.Navigator screenOptions={screenOptions}>
       <AccountStack.Screen name="Account" component={AccountRoute} />
-      <AccountStack.Screen name="Orders" component={AccountGatedRoute} />
-      <AccountStack.Screen name="OrderDetail" component={AccountGatedRoute} />
-      <AccountStack.Screen name="ReturnForm" component={AccountGatedRoute} />
-      <AccountStack.Screen name="Addresses" component={AccountGatedRoute} />
-      <AccountStack.Screen name="AddressForm" component={AccountGatedRoute} />
+      <AccountStack.Screen name="Orders" component={OrdersRoute} />
+      <AccountStack.Screen name="OrderDetail" component={OrderDetailRoute} />
+      <AccountStack.Screen name="ReturnForm" component={ReturnFormRoute} />
+      <AccountStack.Screen name="Addresses" component={AddressesRoute} />
+      <AccountStack.Screen name="AddressForm" component={AddressFormRoute} />
       <AccountStack.Screen name="Wallet" component={AccountGatedRoute} />
       <AccountStack.Screen name="Gifts" component={AccountGatedRoute} />
       <AccountStack.Screen name="Support" component={AccountGatedRoute} />
       <AccountStack.Screen name="Ticket" component={AccountGatedRoute} />
-      <AccountStack.Screen name="Profile" component={AccountGatedRoute} />
+      <AccountStack.Screen name="Profile" component={ProfileRoute} />
       <AccountStack.Screen name="Wishlist" component={WishlistRoute} />
       <AccountStack.Screen name="Notifications" component={AccountGatedRoute} />
     </AccountStack.Navigator>

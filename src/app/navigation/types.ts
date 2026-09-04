@@ -37,12 +37,12 @@ export type AccountStackParamList = {
   Account: undefined;
   Orders: undefined;
   OrderDetail: { orderId: string };
-  ReturnForm: { orderId: string };
+  ReturnForm: { orderId: string; orderNumber?: string };
   Addresses: undefined;
   AddressForm: { addressId?: string } | undefined;
   Wallet: undefined;
   Gifts: undefined;
-  Support: undefined;
+  Support: { orderId?: string } | undefined;
   Ticket: { ticketId: string };
   Profile: undefined;
   Wishlist: undefined;

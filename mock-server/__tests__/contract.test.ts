@@ -420,6 +420,155 @@ describe('stateful and money-moving contracts', () => {
   });
 });
 
+describe('after-sales contract (Phase 9)', () => {
+  it('keeps exactly one default address, clearing the previous one (BR7)', async () => {
+    const { authorization } = await signIn();
+    const authenticated = () => ({ Authorization: authorization });
+
+    const before = await request(app)
+      .get('/api/v1/users/me/addresses')
+      .set(authenticated());
+    expect(before.status).toBe(200);
+    const defaults = (before.body.data as { id: string; isDefault: boolean }[])
+      .filter((address) => address.isDefault)
+      .map((address) => address.id);
+    expect(defaults).toEqual(['address-1']);
+
+    const applied = await request(app)
+      .post('/api/v1/users/me/addresses/address-2/set-default')
+      .set(authenticated());
+    expect(applied.status).toBe(200);
+
+    const after = await request(app)
+      .get('/api/v1/users/me/addresses')
+      .set(authenticated());
+    expect(
+      (after.body.data as { id: string; isDefault: boolean }[])
+        .filter((address) => address.isDefault)
+        .map((address) => address.id),
+    ).toEqual(['address-2']);
+  });
+
+  it('stores and returns an address in the shape the app sends (D13)', async () => {
+    const { authorization } = await signIn();
+    const authenticated = () => ({ Authorization: authorization });
+
+    // Exactly what `addressPayload` produces: Oman, no state, no postal code, and the label
+    // carried in the second line.
+    const created = await request(app)
+      .post('/api/v1/users/me/addresses')
+      .set(authenticated())
+      .send({
+        fullName: 'Salim Al Rashdi',
+        phone: '+96899112233',
+        addressLine1: 'Office 52, Knowledge Oasis',
+        addressLine2: 'brandhub-label:WORK',
+        city: 'Muscat',
+        country: 'OM',
+        isDefault: false,
+      });
+    expect(created.status).toBe(201);
+    expect(created.body.data).toMatchObject({
+      fullName: 'Salim Al Rashdi',
+      addressLine1: 'Office 52, Knowledge Oasis',
+      addressLine2: 'brandhub-label:WORK',
+      city: 'Muscat',
+      country: 'OM',
+      isDefault: false,
+    });
+
+    const id = created.body.data.id as string;
+    const updated = await request(app)
+      .put(`/api/v1/users/me/addresses/${id}`)
+      .set(authenticated())
+      .send({
+        fullName: 'Salim Al Rashdi',
+        phone: '+96899112233',
+        addressLine1: 'Office 61, Knowledge Oasis',
+        addressLine2: 'brandhub-label:HOME',
+        city: 'Muscat',
+        country: 'OM',
+        isDefault: false,
+      });
+    expect(updated.status).toBe(200);
+    expect(updated.body.data.id).toBe(id);
+    expect(updated.body.data.addressLine1).toBe('Office 61, Knowledge Oasis');
+
+    expect(
+      (
+        await request(app)
+          .delete(`/api/v1/users/me/addresses/${id}`)
+          .set(authenticated())
+      ).status,
+    ).toBe(204);
+  });
+
+  it("pages the account's orders and carries the delivery OTP (D19)", async () => {
+    const { authorization } = await signIn();
+
+    const page = await request(app)
+      .get('/api/v1/orders?page=0&size=2')
+      .set({ Authorization: authorization });
+    expect(page.status).toBe(200);
+    expect(page.body.content).toHaveLength(2);
+    expect(page.body.totalElements).toBeGreaterThanOrEqual(4);
+    expect(page.body.content[0].deliveryOtp).toEqual(expect.any(String));
+
+    const second = await request(app)
+      .get('/api/v1/orders?page=1&size=2')
+      .set({ Authorization: authorization });
+    expect(second.body.content[0].id).not.toBe(page.body.content[0].id);
+  });
+
+  it('takes a return as free text against a real order and rejects an unknown one (D19)', async () => {
+    const { authorization } = await signIn();
+    const authenticated = () => ({ Authorization: authorization });
+
+    const accepted = await request(app)
+      .post('/api/v1/returns')
+      .set(authenticated())
+      .send({
+        orderId: 'order-4',
+        reason: 'Arrived damaged: the screen was cracked',
+      });
+    expect(accepted.status).toBe(201);
+    expect(accepted.body.data.reason).toBe(
+      'Arrived damaged: the screen was cracked',
+    );
+    expect(accepted.body.data.status).toBe('PENDING');
+
+    expect(
+      (
+        await request(app)
+          .post('/api/v1/returns')
+          .set(authenticated())
+          .send({ orderId: 'order-404', reason: 'Arrived damaged' })
+      ).status,
+    ).toBe(400);
+  });
+
+  it('updates the profile through PUT /users/me', async () => {
+    const { authorization } = await signIn();
+
+    const updated = await request(app)
+      .put('/api/v1/users/me')
+      .set({ Authorization: authorization })
+      .send({
+        firstName: 'Salma',
+        lastName: 'Al Rashdi',
+        phone: '+96899112244',
+      });
+    expect(updated.status).toBe(200);
+    // This route answers with the bare user, not the `data` envelope; `unwrapEnvelope` in the
+    // data layer accepts both shapes.
+    expect(updated.body).toMatchObject({
+      firstName: 'Salma',
+      lastName: 'Al Rashdi',
+      phone: '+96899112244',
+    });
+  });
+});
+
 describe('customer endpoint inventory', () => {
   it('answers every read route and both deliberate envelope shapes', async () => {
     const { authorization } = await signIn();

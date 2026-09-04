@@ -66,7 +66,11 @@ export class HttpCheckoutAddressRepository
 
   async list() {
     try {
-      return ok((await this.remote.listAddresses()).map(mapShippingAddress));
+      const [addresses, areas] = await Promise.all([
+        this.remote.listAddresses(),
+        this.remote.listAreas(),
+      ]);
+      return ok(addresses.map((address) => mapShippingAddress(address, areas)));
     } catch (error) {
       return this.failure(error);
     }
@@ -74,7 +78,11 @@ export class HttpCheckoutAddressRepository
 
   async save(input: import('@domain/checkout').NewShippingAddress) {
     try {
-      return ok(mapShippingAddress(await this.remote.saveAddress(input)));
+      const [address, areas] = await Promise.all([
+        this.remote.saveAddress(input),
+        this.remote.listAreas(),
+      ]);
+      return ok(mapShippingAddress(address, areas));
     } catch (error) {
       return this.failure(error);
     }

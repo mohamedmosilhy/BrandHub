@@ -17,6 +17,13 @@ export type SignUpInput = Readonly<{
   phone: PhoneNumber;
   password: string;
 }>;
+/** What the profile screen submits, before validation. */
+export type UpdateProfileInput = Readonly<{
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+}>;
 
 export interface AuthRepository {
   signIn(input: SignInInput): Promise<Result<Session, AppError>>;
@@ -29,4 +36,5 @@ export interface AuthRepository {
     challengeId: string,
     code: string,
   ): Promise<Result<void, AppError>>;
+  updateProfile(input: UpdateProfileInput): Promise<Result<Session, AppError>>;
 }

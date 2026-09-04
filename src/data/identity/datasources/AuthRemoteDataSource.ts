@@ -95,6 +95,26 @@ export class AuthRemoteDataSource {
     });
   }
 
+  /** `PUT /users/me` takes the name and phone; the account's email is not editable by contract. */
+  async updateProfile(input: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+  }): Promise<UserDto> {
+    const endpoint = '/users/me';
+    const response = await this.httpClient.request<unknown>({
+      method: 'PUT',
+      endpoint,
+      body: input,
+    });
+    return parseResponse(
+      userDtoSchema,
+      response.data,
+      endpoint,
+      response.correlationId,
+    );
+  }
+
   /** Mock-only endpoints; see D12 / FA1. */
   async sendPhoneOtp(phone: string): Promise<OtpChallengeDto> {
     const endpoint = '/auth/phone/send-otp';

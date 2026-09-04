@@ -5,8 +5,11 @@ import { IdempotencyAttempt, type IdempotencyKeyFactory } from '@core/types';
 import type { CartRepository } from '@domain/cart';
 import type { CheckoutDraft } from '@domain/checkout';
 
-import type { Order } from './entities';
+import type { Order, ReturnReason, ReturnRequest } from './entities';
 import type { OrderRepository } from './OrderRepository';
+
+/** The orders list is paged; the account hub and the orders screen both use this size. */
+export const DEFAULT_PAGE_SIZE = 20;
 
 function orderError(code: string, message: string) {
   return new DomainError({
@@ -14,6 +17,53 @@ function orderError(code: string, message: string) {
     message,
     correlationId: 'domain-orders',
   });
+}
+
+export class GetOrdersUseCase {
+  constructor(private readonly repository: OrderRepository) {}
+  execute(
+    page = 0,
+    size = DEFAULT_PAGE_SIZE,
+  ): Promise<Result<readonly Order[], AppError>> {
+    return this.repository.list(page, size);
+  }
+}
+
+export class GetOrderDetailUseCase {
+  constructor(private readonly repository: OrderRepository) {}
+  execute(id: string): Promise<Result<Order, AppError>> {
+    return this.repository.getById(id);
+  }
+}
+
+export class RequestReturnUseCase {
+  constructor(private readonly repository: OrderRepository) {}
+
+  /**
+   * BR8 — only a delivered order can be returned. The status is read back from the repository
+   * rather than trusted from the screen, so a stale list cannot open a return on an order that
+   * has since been cancelled.
+   */
+  async execute(
+    orderId: string,
+    reason: ReturnReason | null,
+    note?: string,
+  ): Promise<Result<ReturnRequest, AppError>> {
+    if (!reason)
+      return err(
+        orderError('RETURN_REASON_REQUIRED', 'Choose a return reason.'),
+      );
+    const order = await this.repository.getById(orderId);
+    if (!order.ok) return order;
+    if (order.value.status !== 'DELIVERED')
+      return err(
+        orderError(
+          'ORDER_NOT_RETURNABLE',
+          'Only delivered orders can be returned.',
+        ),
+      );
+    return this.repository.requestReturn(orderId, reason, note);
+  }
 }
 
 export class PlaceOrderUseCase {

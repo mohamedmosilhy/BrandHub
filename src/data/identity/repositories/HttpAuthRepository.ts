@@ -1,4 +1,4 @@
-import { isAppError } from '@core/errors';
+import { isAppError, UnauthorizedError } from '@core/errors';
 import { err, ok } from '@core/result';
 
 import {
@@ -6,13 +6,14 @@ import {
   type AuthRepository,
   type SignInInput,
   type SignUpInput,
+  type UpdateProfileInput,
 } from '@domain/identity';
 
 import {
   AuthRemoteDataSource,
   SessionLocalDataSource,
 } from '@data/identity/datasources';
-import { mapSession } from '@data/identity/mappers';
+import { mapSession, mapUser } from '@data/identity/mappers';
 
 import { normalizeHttpError } from '@infrastructure/http';
 
@@ -126,6 +127,38 @@ export class HttpAuthRepository implements AuthRepository {
     try {
       await this.remote.verifyPhoneOtp(challengeId, code);
       return ok(undefined);
+    } catch (source) {
+      return err(isAppError(source) ? source : normalizeHttpError(source));
+    }
+  }
+
+  /**
+   * The stored session is rewritten with the returned user, so the account header reflects the
+   * change without a re-authentication round trip (AC9.17).
+   */
+  async updateProfile(input: UpdateProfileInput) {
+    try {
+      const current = await this.local.load();
+      if (!current)
+        return err(
+          new UnauthorizedError({
+            code: 'SESSION_MISSING',
+            message: 'There is no active session to update.',
+            correlationId: 'data-identity',
+          }),
+        );
+      const session = {
+        ...current,
+        user: mapUser(
+          await this.remote.updateProfile({
+            firstName: input.firstName,
+            lastName: input.lastName,
+            phone: input.phone,
+          }),
+        ),
+      };
+      await this.local.save(session);
+      return ok(session);
     } catch (source) {
       return err(isAppError(source) ? source : normalizeHttpError(source));
     }

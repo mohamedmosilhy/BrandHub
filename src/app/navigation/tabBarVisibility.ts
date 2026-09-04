@@ -6,7 +6,22 @@
  * It lives apart from `AppNavigator` because that module builds the DI container on import;
  * the rule itself is worth asserting without a running app.
  */
-const FULL_SCREEN_ROUTES = new Set(['Product', 'Seller']);
+const FULL_SCREEN_ROUTES = new Set([
+  'Product',
+  'Seller',
+  'Orders',
+  'OrderDetail',
+  'ReturnForm',
+  'Addresses',
+  'AddressForm',
+  'Profile',
+  'Wallet',
+  'Gifts',
+  'Support',
+  'Ticket',
+  'Wishlist',
+  'Notifications',
+]);
 
 export function hidesTabBar(focusedRouteName: string | undefined): boolean {
   return Boolean(focusedRouteName && FULL_SCREEN_ROUTES.has(focusedRouteName));

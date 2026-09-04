@@ -35,6 +35,10 @@ function authRepository(): jest.Mocked<AuthRepository> {
       }),
     ),
     signOut: jest.fn(async () => ok(undefined)),
+    updateProfile: jest.fn(
+      async (_input: Parameters<AuthRepository['updateProfile']>[0]) =>
+        ok(session),
+    ),
     restoreSession: jest.fn(async () => ok(null)),
     refreshSession: jest.fn(async () => ok(session)),
     sendPhoneOtp: jest.fn(
