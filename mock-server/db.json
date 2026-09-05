@@ -21740,63 +21740,126 @@
       "ticketNumber": "TKT-2026-0001",
       "userId": "user-customer",
       "orderId": "order-1",
-      "category": "ORDER",
-      "priority": "NORMAL",
-      "subject": "Support request 1",
-      "description": "Please help me with this request.",
+      "category": "DELIVERY",
+      "priority": "HIGH",
+      "subject": {
+        "ar": "لم يصل الطلب في الوقت المحدد",
+        "en": "Order arrived later than promised"
+      },
+      "description": {
+        "ar": "الطلب كان مقرراً أمس والمندوب لم يتواصل معي حتى الآن.",
+        "en": "Delivery was promised yesterday and the courier has not called yet."
+      },
       "status": "OPEN",
       "messages": [
         {
-          "id": "ticket-message-1",
+          "id": "ticket-1-message-1",
           "senderType": "CUSTOMER",
-          "message": "Please help me with this request.",
-          "createdAt": "2026-09-02T12:00:00.000Z"
+          "message": {
+            "ar": "الطلب كان مقرراً أمس والمندوب لم يتواصل معي حتى الآن.",
+            "en": "Delivery was promised yesterday and the courier has not called yet."
+          },
+          "createdAt": "2026-09-02T08:00:00.000Z"
+        },
+        {
+          "id": "ticket-1-message-2",
+          "senderType": "SUPPORT",
+          "message": {
+            "ar": "شكراً لتواصلك. تحققنا من الشحنة وهي الآن مع المندوب سعيد الحارثي، وسيصل اليوم قبل 6 مساءً.",
+            "en": "Thanks for reaching out. We checked the shipment: it is with courier Said Al Harthy and arrives today before 6pm."
+          },
+          "createdAt": "2026-09-02T08:30:00.000Z"
+        },
+        {
+          "id": "ticket-1-message-3",
+          "senderType": "CUSTOMER",
+          "message": {
+            "ar": "شكراً لكم، سأنتظر.",
+            "en": "Thank you, I will wait."
+          },
+          "createdAt": "2026-09-02T09:00:00.000Z"
         }
       ],
-      "createdAt": "2026-09-02T12:00:00.000Z",
-      "updatedAt": "2026-09-02T12:00:00.000Z"
+      "createdAt": "2026-09-02T08:00:00.000Z",
+      "updatedAt": "2026-09-02T09:00:00.000Z"
     },
     {
       "id": "ticket-2",
       "ticketNumber": "TKT-2026-0002",
       "userId": "user-customer",
       "orderId": "order-2",
-      "category": "GENERAL",
+      "category": "WALLET",
       "priority": "NORMAL",
-      "subject": "Support request 2",
-      "description": "Please help me with this request.",
-      "status": "OPEN",
+      "subject": {
+        "ar": "استرجاع مبلغ إلى المحفظة",
+        "en": "Refund back to my wallet"
+      },
+      "description": {
+        "ar": "أرجعت منتجاً ولم يصل المبلغ للمحفظة.",
+        "en": "I returned an item and the refund has not reached my wallet."
+      },
+      "status": "IN_PROGRESS",
       "messages": [
         {
-          "id": "ticket-message-2",
+          "id": "ticket-2-message-1",
           "senderType": "CUSTOMER",
-          "message": "Please help me with this request.",
-          "createdAt": "2026-09-02T12:00:00.000Z"
+          "message": {
+            "ar": "أرجعت منتجاً ولم يصل المبلغ للمحفظة.",
+            "en": "I returned an item and the refund has not reached my wallet."
+          },
+          "createdAt": "2026-09-01T10:30:00.000Z"
+        },
+        {
+          "id": "ticket-2-message-2",
+          "senderType": "SUPPORT",
+          "message": {
+            "ar": "نحتاج صورة إيصال الإرجاع لإكمال المعالجة.",
+            "en": "We need a photo of the return receipt to finish processing."
+          },
+          "createdAt": "2026-09-01T11:00:00.000Z"
         }
       ],
-      "createdAt": "2026-09-02T12:00:00.000Z",
-      "updatedAt": "2026-09-02T12:00:00.000Z"
+      "createdAt": "2026-09-01T10:30:00.000Z",
+      "updatedAt": "2026-09-01T11:00:00.000Z"
     },
     {
       "id": "ticket-3",
       "ticketNumber": "TKT-2026-0003",
       "userId": "user-customer",
       "orderId": "order-3",
-      "category": "GENERAL",
-      "priority": "HIGH",
-      "subject": "Support request 3",
-      "description": "Please help me with this request.",
+      "category": "PAYMENT",
+      "priority": "LOW",
+      "subject": {
+        "ar": "رمز الخصم لا يعمل",
+        "en": "Promo code not applying"
+      },
+      "description": {
+        "ar": "رمز HUB20 يعطي خطأ عند الدفع.",
+        "en": "Code HUB20 errors out at checkout."
+      },
       "status": "RESOLVED",
       "messages": [
         {
-          "id": "ticket-message-3",
+          "id": "ticket-3-message-1",
           "senderType": "CUSTOMER",
-          "message": "Please help me with this request.",
-          "createdAt": "2026-09-02T12:00:00.000Z"
+          "message": {
+            "ar": "رمز HUB20 يعطي خطأ عند الدفع.",
+            "en": "Code HUB20 errors out at checkout."
+          },
+          "createdAt": "2026-08-26T11:30:00.000Z"
+        },
+        {
+          "id": "ticket-3-message-2",
+          "senderType": "SUPPORT",
+          "message": {
+            "ar": "كان الرمز محدوداً بفئة الأزياء. أضفنا لك رصيد 5 ر.ع. كتعويض.",
+            "en": "The code was limited to fashion. We credited OMR 5 to your wallet instead."
+          },
+          "createdAt": "2026-08-26T12:00:00.000Z"
         }
       ],
-      "createdAt": "2026-09-02T12:00:00.000Z",
-      "updatedAt": "2026-09-02T12:00:00.000Z"
+      "createdAt": "2026-08-26T11:30:00.000Z",
+      "updatedAt": "2026-08-26T12:00:00.000Z"
     }
   ],
   "ticketAttachments": [],

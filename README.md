@@ -6,8 +6,8 @@ Design and planning live in [`docs/architecture.md`](docs/architecture.md) and
 [`docs/plan.md`](docs/plan.md). The UI/UX source of truth is `design-reference/`, which is read-only
 and never modified.
 
-**Current state: Phase 9 (account, orders and addresses) and Phase 11 (social commerce and
-notifications) implemented.** The app opens on Arabic
+**Current state: Phase 9 (account, orders and addresses), Phase 11 (social commerce and
+notifications) and Phase 12 (support) implemented.** The app opens on Arabic
 onboarding, supports the Phase 5 identity/navigation shell, and browses a live catalogue through
 Home, Browse, Category and Search. A product opens a real detail page — image pager, variant
 selector, seller strip, specifications, reviews, related products and a sticky buy bar — with the
@@ -18,8 +18,10 @@ carries live counts into order history and detail with its delivery-OTP panel, t
 full address management and profile editing, and a language switch that survives a restart. The
 social layer is live too: an influencer directory, a profile with its shoppable feed whose tagged
 products open the PDP, a persisted follow, and an in-app notification list with mark-all-read
-behind the home bell's unread dot. Phase 10 (wallet, gifts and the payment result) is the one
-customer feature still outstanding.
+behind the home bell's unread dot. Support closes the after-sales path: a ticket form with the
+prototype's six categories and three priorities, a related-order select that order detail can
+preselect, and a two-sided thread with a reply box. Phase 10 (wallet, gifts and the payment result)
+is the one customer feature still outstanding.
 
 ## Requirements
 
@@ -128,6 +130,13 @@ repository knows it. A post carries its tagged products inline, so opening a pro
 rather than one per product. Notifications are an in-app list only — no push, no permission prompt,
 no device token (D17). See
 [`docs/reports/phase-11-report.md`](docs/reports/phase-11-report.md).
+
+Phase 12 adds support. Unlike social commerce it is on the **real contract** (D19), so
+`HttpSupportRepository` speaks to `/support/tickets` from the start; what the collection lacks is a
+response example, so the field set and the two open enum questions are recorded in
+`INVENTED_ENDPOINTS.md`. The thread's two sides align by reading direction rather than by a locale
+check, so they swap correctly in Arabic without a conditional. See
+[`docs/reports/phase-12-report.md`](docs/reports/phase-12-report.md).
 
 ## Architecture in one screen
 

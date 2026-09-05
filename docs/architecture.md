@@ -188,29 +188,29 @@ The API is Spring Boot at `http://localhost:8081/api/v1`, JWT bearer auth, role-
 
 **Endpoints the customer app consumes**
 
-| Area               | Endpoints                                                                                                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Auth               | `POST /auth/login`, `POST /auth/register`, `POST /auth/refresh`, `POST /auth/logout`, `POST /auth/forgot-password`, `POST /auth/reset-password`, `GET /auth/verify-email` |
-| Catalogue          | `GET /products`, `/products/featured`, `/products/new-arrivals`, `/products/best-sellers`, `/products/search?q=`, `/products/{id}`, `/products/category/{id}`             |
-| Categories         | `GET /categories/tree`, `/categories/{id}`, `/categories/slug/{slug}`                                                                                                     |
-| Search             | `GET /search/products?q=&page=&size=`                                                                                                                                     |
-| Images             | `GET {appUrl}{productImageUrl}`, `{categoryImageUrl}`, `{appUrl}{sellerProfileImageUrl}`, `GET /users/{userId}/profile-image`                                             |
-| Sellers            | `GET /sellers`, `GET /sellers/{id}/products`, `GET /sellers/{id}/profile-image`                                                                                           |
-| Cart               | `GET /cart`, `POST /cart/items`, `PUT /cart/items/{id}?quantity=`, `DELETE /cart/items/{id}`, `DELETE /cart`                                                              |
-| Orders             | `POST /orders`, `GET /orders`, `GET /orders/{id}`, `POST /orders/{id}/cancel?reason=`                                                                                     |
-| Areas and shipping | `GET /areas`, `GET /areas/governorate/{name}`, `GET /areas/{id}`, `GET /shipping-rates`                                                                                   |
-| Returns            | `POST /returns`, `GET /returns`, `GET /returns/{id}`                                                                                                                      |
-| Support            | `POST /support/tickets`, `GET /support/tickets`, `GET /support/tickets/{id}`, `POST /support/tickets/{id}/messages`, and attachment upload and listing                    |
-| Wallet             | `GET /wallet`, `POST /wallet/charge`, `GET /wallet/transactions`                                                                                                          |
-| Wallet transfers   | `GET /wallet/transfers/settings`, `POST /wallet/transfers/recipient-preview`, `POST /wallet/transfers`, `GET /wallet/transfers`, `GET /wallet/transfers/{id}`             |
-| Gifts              | `POST /gifts`, `GET /gifts/sent`, `GET /gifts/received`, `POST /gifts/{id}/claim`, `POST /gifts/{id}/cancel`                                                              |
-| Payments           | `GET /payments/PAYMOB/status?orderId=`, plus a server-side PAYMOB webhook                                                                                                 |
-| Profile            | `GET /users/me`, `PUT /users/me`, `PATCH /users/me/password`                                                                                                              |
-| Addresses          | `GET` and `POST` on `/users/me/addresses`, `PUT` and `DELETE` on `/users/me/addresses/{id}`, `POST /users/me/addresses/{id}/set-default`                                  |
-| Wishlist           | `GET /wishlist`, `POST` and `DELETE` on `/wishlist/{productId}`                                                                                                           |
-| Reviews            | `GET /reviews/product/{id}`, `POST /reviews`                                                                                                                              |
-| Coupons            | `GET /coupons`, `POST /coupons/validate`                                                                                                                                  |
-| Notifications      | `GET /notifications?isRead=&page=&size=` — read only; marking read is invented (FA1)                                                                                      |
+| Area               | Endpoints                                                                                                                                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Auth               | `POST /auth/login`, `POST /auth/register`, `POST /auth/refresh`, `POST /auth/logout`, `POST /auth/forgot-password`, `POST /auth/reset-password`, `GET /auth/verify-email`                                                 |
+| Catalogue          | `GET /products`, `/products/featured`, `/products/new-arrivals`, `/products/best-sellers`, `/products/search?q=`, `/products/{id}`, `/products/category/{id}`                                                             |
+| Categories         | `GET /categories/tree`, `/categories/{id}`, `/categories/slug/{slug}`                                                                                                                                                     |
+| Search             | `GET /search/products?q=&page=&size=`                                                                                                                                                                                     |
+| Images             | `GET {appUrl}{productImageUrl}`, `{categoryImageUrl}`, `{appUrl}{sellerProfileImageUrl}`, `GET /users/{userId}/profile-image`                                                                                             |
+| Sellers            | `GET /sellers`, `GET /sellers/{id}/products`, `GET /sellers/{id}/profile-image`                                                                                                                                           |
+| Cart               | `GET /cart`, `POST /cart/items`, `PUT /cart/items/{id}?quantity=`, `DELETE /cart/items/{id}`, `DELETE /cart`                                                                                                              |
+| Orders             | `POST /orders`, `GET /orders`, `GET /orders/{id}`, `POST /orders/{id}/cancel?reason=`                                                                                                                                     |
+| Areas and shipping | `GET /areas`, `GET /areas/governorate/{name}`, `GET /areas/{id}`, `GET /shipping-rates`                                                                                                                                   |
+| Returns            | `POST /returns`, `GET /returns`, `GET /returns/{id}`                                                                                                                                                                      |
+| Support            | `POST /support/tickets`, `GET /support/tickets`, `GET /support/tickets/{id}`, `POST /support/tickets/{id}/messages`; attachment upload and listing exist but the prototype has no attach control, so v1 does not use them |
+| Wallet             | `GET /wallet`, `POST /wallet/charge`, `GET /wallet/transactions`                                                                                                                                                          |
+| Wallet transfers   | `GET /wallet/transfers/settings`, `POST /wallet/transfers/recipient-preview`, `POST /wallet/transfers`, `GET /wallet/transfers`, `GET /wallet/transfers/{id}`                                                             |
+| Gifts              | `POST /gifts`, `GET /gifts/sent`, `GET /gifts/received`, `POST /gifts/{id}/claim`, `POST /gifts/{id}/cancel`                                                                                                              |
+| Payments           | `GET /payments/PAYMOB/status?orderId=`, plus a server-side PAYMOB webhook                                                                                                                                                 |
+| Profile            | `GET /users/me`, `PUT /users/me`, `PATCH /users/me/password`                                                                                                                                                              |
+| Addresses          | `GET` and `POST` on `/users/me/addresses`, `PUT` and `DELETE` on `/users/me/addresses/{id}`, `POST /users/me/addresses/{id}/set-default`                                                                                  |
+| Wishlist           | `GET /wishlist`, `POST` and `DELETE` on `/wishlist/{productId}`                                                                                                                                                           |
+| Reviews            | `GET /reviews/product/{id}`, `POST /reviews`                                                                                                                                                                              |
+| Coupons            | `GET /coupons`, `POST /coupons/validate`                                                                                                                                                                                  |
+| Notifications      | `GET /notifications?isRead=&page=&size=` — read only; marking read is invented (FA1)                                                                                                                                      |
 
 **Request shapes that constrain the UI**
 
@@ -611,7 +611,7 @@ BrandHub/
     │   ├── wallet/
     │   ├── wishlist/
     │   ├── social/               # Influencer, Post  (no API contract — GAP-1)
-    │   ├── support/              # Ticket, Message   (no API contract — GAP-2)
+    │   ├── support/              # Ticket, TicketMessage   (real contract — GAP-2 closed by D19)
     │   └── notifications/
     ├── data/
     │   └── <same slices>/
@@ -1090,7 +1090,7 @@ mock-server/
 | `GET /api/v1/influencers`             | custom handler                | **Invented** — no real contract (GAP-1); resolves `isFollowing` per bearer token |
 | `GET /api/v1/posts`                   | custom handler                | **Invented** (GAP-1); embeds each post's tagged products in full                 |
 | `POST /api/v1/notifications/read-all` | custom handler                | **Invented** — the resource is contracted, marking read is not                   |
-| `GET /api/v1/support/tickets`         | `/tickets`                    | **Invented** — no real contract (GAP-2)                                          |
+| `GET /api/v1/support/tickets`         | custom handler                | Contracted (D19); ordered newest-updated first, and localised                    |
 
 Every invented endpoint is listed in one file, `mock-server/INVENTED_ENDPOINTS.md`, so the backend
 team receives an exact list of what still needs specifying.
@@ -1633,6 +1633,14 @@ These survive the decisions in §34. Each is accepted, not open.
 19. **Direct messaging an influencer is not built.** The prototype's profile carries a `Message`
     action beside `Follow`, and nothing in the collection describes a conversation. The button says
     so rather than opening a dead screen — a product question, not an oversight.
+20. **Ticket attachments are contracted but not built.** `POST` and `GET
+/support/tickets/{id}/attachments` exist and the mock serves them; the prototype's ticket
+    screen has no attach control, so v1 has none either. Worth raising as a product question rather
+    than assuming it was an oversight in the reference.
+21. **Only one ticket category is evidenced by the contract.** The collection's single example
+    sends `category: "ORDER"`; the prototype's form offers six. The client sends its six and maps
+    anything it does not recognise to `OTHER`, so a narrower server enum degrades rather than
+    breaks — but the set needs confirming (Phase 12).
 
 ---
 

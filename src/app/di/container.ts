@@ -43,6 +43,12 @@ import {
   GetInfluencerProfileUseCase,
   GetInfluencersUseCase,
 } from '@domain/social';
+import {
+  CreateTicketUseCase,
+  GetTicketUseCase,
+  GetTicketsUseCase,
+  ReplyToTicketUseCase,
+} from '@domain/support';
 import { ToggleWishlistUseCase } from '@domain/wishlist';
 
 import {
@@ -89,6 +95,7 @@ import {
   InfluencerRemoteDataSource,
   MockInfluencerRepository,
 } from '@data/social';
+import { HttpSupportRepository, SupportRemoteDataSource } from '@data/support';
 import {
   HttpWishlistRepository,
   WishlistRemoteDataSource,
@@ -230,6 +237,14 @@ const notificationRepository = new HttpNotificationRepository(
 );
 const getNotifications = new GetNotificationsUseCase(notificationRepository);
 const markAllRead = new MarkAllReadUseCase(notificationRepository);
+/** D19 — support tickets are on the real contract, so this repository is HTTP from the start. */
+const supportRepository = new HttpSupportRepository(
+  new SupportRemoteDataSource(httpClient),
+);
+const getTickets = new GetTicketsUseCase(supportRepository);
+const getTicket = new GetTicketUseCase(supportRepository);
+const createTicket = new CreateTicketUseCase(supportRepository);
+const replyToTicket = new ReplyToTicketUseCase(supportRepository);
 const queryClient = createAppQueryClient(logger);
 
 export const container = Object.freeze({
@@ -284,6 +299,11 @@ export const container = Object.freeze({
   notificationRepository,
   getNotifications,
   markAllRead,
+  supportRepository,
+  getTickets,
+  getTicket,
+  createTicket,
+  replyToTicket,
   queryClient,
 });
 

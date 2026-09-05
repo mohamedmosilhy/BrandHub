@@ -158,6 +158,24 @@ describe('BRANDHUB theme tokens', () => {
     );
   });
 
+  it('pins the support geometry to the prototype', () => {
+    // The form: `padding: 16px; gap: 13px`, with 12 px-radius priority blocks.
+    expect(mobile.support.formPadding).toBe(16);
+    expect(mobile.support.formGap).toBe(13);
+    expect(mobile.support.priorityRadius).toBe(12);
+    // The my-tickets row: `border-radius: 16px; padding: 13px`.
+    expect(mobile.support.rowRadius).toBe(16);
+    expect(mobile.support.rowPadding).toBe(13);
+    // The thread: a `12px 14px` bubble at radius 14, never wider than 84% of the column.
+    expect(mobile.support.bubbleRadius).toBe(14);
+    expect(mobile.support.bubblePaddingX).toBe(14);
+    expect(mobile.support.bubblePaddingY).toBe(12);
+    expect(mobile.support.bubbleMaxWidth).toBe('84%');
+    // The reply bar: a 44 px field and a 44 px send button on a 9 px gap.
+    expect(mobile.support.replyHeight).toBe(44);
+    expect(mobile.support.replyGap).toBe(9);
+  });
+
   it('carries the two type steps Phase 7 needed', () => {
     // `font-size: 9.5px` badge pills, related titles and stat labels; the 25 px PDP price.
     expect(fontSizes.nano).toBe(9.5);

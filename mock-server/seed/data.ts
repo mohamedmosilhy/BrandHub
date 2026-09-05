@@ -343,6 +343,109 @@ const notificationSeed = [
   },
 ] as const;
 
+/**
+ * The prototype's three support tickets, with their two-sided threads
+ * (`design-reference/BRANDHUB App.dc.html`, `const TICKETS`). `/support/tickets` is contracted
+ * (D19) but carries no response example, so the field set here is the mock's; the statuses are
+ * the ones the collection's admin routes set — `OPEN`, `IN_PROGRESS`, `RESOLVED`.
+ */
+const ticketSeed = [
+  {
+    orderId: 'order-1',
+    category: 'DELIVERY',
+    priority: 'HIGH',
+    status: 'OPEN',
+    subject: {
+      ar: 'لم يصل الطلب في الوقت المحدد',
+      en: 'Order arrived later than promised',
+    },
+    description: {
+      ar: 'الطلب كان مقرراً أمس والمندوب لم يتواصل معي حتى الآن.',
+      en: 'Delivery was promised yesterday and the courier has not called yet.',
+    },
+    minutesAgo: 180,
+    thread: [
+      {
+        senderType: 'CUSTOMER',
+        message: {
+          ar: 'الطلب كان مقرراً أمس والمندوب لم يتواصل معي حتى الآن.',
+          en: 'Delivery was promised yesterday and the courier has not called yet.',
+        },
+      },
+      {
+        senderType: 'SUPPORT',
+        message: {
+          ar: 'شكراً لتواصلك. تحققنا من الشحنة وهي الآن مع المندوب سعيد الحارثي، وسيصل اليوم قبل 6 مساءً.',
+          en: 'Thanks for reaching out. We checked the shipment: it is with courier Said Al Harthy and arrives today before 6pm.',
+        },
+      },
+      {
+        senderType: 'CUSTOMER',
+        message: { ar: 'شكراً لكم، سأنتظر.', en: 'Thank you, I will wait.' },
+      },
+    ],
+  },
+  {
+    orderId: 'order-2',
+    category: 'WALLET',
+    priority: 'NORMAL',
+    status: 'IN_PROGRESS',
+    subject: {
+      ar: 'استرجاع مبلغ إلى المحفظة',
+      en: 'Refund back to my wallet',
+    },
+    description: {
+      ar: 'أرجعت منتجاً ولم يصل المبلغ للمحفظة.',
+      en: 'I returned an item and the refund has not reached my wallet.',
+    },
+    minutesAgo: 1_500,
+    thread: [
+      {
+        senderType: 'CUSTOMER',
+        message: {
+          ar: 'أرجعت منتجاً ولم يصل المبلغ للمحفظة.',
+          en: 'I returned an item and the refund has not reached my wallet.',
+        },
+      },
+      {
+        senderType: 'SUPPORT',
+        message: {
+          ar: 'نحتاج صورة إيصال الإرجاع لإكمال المعالجة.',
+          en: 'We need a photo of the return receipt to finish processing.',
+        },
+      },
+    ],
+  },
+  {
+    orderId: 'order-3',
+    category: 'PAYMENT',
+    priority: 'LOW',
+    status: 'RESOLVED',
+    subject: { ar: 'رمز الخصم لا يعمل', en: 'Promo code not applying' },
+    description: {
+      ar: 'رمز HUB20 يعطي خطأ عند الدفع.',
+      en: 'Code HUB20 errors out at checkout.',
+    },
+    minutesAgo: 10_080,
+    thread: [
+      {
+        senderType: 'CUSTOMER',
+        message: {
+          ar: 'رمز HUB20 يعطي خطأ عند الدفع.',
+          en: 'Code HUB20 errors out at checkout.',
+        },
+      },
+      {
+        senderType: 'SUPPORT',
+        message: {
+          ar: 'كان الرمز محدوداً بفئة الأزياء. أضفنا لك رصيد 5 ر.ع. كتعويض.',
+          en: 'The code was limited to fashion. We credited OMR 5 to your wallet instead.',
+        },
+      },
+    ],
+  },
+] as const;
+
 export function buildSeedDatabase(): MockDatabase {
   const now = '2026-09-02T12:00:00.000Z';
   const orderItems = (offset: number) => [
@@ -428,27 +531,37 @@ export function buildSeedDatabase(): MockDatabase {
       createdAt: now,
     })),
     addresses,
-    tickets: Array.from({ length: 3 }, (_, index) => ({
-      id: `ticket-${index + 1}`,
-      ticketNumber: `TKT-2026-${String(index + 1).padStart(4, '0')}`,
-      userId: 'user-customer',
-      orderId: `order-${index + 1}`,
-      category: index === 0 ? 'ORDER' : 'GENERAL',
-      priority: index === 2 ? 'HIGH' : 'NORMAL',
-      subject: `Support request ${index + 1}`,
-      description: 'Please help me with this request.',
-      status: index === 2 ? 'RESOLVED' : 'OPEN',
-      messages: [
-        {
-          id: `ticket-message-${index + 1}`,
-          senderType: 'CUSTOMER',
-          message: 'Please help me with this request.',
-          createdAt: now,
-        },
-      ],
-      createdAt: now,
-      updatedAt: now,
-    })),
+    tickets: ticketSeed.map((ticket, index) => {
+      const updatedAt = new Date(
+        Date.parse(now) - ticket.minutesAgo * 60_000,
+      ).toISOString();
+      return {
+        id: `ticket-${index + 1}`,
+        ticketNumber: `TKT-2026-${String(index + 1).padStart(4, '0')}`,
+        userId: 'user-customer',
+        orderId: ticket.orderId,
+        category: ticket.category,
+        priority: ticket.priority,
+        subject: ticket.subject,
+        description: ticket.description,
+        status: ticket.status,
+        // The thread runs forward in time and ends at `updatedAt`, so the list's "last update"
+        // line and the last bubble in the thread agree.
+        messages: ticket.thread.map((message, messageIndex) => ({
+          id: `ticket-${index + 1}-message-${messageIndex + 1}`,
+          senderType: message.senderType,
+          message: message.message,
+          createdAt: new Date(
+            Date.parse(updatedAt) -
+              (ticket.thread.length - 1 - messageIndex) * 30 * 60_000,
+          ).toISOString(),
+        })),
+        createdAt: new Date(
+          Date.parse(updatedAt) - (ticket.thread.length - 1) * 30 * 60_000,
+        ).toISOString(),
+        updatedAt,
+      };
+    }),
     ticketAttachments: [],
     walletTransactions: Array.from({ length: 5 }, (_, index) => ({
       id: `wallet-transaction-${index + 1}`,

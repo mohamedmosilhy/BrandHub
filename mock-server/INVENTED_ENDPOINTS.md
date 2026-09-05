@@ -105,7 +105,7 @@ the app saved always matches by name.
 **To replace:** add `areaId` to the address payload. `resolveAddressArea` already returns an
 explicit `areaId` unchanged when one is present, so the function can then be deleted.
 
-# Contracted routes the mock had to shape (Phases 7 and 11)
+# Contracted routes the mock had to shape (Phases 7, 11 and 12)
 
 These routes **are** in `docs/ECommerce_API_Postman_Collection.json`, but it carries no response
 example for them, so the mock defines their payloads. They are listed here separately from the
@@ -121,6 +121,37 @@ Spring page — **unwrapped**, like `GET /orders` — of
   the prototype's list draws. The client narrows an unrecognised value to `UNKNOWN` and renders a
   neutral row, so a kind the backend adds later still reaches the customer.
 - `isRead=` filters; the client reads the whole list and counts unread itself for the home bell.
+
+## `GET /support/tickets` and `GET /support/tickets/{id}` (Phase 12)
+
+Spring page (and single object) of
+`{ id, ticketNumber, userId, orderId, category, priority, subject, description, status, messages[],
+createdAt, updatedAt }`, where a message is
+`{ id, senderType, message, createdAt }`.
+
+- `subject`, `description` and each `message` are resolved from `Accept-Language`.
+- **The list is ordered newest-updated first.** The prototype's my-tickets list is ordered by last
+  update, and a ticket the customer has just opened has to appear at the top of it.
+- **`POST /support/tickets` stores the `description` as the thread's opening customer message.**
+  The contracted body has `description` and no message array, but the prototype's thread opens with
+  exactly that text as the customer's first bubble. Storing it as a message keeps a replied-to
+  ticket from losing the complaint it was raised with. The client also tolerates a server that does
+  **not** do this — `ticketThread` in `src/domain/support` synthesises the opening bubble from
+  `description` when `messages` is empty — so either behaviour renders correctly.
+- **`status`.** The collection's admin routes set `OPEN`, `IN_PROGRESS` and `RESOLVED`; the mock
+  seeds one ticket in each. The client also accepts `CLOSED`, and narrows anything else to a
+  neutral "under review" row rather than dropping the ticket.
+- **`category`.** Only `ORDER` appears anywhere in the collection. The prototype's form offers six
+  choices, so the client sends `ORDER`, `PAYMENT`, `DELIVERY`, `RETURN`, `WALLET` and `OTHER`.
+  **The backend is asked to confirm this set.** An unrecognised category maps to `OTHER` on the way
+  in, so a narrower server enum degrades rather than breaks.
+- **`priority`.** `NORMAL` is the contract's middle value (the prototype labels it "Medium"); the
+  client sends `LOW`, `NORMAL` and `HIGH`.
+
+Not built, and deliberately: **ticket attachments**. `POST` and `GET
+/support/tickets/{id}/attachments` are contracted and the mock serves them, but the prototype's
+ticket screen has no attach control, and D13 is about not losing what the UI collects — not about
+adding controls the reference does not have. Raise it as a product question if support needs it.
 
 ## `GET /reviews/product/{productId}`
 

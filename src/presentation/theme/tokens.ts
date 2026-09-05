@@ -402,6 +402,42 @@ export const mobile = {
     taggedActionSize: 34,
     taggedActionIconSize: 16,
   },
+  /**
+   * Support. The ticket form, the my-tickets row and the two-sided thread, read off
+   * `design-reference/BRANDHUB App.dc.html`.
+   */
+  support: {
+    /** `padding: 16px; gap: 13px` form body; `gap: 7px` between chips and 8 between field parts. */
+    formPadding: 16,
+    formGap: 13,
+    fieldGap: 8,
+    chipGap: 7,
+    /** `border-radius: 12px; padding: 10px` priority blocks, three across. */
+    priorityRadius: 12,
+    priorityPadding: 10,
+    /** `border-radius: 16px; padding: 13px; gap: 7px` my-tickets row. */
+    rowRadius: 16,
+    rowPadding: 13,
+    rowGap: 7,
+    /** `padding: 16px 18px 12px; gap: 10px` ticket header block under the screen header. */
+    headerPaddingX: 18,
+    headerPaddingTop: 16,
+    headerPaddingBottom: 12,
+    headerGap: 10,
+    /** `padding: 16px; gap: 11px` thread; a bubble is `12px 14px` at radius 14, max 84% wide. */
+    threadPadding: 16,
+    threadGap: 11,
+    bubblePaddingX: 14,
+    bubblePaddingY: 12,
+    bubbleRadius: 14,
+    bubbleMaxWidth: '84%',
+    /** `padding: 14px 16px; gap: 9px` reply bar; a 44 px send button beside a 44 px field. */
+    replyPaddingX: 16,
+    replyPaddingY: 14,
+    replyGap: 9,
+    replyHeight: 44,
+    replyButtonPaddingX: 18,
+  },
   /** Notifications: a `38px` icon token at radius 11 beside copy, on a `14px 16px` row. */
   notification: {
     rowPaddingX: 16,

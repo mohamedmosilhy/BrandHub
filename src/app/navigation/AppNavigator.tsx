@@ -67,6 +67,7 @@ import { ProductScreen } from '@presentation/features/product';
 import { ProfileScreen } from '@presentation/features/profile';
 import { SearchScreen } from '@presentation/features/search';
 import { SellerStoreScreen } from '@presentation/features/sellerStore';
+import { SupportScreen, TicketScreen } from '@presentation/features/support';
 import {
   WishlistProvider,
   WishlistScreen,
@@ -650,6 +651,49 @@ function ProfileRoute() {
   );
 }
 
+function SupportRoute() {
+  const { getTickets, getOrders, createTicket } = useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  const orderId =
+    useRoute<RouteProp<AccountStackParamList, 'Support'>>().params?.orderId;
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'Support' }}
+      onRequireAuth={requestAuth}
+    >
+      <SupportScreen
+        // AC12.10 — arriving from order detail preselects that order.
+        {...(orderId ? { orderId } : {})}
+        getTickets={getTickets}
+        getOrders={getOrders}
+        createTicket={createTicket}
+        onBack={() => navigation.goBack()}
+        onOpenTicket={(ticketId) => navigation.navigate('Ticket', { ticketId })}
+      />
+    </RequireAuth>
+  );
+}
+
+function TicketRoute() {
+  const { getTicket, replyToTicket } = useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  const { ticketId } =
+    useRoute<RouteProp<AccountStackParamList, 'Ticket'>>().params;
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'Ticket' }}
+      onRequireAuth={requestAuth}
+    >
+      <TicketScreen
+        ticketId={ticketId}
+        getTicket={getTicket}
+        replyToTicket={replyToTicket}
+        onBack={() => navigation.goBack()}
+      />
+    </RequireAuth>
+  );
+}
+
 function AccountGatedRoute() {
   const route = useRoute();
   const returnTo = {
@@ -776,8 +820,8 @@ function AccountNavigator() {
       <AccountStack.Screen name="AddressForm" component={AddressFormRoute} />
       <AccountStack.Screen name="Wallet" component={AccountGatedRoute} />
       <AccountStack.Screen name="Gifts" component={AccountGatedRoute} />
-      <AccountStack.Screen name="Support" component={AccountGatedRoute} />
-      <AccountStack.Screen name="Ticket" component={AccountGatedRoute} />
+      <AccountStack.Screen name="Support" component={SupportRoute} />
+      <AccountStack.Screen name="Ticket" component={TicketRoute} />
       <AccountStack.Screen name="Profile" component={ProfileRoute} />
       <AccountStack.Screen name="Wishlist" component={WishlistRoute} />
       <AccountStack.Screen

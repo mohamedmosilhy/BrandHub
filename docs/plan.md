@@ -1,11 +1,12 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Implemented through Phase 9, plus Phase 11 — Phase 10 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
+**Status:** **Implemented through Phase 9, plus Phases 11 and 12 — Phase 10 is the last customer feature open** · **Companion document:** [`architecture.md`](./architecture.md)
 **Date:** 2026-09-05 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
-> Phases 1–9 and Phase 11 are implemented. Their completion reports are in `docs/reports/`.
-> Phase 11 depends on Phase 6 alone, so it was taken ahead of Phase 10; Phase 10 remains open.
+> Phases 1–9, 11 and 12 are implemented. Their completion reports are in `docs/reports/`.
+> Phase 11 depends on Phase 6 and Phase 12 on Phase 9, so both were taken ahead of Phase 10.
+> **Phase 10 — wallet, gifts and the payment result — is the only customer feature still open.**
 > All 17 open questions were approved as recommended on 2026-09-02 and are recorded as decisions
 > **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 6.**
 
@@ -70,7 +71,7 @@ behaviour. They are collected at the end of this document under
 | 9     | Account, orders and addresses                    | 5, 8       | Done       |
 | 10    | Wallet, gifts and payment result                 | 9          | **Medium** |
 | 11    | Social commerce and notifications                | 6          | Done       |
-| 12    | Support                                          | 9          | Small      |
+| 12    | Support                                          | 9          | Done       |
 | 13    | Integration, QA and release preparation          | 1–12       | **Large**  |
 | 14    | Seller app — deferred track, not part of v1 (D1) | 13         | Out of v1  |
 
@@ -1000,7 +1001,10 @@ Phase 9 done.
 ### Tasks
 
 1. Domain: `Ticket`, `TicketMessage`, `TicketCategory`, `TicketPriority`, `TicketStatus`; `SupportRepository` port; `CreateTicketUseCase`, `GetTicketsUseCase`, `GetTicketUseCase`, `ReplyToTicketUseCase`.
-2. Data: DTOs, schemas, mappers, data source, repository against the mock's invented endpoints.
+2. Data: DTOs, schemas, mappers, data source, repository. **Amended by D19** — support tickets are
+   on the **real contract**, so the repository is `HttpSupportRepository` from the start rather than
+   a mock. What the collection lacks is a response example, so the field set is the mock's and is
+   recorded in `INVENTED_ENDPOINTS.md` under the routes the backend already owns.
 3. Build the support screen: the new-ticket form with six category chips, three priority chips, a related-order select, subject and description; the my-tickets list with number, status pill, subject and meta line; and the empty state.
 4. Build the ticket detail: header with number and status, meta chips for category, priority and order, last-update line, the two-sided message thread, and the reply box.
 5. Accept a pre-selected order from the order-detail entry point.
@@ -1031,16 +1035,31 @@ Phase 9 done.
 - AC12.11 An account with no tickets shows the empty state.
 - AC12.12 Both screens render correctly in Arabic RTL and English LTR.
 
-### Review checklist
+### Review checklist — implementation audit 2026-09-05
 
-- [ ] Thread layout compared against the prototype, including the RTL alignment of the two sides.
-- [ ] Are the status tints exactly the reference's?
-- [ ] Is the provisional nature of these endpoints documented?
+- [x] Thread layout compared against the prototype, including the RTL alignment of the two sides.
+      The two sides use `alignSelf: 'flex-start'` and `'flex-end'`, which Yoga resolves against the
+      reading direction, so the swap is automatic rather than conditional on the locale. The bubble
+      geometry — `12px 14px` at radius 14, capped at 84% — is pinned in `tokens.test.ts`, and the
+      alignment itself is asserted in `TicketScreen.test.tsx`.
+- [x] Are the status tints exactly the reference's? The prototype's three states are
+      `#FCEEF3/#D4537E`, `#FEF7E0/#B98900` and `#E3F5EF/#2E9E7A` — the `pink`, `warning` and
+      `success` badge tones. `OPEN`, `IN_PROGRESS` and `RESOLVED` take those three slots; `CLOSED`
+      and an unrecognised status are neutral, because neither is a state the prototype tints.
+- [x] Is the provisional nature of these endpoints documented? The routes are **not** provisional —
+      D19 moved support onto the real contract, and the repository is `Http` accordingly. What is
+      provisional is the _field set_ (the collection carries no response example) and the
+      **six-value category enum**, of which only `ORDER` is evidenced. Both are recorded in
+      `INVENTED_ENDPOINTS.md` and raised for the backend.
+- [ ] Both screens approved against the reference. Automated geometry checks pass; the physical
+      AR/EN visual sign-off carries over to the Phase 13 release gate, as it does for Phases 7–9
+      and 11.
 
 ### Definition of done
 
 All twelve criteria pass; the support journey is green; both screens are approved against the
-reference.
+reference. **Met 2026-09-05** — see
+[`reports/phase-12-report.md`](./reports/phase-12-report.md).
 
 ---
 

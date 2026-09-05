@@ -790,6 +790,94 @@ describe('customer endpoint inventory', () => {
     );
   });
 
+  it('serves the support shapes Phase 12 renders', async () => {
+    const { authorization } = await signIn();
+    const authenticated = () => ({ Authorization: authorization });
+
+    const tickets = await request(app)
+      .get('/api/v1/support/tickets')
+      .set('Accept-Language', 'en')
+      .set(authenticated());
+    expect(tickets.status).toBe(200);
+    // Newest first, so a ticket the customer just opened is at the top of the list (AC12.4).
+    expect(
+      tickets.body.data.content.map(
+        (ticket: { status: string }) => ticket.status,
+      ),
+    ).toEqual(['OPEN', 'IN_PROGRESS', 'RESOLVED']);
+    expect(tickets.body.data.content[0]).toMatchObject({
+      ticketNumber: 'TKT-2026-0001',
+      category: 'DELIVERY',
+      priority: 'HIGH',
+      subject: 'Order arrived later than promised',
+    });
+    // The thread has two sides, and it is localised like the rest of the copy.
+    expect(
+      tickets.body.data.content[0].messages.map(
+        (message: { senderType: string }) => message.senderType,
+      ),
+    ).toEqual(['CUSTOMER', 'SUPPORT', 'CUSTOMER']);
+    const arabic = await request(app)
+      .get('/api/v1/support/tickets/ticket-1')
+      .set('Accept-Language', 'ar')
+      .set(authenticated());
+    expect(arabic.body.data.subject).toBe('لم يصل الطلب في الوقت المحدد');
+
+    // Creating: the description becomes the opening message, so a replied-to ticket keeps it.
+    const created = await request(app)
+      .post('/api/v1/support/tickets')
+      .set(authenticated())
+      .send({
+        orderId: 'order-1',
+        category: 'PAYMENT',
+        priority: 'NORMAL',
+        subject: 'Promo code not applying',
+        description: 'Code HUB20 errors out at checkout.',
+      });
+    expect(created.status).toBe(201);
+    expect(created.body.data).toMatchObject({
+      status: 'OPEN',
+      orderId: 'order-1',
+      category: 'PAYMENT',
+    });
+    expect(created.body.data.messages).toEqual([
+      expect.objectContaining({
+        senderType: 'CUSTOMER',
+        message: 'Code HUB20 errors out at checkout.',
+      }),
+    ]);
+
+    const ticketId = created.body.data.id as string;
+    const reply = await request(app)
+      .post(`/api/v1/support/tickets/${ticketId}/messages`)
+      .set(authenticated())
+      .send({ message: 'Any update?' });
+    expect(reply.status).toBe(201);
+    const reread = await request(app)
+      .get(`/api/v1/support/tickets/${ticketId}`)
+      .set(authenticated());
+    expect(
+      reread.body.data.messages.map(
+        (message: { message: string }) => message.message,
+      ),
+    ).toEqual(['Code HUB20 errors out at checkout.', 'Any update?']);
+    // The reply moved the ticket to the top of the list, which is what its meta line reports.
+    const after = await request(app)
+      .get('/api/v1/support/tickets')
+      .set(authenticated());
+    expect(after.body.data.content[0].id).toBe(ticketId);
+
+    // A ticket with no subject is refused rather than stored half-formed.
+    expect(
+      (
+        await request(app)
+          .post('/api/v1/support/tickets')
+          .set(authenticated())
+          .send({ category: 'OTHER', priority: 'LOW', description: 'Hello' })
+      ).status,
+    ).toBe(400);
+  });
+
   it('serves the social and notification shapes Phase 11 renders', async () => {
     const { authorization } = await signIn();
 

@@ -1392,7 +1392,7 @@ function registerSupportAndGiftRoutes(app: Express, store: MockStore): void {
         );
       const messages = ticket['messages'] as Row[];
       const message = {
-        id: nextId(messages, 'ticket-message'),
+        id: `${stringValue(ticket['id'])}-message-${messages.length + 1}`,
         senderType: 'CUSTOMER',
         message: request.body['message'],
         createdAt: now(),
@@ -1407,15 +1407,22 @@ function registerSupportAndGiftRoutes(app: Express, store: MockStore): void {
     const ticket = byId(store.data.tickets, request.params.id);
     if (!ticket)
       return error(response, 404, 'TICKET_NOT_FOUND', 'Ticket was not found');
-    response.json(envelope(ticket));
+    response.json(envelope(localise(ticket, localeOf(request))));
   });
   app.get('/api/v1/support/tickets', (request, response) =>
     response.json(
       envelope(
         pageOf(
-          store.data.tickets.filter(
-            (item) => item['userId'] === authenticatedUserId(response),
-          ),
+          store.data.tickets
+            .filter((item) => item['userId'] === authenticatedUserId(response))
+            // Newest first: the prototype's list is ordered by last update, and a ticket the
+            // customer just opened has to be at the top of it (AC12.4).
+            .sort((a, b) =>
+              stringValue(b['updatedAt']).localeCompare(
+                stringValue(a['updatedAt']),
+              ),
+            )
+            .map((item) => localise(item, localeOf(request)) as Row),
           request,
         ),
       ),
@@ -1425,8 +1432,10 @@ function registerSupportAndGiftRoutes(app: Express, store: MockStore): void {
     for (const field of ['category', 'priority', 'subject', 'description'])
       if (!request.body[field])
         return error(response, 400, 'INVALID_TICKET', `${field} is required`);
+    const id = nextId(store.data.tickets, 'ticket');
+    const createdAt = now();
     const ticket = {
-      id: nextId(store.data.tickets, 'ticket'),
+      id,
       ticketNumber: `TKT-2026-${String(store.data.tickets.length + 1).padStart(4, '0')}`,
       userId: authenticatedUserId(response),
       orderId: request.body['orderId'] ?? null,
@@ -1435,9 +1444,18 @@ function registerSupportAndGiftRoutes(app: Express, store: MockStore): void {
       subject: request.body['subject'],
       description: request.body['description'],
       status: 'OPEN',
-      messages: [],
-      createdAt: now(),
-      updatedAt: now(),
+      // The description *is* the opening message of the thread. Storing it as one keeps a replied-to
+      // ticket from losing the complaint it was opened with, and matches how the seeded tickets read.
+      messages: [
+        {
+          id: `${id}-message-1`,
+          senderType: 'CUSTOMER',
+          message: request.body['description'],
+          createdAt,
+        },
+      ],
+      createdAt,
+      updatedAt: createdAt,
     };
     store.data.tickets.push(ticket);
     store.write();
