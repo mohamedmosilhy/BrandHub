@@ -790,6 +790,95 @@ describe('customer endpoint inventory', () => {
     );
   });
 
+  it('serves the social and notification shapes Phase 11 renders', async () => {
+    const { authorization } = await signIn();
+
+    // Browsing the social feed is public (D3); the shape carries everything the profile shows.
+    const influencers = await request(app)
+      .get('/api/v1/influencers')
+      .set('Accept-Language', 'en');
+    expect(influencers.status).toBe(200);
+    expect(influencers.body.data.content[0]).toMatchObject({
+      id: 'influencer-1',
+      name: 'Layan Al Maamari',
+      handle: '@layan.style',
+      followerCount: 215_000,
+      postCount: 128,
+      productCount: 46,
+      isFollowing: false,
+    });
+
+    // A post carries its tagged products inline, so a feed is one request, not one per product.
+    const posts = await request(app)
+      .get('/api/v1/posts?influencerId=influencer-1')
+      .set('Accept-Language', 'en');
+    expect(posts.body.data.content).toHaveLength(2);
+    expect(posts.body.data.content[0]).toMatchObject({
+      influencerId: 'influencer-1',
+      likeCount: 2_400,
+      commentCount: 86,
+      productIds: ['product-9'],
+    });
+    expect(posts.body.data.content[0].products[0].id).toBe('product-9');
+
+    // Following is resolved per user and survives the request that created it.
+    await request(app)
+      .post('/api/v1/influencers/influencer-1/follow')
+      .set('Authorization', authorization);
+    const followed = await request(app)
+      .get('/api/v1/influencers/influencer-1')
+      .set('Authorization', authorization);
+    expect(followed.body.data.isFollowing).toBe(true);
+    // Following twice is the same relationship, not a second row.
+    await request(app)
+      .post('/api/v1/influencers/influencer-1/follow')
+      .set('Authorization', authorization);
+    await request(app)
+      .delete('/api/v1/influencers/influencer-1/follow')
+      .set('Authorization', authorization);
+    expect(
+      (
+        await request(app)
+          .get('/api/v1/influencers/influencer-1')
+          .set('Authorization', authorization)
+      ).body.data.isFollowing,
+    ).toBe(false);
+
+    // Arabic resolves from Accept-Language, exactly as the catalogue does (D9).
+    const arabic = await request(app)
+      .get('/api/v1/influencers/influencer-1')
+      .set('Accept-Language', 'ar');
+    expect(arabic.body.data.name).toBe('ليان المعمري');
+
+    const notifications = await request(app)
+      .get('/api/v1/notifications')
+      .set('Accept-Language', 'en')
+      .set('Authorization', authorization);
+    expect(notifications.body.content).toHaveLength(5);
+    expect(notifications.body.content[0]).toMatchObject({
+      type: 'ORDER',
+      title: 'Order #BH-284193 is being prepared',
+      isRead: false,
+    });
+
+    // The invented mark-all-read reports what it changed, and changes nothing on a second call.
+    const first = await request(app)
+      .post('/api/v1/notifications/read-all')
+      .set('Authorization', authorization);
+    expect(first.body.data).toEqual({ updated: 2 });
+    expect(
+      (
+        await request(app)
+          .post('/api/v1/notifications/read-all')
+          .set('Authorization', authorization)
+      ).body.data,
+    ).toEqual({ updated: 0 });
+    const unread = await request(app)
+      .get('/api/v1/notifications?isRead=false')
+      .set('Authorization', authorization);
+    expect(unread.body.content).toHaveLength(0);
+  });
+
   it('serves the product-detail shapes Phase 7 renders', async () => {
     const reviews = await request(app).get('/api/v1/reviews/product/product-1');
     expect(reviews.status).toBe(200);

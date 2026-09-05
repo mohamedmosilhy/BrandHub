@@ -29,11 +29,20 @@ import {
   UpdateProfileUseCase,
 } from '@domain/identity';
 import {
+  GetNotificationsUseCase,
+  MarkAllReadUseCase,
+} from '@domain/notifications';
+import {
   GetOrderDetailUseCase,
   GetOrdersUseCase,
   PlaceOrderUseCase,
   RequestReturnUseCase,
 } from '@domain/orders';
+import {
+  FollowInfluencerUseCase,
+  GetInfluencerProfileUseCase,
+  GetInfluencersUseCase,
+} from '@domain/social';
 import { ToggleWishlistUseCase } from '@domain/wishlist';
 
 import {
@@ -71,7 +80,15 @@ import {
   HttpAuthRepository,
   SessionLocalDataSource,
 } from '@data/identity';
+import {
+  HttpNotificationRepository,
+  NotificationRemoteDataSource,
+} from '@data/notifications';
 import { HttpOrderRepository, OrderRemoteDataSource } from '@data/orders';
+import {
+  InfluencerRemoteDataSource,
+  MockInfluencerRepository,
+} from '@data/social';
 import {
   HttpWishlistRepository,
   WishlistRemoteDataSource,
@@ -194,6 +211,25 @@ const addressRepository = new HttpAddressRepository(
 const saveAddress = new SaveAddressUseCase(addressRepository);
 const setDefaultAddress = new SetDefaultAddressUseCase(addressRepository);
 const deleteAddress = new DeleteAddressUseCase(addressRepository);
+/**
+ * Provisional by name (FA1). Influencers, shoppable posts and follows are the one feature area
+ * with no backend contract, so the container binds `InfluencerRepository` to a mock-only
+ * implementation. When the backend delivers GAP-1 this line is the whole migration.
+ */
+const influencerRepository = new MockInfluencerRepository(
+  new InfluencerRemoteDataSource(httpClient),
+  resolveAssetUrl,
+);
+const getInfluencers = new GetInfluencersUseCase(influencerRepository);
+const getInfluencerProfile = new GetInfluencerProfileUseCase(
+  influencerRepository,
+);
+const followInfluencer = new FollowInfluencerUseCase(influencerRepository);
+const notificationRepository = new HttpNotificationRepository(
+  new NotificationRemoteDataSource(httpClient),
+);
+const getNotifications = new GetNotificationsUseCase(notificationRepository);
+const markAllRead = new MarkAllReadUseCase(notificationRepository);
 const queryClient = createAppQueryClient(logger);
 
 export const container = Object.freeze({
@@ -241,6 +277,13 @@ export const container = Object.freeze({
   saveAddress,
   setDefaultAddress,
   deleteAddress,
+  influencerRepository,
+  getInfluencers,
+  getInfluencerProfile,
+  followInfluencer,
+  notificationRepository,
+  getNotifications,
+  markAllRead,
   queryClient,
 });
 

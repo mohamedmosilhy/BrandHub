@@ -1,10 +1,11 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Implemented through Phase 9 — Phase 10 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
-**Date:** 2026-09-04 · **Reviewer / decision maker:** repository owner
+**Status:** **Implemented through Phase 9, plus Phase 11 — Phase 10 cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
+**Date:** 2026-09-05 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
-> Phases 1–9 are implemented. Their completion reports are in `docs/reports/`.
+> Phases 1–9 and Phase 11 are implemented. Their completion reports are in `docs/reports/`.
+> Phase 11 depends on Phase 6 alone, so it was taken ahead of Phase 10; Phase 10 remains open.
 > All 17 open questions were approved as recommended on 2026-09-02 and are recorded as decisions
 > **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 6.**
 
@@ -68,7 +69,7 @@ behaviour. They are collected at the end of this document under
 | 8     | Cart and checkout                                | 7          | Done       |
 | 9     | Account, orders and addresses                    | 5, 8       | Done       |
 | 10    | Wallet, gifts and payment result                 | 9          | **Medium** |
-| 11    | Social commerce and notifications                | 6          | Medium     |
+| 11    | Social commerce and notifications                | 6          | Done       |
 | 12    | Support                                          | 9          | Small      |
 | 13    | Integration, QA and release preparation          | 1–12       | **Large**  |
 | 14    | Seller app — deferred track, not part of v1 (D1) | 13         | Out of v1  |
@@ -961,17 +962,28 @@ Phase 6 done. Notifications are an in-app list only, with no push (D17).
 - AC11.11 Every repository backed by an invented endpoint is named and documented as provisional (FA1).
 - AC11.12 No push permission is requested and no device token is registered; the list refreshes on open and on pull-to-refresh (D17).
 
-### Review checklist
+### Review checklist — implementation audit 2026-09-05
 
-- [ ] Is the shoppable-post layout faithful to the prototype?
-- [ ] Are the provisional repositories obviously provisional in the code and in the container?
-- [ ] Is D17 respected — in-app list only, no permission prompt, no device token?
-- [ ] Both screens compared against the prototype.
+- [x] Is the shoppable-post layout faithful to the prototype? The card's geometry — a 232 px cover,
+      the `11px 14px 6px` like-and-comment row, the caption, and the tagged-product panel with its
+      46 px thumbnail and 34 px cart action — is pinned in `theme/tokens.ts` and asserted in
+      `tokens.test.ts`, so a drift is a failing test rather than a visual regression.
+- [x] Are the provisional repositories obviously provisional in the code and in the container?
+      `MockInfluencerRepository` is named for it, its class comment says it is the only thing that
+      stops at migration, and the container's binding carries the same note.
+      `HttpNotificationRepository` keeps its `Http` name because reading is contracted; its one
+      invented write is isolated in `NotificationRemoteDataSource.markAllRead`.
+- [x] Is D17 respected — in-app list only, no permission prompt, no device token? No notification
+      permission API is called anywhere, no device token is registered, and no push dependency was
+      added. The list refreshes on open and on refetch.
+- [ ] Both screens compared against the prototype. Automated geometry checks pass; the physical
+      AR/EN visual sign-off carries over to the Phase 13 release gate, as it does for Phases 7–9.
 
 ### Definition of done
 
-All eleven criteria pass; the social journey is green; the invented endpoints for this phase are in
-`INVENTED_ENDPOINTS.md`.
+All twelve criteria pass; the social journey is green; the invented endpoints for this phase are in
+`INVENTED_ENDPOINTS.md`. **Met 2026-09-05** — see
+[`reports/phase-11-report.md`](./reports/phase-11-report.md).
 
 ---
 
@@ -1162,14 +1174,14 @@ domain, data and design-system layers are reusable either way.
 Six actions sit with people outside this project. **None blocks a phase.** Each has an interim
 behaviour that lets the work proceed, and a checkpoint where its absence starts to cost something.
 
-| ID          | Action                                                                                                                                                                                                                                                                                                                      | Owner         | Interim behaviour                                                      | Checkpoint                          | If it never lands                                                                   |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------- |
-| **FA1**     | Support tickets, returns, gift money, the delivery OTP and stock are **delivered** in the expanded collection. What remains: influencers and shoppable posts, delivery time slots and the express flag, phone OTP, confirming how an address resolves to a shipping area, and a real field for the address label (Phase 9). | Backend       | Mock-only repositories behind real domain ports, named as provisional. | Phase 13 review, then at migration. | Only social commerce stops at migration. Everything else runs on the real contract. |
-| **FA2**     | Add `averageRating` and `reviewCount` to product responses.                                                                                                                                                                                                                                                                 | Backend       | The mock serves both.                                                  | Phase 6 acceptance.                 | Ratings vanish from cards, or an N+1 fetch has to be introduced.                    |
-| **FA3**     | Honour `Accept-Language` for catalogue content.                                                                                                                                                                                                                                                                             | Backend       | The mock resolves from a stored `{ ar, en }` pair.                     | Phase 6 acceptance.                 | Arabic titles fall back to whatever single language the API stores.                 |
-| **FA4**     | Obtain the GE Dinar One licence.                                                                                                                                                                                                                                                                                            | Brand / legal | Noto Kufi Arabic ships behind a single theme token.                    | Phase 2 review.                     | The app ships in the face the prototype already renders with.                       |
-| **FA5**     | Native Arabic review of all drafted copy.                                                                                                                                                                                                                                                                                   | Content       | Placeholders drafted in both languages in Phase 2.                     | **Release gate, Phase 13.**         | Phase 13 does not clear.                                                            |
-| ~~**FA6**~~ | ~~Confirm the free-delivery threshold.~~ **Closed:** the API supplies it as `area.minOrderAmount`.                                                                                                                                                                                                                          | Closed        | Closed                                                                 | Closed                              | Closed                                                                              |
+| ID          | Action                                                                                                                                                                                                                                                                                                                                                                                                 | Owner         | Interim behaviour                                                      | Checkpoint                          | If it never lands                                                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- | ---------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **FA1**     | Support tickets, returns, gift money, the delivery OTP and stock are **delivered** in the expanded collection. What remains: influencers, shoppable posts and follows — **specified in full by Phase 11** — marking a notification read, delivery time slots and the express flag, phone OTP, confirming how an address resolves to a shipping area, and a real field for the address label (Phase 9). | Backend       | Mock-only repositories behind real domain ports, named as provisional. | Phase 13 review, then at migration. | Only social commerce stops at migration; notifications keep reading and lose only mark-all-read. Everything else runs on the real contract. |
+| **FA2**     | Add `averageRating` and `reviewCount` to product responses.                                                                                                                                                                                                                                                                                                                                            | Backend       | The mock serves both.                                                  | Phase 6 acceptance.                 | Ratings vanish from cards, or an N+1 fetch has to be introduced.                                                                            |
+| **FA3**     | Honour `Accept-Language` for catalogue content.                                                                                                                                                                                                                                                                                                                                                        | Backend       | The mock resolves from a stored `{ ar, en }` pair.                     | Phase 6 acceptance.                 | Arabic titles fall back to whatever single language the API stores.                                                                         |
+| **FA4**     | Obtain the GE Dinar One licence.                                                                                                                                                                                                                                                                                                                                                                       | Brand / legal | Noto Kufi Arabic ships behind a single theme token.                    | Phase 2 review.                     | The app ships in the face the prototype already renders with.                                                                               |
+| **FA5**     | Native Arabic review of all drafted copy.                                                                                                                                                                                                                                                                                                                                                              | Content       | Placeholders drafted in both languages in Phase 2.                     | **Release gate, Phase 13.**         | Phase 13 does not clear.                                                                                                                    |
+| ~~**FA6**~~ | ~~Confirm the free-delivery threshold.~~ **Closed:** the API supplies it as `area.minOrderAmount`.                                                                                                                                                                                                                                                                                                     | Closed        | Closed                                                                 | Closed                              | Closed                                                                                                                                      |
 
 ---
 

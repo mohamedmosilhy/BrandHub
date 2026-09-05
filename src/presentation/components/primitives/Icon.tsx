@@ -8,6 +8,7 @@ export type IconName =
   | 'arrow-back'
   | 'bell'
   | 'cart'
+  | 'chat'
   | 'check'
   | 'chevron-down'
   | 'close'
@@ -71,6 +72,11 @@ function Glyph({ name }: { name: IconName }): ReactNode {
           <Circle cx="9.5" cy="19" r="1.4" />
           <Circle cx="17" cy="19" r="1.4" />
         </>
+      );
+    // The prototype's comment bubble, on the shoppable post card beside the like count.
+    case 'chat':
+      return (
+        <Path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1L3 20l1-5.3a8.5 8.5 0 1 1 17-3.2z" />
       );
     case 'check':
       return <Polyline points="5 12.5 9.5 17 19 7.5" />;

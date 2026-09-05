@@ -2,18 +2,62 @@
 
 Only three feature areas remain uncontracted. These mock routes are isolated here so the backend
 team can adopt or replace them explicitly. All responses use `{ "success": true, "data": ... }`.
+Section 1b adds one route to a resource that is otherwise contracted.
 
 ## 1. Influencers, shoppable posts and follows
 
+The whole feature area. The shapes below are the specification handed to the backend team: the
+client's Zod schemas in `src/data/social/dto` are strict against exactly these fields, so a
+mismatch fails loudly at the boundary rather than rendering as `undefined`. The client binds them
+through `MockInfluencerRepository`, named to keep its provisional status visible in the container.
+
 - `GET /influencers?page=0&size=20` → Spring page of
-  `{ id, name, handle, followerCount, taggedProductIds[] }`.
+  `{ id, name, handle, bio, avatarUrl, followerCount, postCount, productCount,
+taggedProductIds[], isFollowing }`.
+  - `name` and `bio` are resolved from `Accept-Language` (D9), as the catalogue's are.
+  - `handle` carries its own leading `@`; the client normalises it into a `Handle` value object
+    regardless.
+  - `postCount` and `productCount` are the profile's two non-follower stats. **The server owns
+    them.** The client never derives a count from a page it happens to be holding.
+  - `isFollowing` is resolved for the bearer token on the request. Browsing is public (D3), so a
+    request without a token reads `false` — the route must accept an **optional** session rather
+    than ignoring one.
 - `GET /influencers/{id}` → the same influencer entity.
-- `GET /posts?page=0&size=20` → Spring page of
-  `{ id, influencerId, caption, productIds[], createdAt }`; `caption` is resolved from
-  `Accept-Language`.
+- `GET /posts?influencerId={id}&page=0&size=20` → Spring page of
+  `{ id, influencerId, imageUrl, caption, likeCount, commentCount, productIds[], products[],
+createdAt }`.
+  - `caption` is resolved from `Accept-Language`.
+  - **`products` embeds the tagged products in full**, in the same shape `GET /products` returns.
+    A feed is one request; without the embed, opening a profile would fan out into one product
+    request per tagged item — the N+1 D14 already rejected for card ratings. `productIds` remains
+    the membership statement, so a tagged product the server cannot resolve narrows the card
+    instead of leaving a broken tile.
+  - `influencerId` filters the feed. Omitted, the route answers every post.
 - `POST /influencers/{id}/follow` with no body →
-  `{ id, userId, influencerId, createdAt }`. Bearer token required.
+  `{ id, userId, influencerId, createdAt }`. Bearer token required. **Idempotent**: following an
+  influencer already followed returns the existing relationship rather than creating a second row.
 - `DELETE /influencers/{id}/follow` → `204`. Bearer token required.
+
+Not built, and deliberately: **direct messaging**. The prototype's influencer profile carries a
+`Message` action beside `Follow`. Nothing in the collection describes a conversation, so the button
+says messaging is out of v1 rather than opening a dead screen. It is a product question, not an
+oversight.
+
+## 1b. Marking notifications read
+
+`GET /notifications?isRead=&page=&size=` **is** contracted (see the last section of this file for
+the field set the mock had to shape). Nothing that marks one read is, and the prototype's list
+carries a mark-all-read action, so one route is invented for it:
+
+- `POST /notifications/read-all` with no body → `{ updated: <number of rows changed> }`.
+  Bearer token required. Returning the count lets the client tell a no-op from a change.
+
+The client's `HttpNotificationRepository` is named `Http`, not `Mock`, because reading is
+contracted; this one write is the provisional part and is confined to
+`NotificationRemoteDataSource.markAllRead`.
+
+**To replace:** if the backend prefers per-row marking (`PATCH /notifications/{id}`), the client
+change is that one data-source method plus the `MarkAllReadUseCase` that calls it.
 
 ## 2. Delivery time slots and express flag
 
@@ -61,11 +105,22 @@ the app saved always matches by name.
 **To replace:** add `areaId` to the address payload. `resolveAddressArea` already returns an
 explicit `areaId` unchanged when one is present, so the function can then be deleted.
 
-# Contracted routes the mock had to shape (Phase 7)
+# Contracted routes the mock had to shape (Phases 7 and 11)
 
 These routes **are** in `docs/ECommerce_API_Postman_Collection.json`, but it carries no response
 example for them, so the mock defines their payloads. They are listed here separately from the
 invented endpoints above: the backend owns the routes already, and only the field set is at stake.
+
+## `GET /notifications` (Phase 11)
+
+Spring page — **unwrapped**, like `GET /orders` — of
+`{ id, userId, type, title, body, isRead, createdAt }`.
+
+- `title` and `body` are resolved from `Accept-Language`.
+- `type` is one of `ORDER`, `DELIVERY`, `PROMOTION`, `SOCIAL`, `PRICE_DROP` — the five icon tokens
+  the prototype's list draws. The client narrows an unrecognised value to `UNKNOWN` and renders a
+  neutral row, so a kind the backend adds later still reaches the customer.
+- `isRead=` filters; the client reads the whole list and counts unread itself for the home bell.
 
 ## `GET /reviews/product/{productId}`
 

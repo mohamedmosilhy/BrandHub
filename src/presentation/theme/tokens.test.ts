@@ -2,6 +2,7 @@ import {
   colors,
   fontFamilies,
   fontSizes,
+  gradients,
   lineHeights,
   mobile,
   radius,
@@ -130,6 +131,31 @@ describe('BRANDHUB theme tokens', () => {
       copyPaddingTop: 9,
       copyPaddingBottom: 12,
     });
+  });
+
+  it('pins the social-commerce and notification geometry to the prototype', () => {
+    // `padding: 11px; border-radius: 16px; gap: 12px` with a 52 px ring on the directory row.
+    expect(mobile.influencer.rowPadding).toBe(11);
+    expect(mobile.influencer.rowRadius).toBe(16);
+    expect(mobile.influencer.rowAvatarSize).toBe(52);
+    // The profile band: a 78 px ring, 40 px actions at radius 12, three stats on a 22 px gap.
+    expect(mobile.influencer.avatarSize).toBe(78);
+    expect(mobile.influencer.actionHeight).toBe(40);
+    expect(mobile.influencer.actionRadius).toBe(12);
+    expect(mobile.influencer.statGap).toBe(22);
+    // The shoppable post: a 232 px cover, an 18 px card and a 46 px tagged-product thumbnail.
+    expect(mobile.influencer.postImageHeight).toBe(232);
+    expect(mobile.influencer.postRadius).toBe(18);
+    expect(mobile.influencer.taggedThumbSize).toBe(46);
+    expect(mobile.influencer.taggedRadius).toBe(14);
+    // The notification row: a 38 px icon token at radius 11 on a `14px 16px` row.
+    expect(mobile.notification.tokenSize).toBe(38);
+    expect(mobile.notification.tokenRadius).toBe(11);
+    expect(mobile.notification.rowPaddingY).toBe(14);
+    expect(mobile.notification.rowPaddingX).toBe(16);
+    expect(gradients.influencerCover.css).toBe(
+      'linear-gradient(150deg, #EEEDF9 0%, #FCEEF3 100%)',
+    );
   });
 
   it('carries the two type steps Phase 7 needed', () => {

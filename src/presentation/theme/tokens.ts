@@ -110,6 +110,16 @@ export const gradients = {
     end: { x: 1, y: 1 },
     css: 'linear-gradient(135deg, #1A1A2E 0%, #4A4470 100%)',
   },
+  /**
+   * `linear-gradient(150deg, #EEEDF9 0%, #FCEEF3 100%)` — the influencer profile's header band.
+   * The one soft-tint gradient in the app; every other cover is ink or brand.
+   */
+  influencerCover: {
+    colors: [colors.accentLight, colors.pinkLight] as const,
+    start: { x: 0, y: 0 },
+    end: { x: 0.5, y: 1 },
+    css: 'linear-gradient(150deg, #EEEDF9 0%, #FCEEF3 100%)',
+  },
   /** The app prototype's onboarding hero scrim: .25 → .55 → solid ink. */
   onboardingHero: {
     colors: [
@@ -331,6 +341,75 @@ export const mobile = {
     copyPaddingX: 11,
     copyPaddingTop: 9,
     copyPaddingBottom: 12,
+  },
+  /**
+   * Social commerce. The directory row, the profile band and the shoppable post card, all read
+   * off `design-reference/BRANDHUB App.dc.html`.
+   */
+  influencer: {
+    /** `border-radius: 16px; padding: 11px; gap: 12px` directory row. */
+    rowRadius: 16,
+    rowPadding: 11,
+    rowGap: 12,
+    /** `52px` ring with a 2 px gradient edge and a 2 px white inner border. */
+    rowAvatarSize: 52,
+    rowAvatarRing: 2,
+    /** `padding: 5px 14px; border: 1.5px` outline follow pill on the row. */
+    followPillPaddingX: 14,
+    followPillPaddingY: 5,
+    followPillBorder: 1.5,
+    /** `padding: 14px 16px 20px` tinted profile band. */
+    coverPaddingX: 16,
+    coverPaddingTop: 14,
+    coverPaddingBottom: 20,
+    backSize: 34,
+    backIconSize: 20,
+    /** `78px` profile ring with a 3 px gradient edge and a 3 px white inner border. */
+    avatarSize: 78,
+    avatarRing: 3,
+    identityGap: 14,
+    /** `height: 40px; border-radius: 12px` follow and message actions in a 10 px row. */
+    actionHeight: 40,
+    actionRadius: 12,
+    actionGap: 10,
+    actionsTop: 16,
+    /** The three stats sit on a 22 px gap, unboxed — unlike the seller store's tinted blocks. */
+    statGap: 22,
+    statsTop: 16,
+    feedPaddingX: 16,
+    feedPaddingBottom: 24,
+    feedGap: 14,
+    /** `border-radius: 18px` post card over a `232px` cover image. */
+    postRadius: 18,
+    postImageHeight: 232,
+    /** `padding: 11px 14px 6px; gap: 16px` like and comment row. */
+    postMetaPaddingX: 14,
+    postMetaPaddingTop: 11,
+    postMetaPaddingBottom: 6,
+    postMetaGap: 16,
+    postLikeIconSize: 19,
+    postCommentIconSize: 18,
+    postCaptionPaddingBottom: 8,
+    /** `margin: 8px 12px 12px; padding: 9px; border-radius: 14px` tagged-product card. */
+    taggedMargin: 12,
+    taggedMarginTop: 8,
+    taggedPadding: 9,
+    taggedRadius: 14,
+    taggedGap: 11,
+    /** `46px` thumbnail at radius 10 beside a `34px` circular cart action. */
+    taggedThumbSize: 46,
+    taggedThumbRadius: 10,
+    taggedActionSize: 34,
+    taggedActionIconSize: 16,
+  },
+  /** Notifications: a `38px` icon token at radius 11 beside copy, on a `14px 16px` row. */
+  notification: {
+    rowPaddingX: 16,
+    rowPaddingY: 14,
+    rowGap: 12,
+    tokenSize: 38,
+    tokenRadius: 11,
+    copyGap: 4,
   },
   /** Toast floats `bottom: 118px` in the prototype — above the tab bar, not behind it. */
   toastInsetX: 20,

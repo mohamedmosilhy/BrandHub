@@ -93,14 +93,21 @@ function isPublic(request: Request): boolean {
 
 export function bearerAuth(): RequestHandler {
   return (request, response, next) => {
-    if (isPublic(request)) {
-      next();
-      return;
-    }
     const header = request.header('authorization');
     const payload = header?.startsWith('Bearer ')
       ? readToken(header.slice('Bearer '.length), 'access')
       : null;
+    // A public route does not *require* a session, but it must not ignore one either: the
+    // influencer directory is browsable by a guest and still has to report whether the signed-in
+    // customer follows each row.
+    if (isPublic(request)) {
+      if (payload) {
+        response.locals['userId'] = payload.sub;
+        response.locals['role'] = payload.role;
+      }
+      next();
+      return;
+    }
     if (!payload) {
       response
         .status(401)

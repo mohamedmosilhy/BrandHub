@@ -50,7 +50,12 @@ import {
 import { CategoryScreen } from '@presentation/features/category';
 import { CheckoutScreen } from '@presentation/features/checkout';
 import { HomeScreen } from '@presentation/features/home';
+import {
+  InfluencerProfileScreen,
+  InfluencersScreen,
+} from '@presentation/features/influencers';
 import { ShellScreen } from '@presentation/features/navigation';
+import { NotificationsScreen } from '@presentation/features/notifications';
 import { OnboardingScreen } from '@presentation/features/onboarding';
 import {
   OrderConfirmationScreen,
@@ -162,13 +167,24 @@ function LoginRoute({
 function HomeRoute({
   navigation,
 }: NativeStackScreenProps<HomeStackParamList, 'Home'>) {
-  const { categoryRepository, productRepository, getProductDetail } =
-    useContainer();
+  const {
+    categoryRepository,
+    productRepository,
+    getProductDetail,
+    getInfluencers,
+    getNotifications,
+  } = useContainer();
+  const authenticated = useSessionStore(
+    (state) => state.status === 'authenticated',
+  );
   return (
     <HomeScreen
       categoryRepository={categoryRepository}
       productRepository={productRepository}
       getProductDetail={getProductDetail}
+      getInfluencers={getInfluencers}
+      getNotifications={getNotifications}
+      authenticated={authenticated}
       onSearch={() => navigation.navigate('Search')}
       onNotifications={() => navigation.navigate('Notifications')}
       onBrowse={() => navigationRef.navigate('Main', { screen: 'BrowseTab' })}
@@ -202,9 +218,70 @@ function BrowseRoute({
   );
 }
 
-function InfluencersRoute() {
+function InfluencersRoute({
+  navigation,
+}: NativeStackScreenProps<InfluencersStackParamList, 'Influencers'>) {
+  const { getInfluencers, followInfluencer } = useContainer();
   const { t } = useTranslation();
-  return <ShellScreen title={t('tabInf')} />;
+  const { showToast } = useToast();
+  const authenticated = useSessionStore(
+    (state) => state.status === 'authenticated',
+  );
+  return (
+    <InfluencersScreen
+      getInfluencers={getInfluencers}
+      followInfluencer={followInfluencer}
+      authenticated={authenticated}
+      onRequireAuth={() => {
+        showToast({ message: t('followRequiresAuth'), tone: 'info' });
+        requestAuth({ kind: 'account' });
+      }}
+      onFollowFailed={() =>
+        showToast({ message: t('followFailed'), tone: 'error' })
+      }
+      onOpenInfluencer={(influencerId) =>
+        navigation.navigate('Influencer', { influencerId })
+      }
+    />
+  );
+}
+
+/**
+ * Shared by the home and influencers stacks — the profile is reachable from the home rail and
+ * from the directory, and both push a `Product` route of their own for a tagged product.
+ */
+function InfluencerRoute() {
+  const { getInfluencerProfile, followInfluencer } = useContainer();
+  const { t } = useTranslation();
+  const { showToast } = useToast();
+  const authenticated = useSessionStore(
+    (state) => state.status === 'authenticated',
+  );
+  const navigation =
+    useNavigation<NativeStackNavigationProp<InfluencersStackParamList>>();
+  const route = useRoute<RouteProp<InfluencersStackParamList, 'Influencer'>>();
+  return (
+    <InfluencerProfileScreen
+      influencerId={route.params.influencerId}
+      getInfluencerProfile={getInfluencerProfile}
+      followInfluencer={followInfluencer}
+      authenticated={authenticated}
+      onRequireAuth={() => {
+        showToast({ message: t('followRequiresAuth'), tone: 'info' });
+        requestAuth({ kind: 'account' });
+      }}
+      onFollowFailed={() =>
+        showToast({ message: t('followFailed'), tone: 'error' })
+      }
+      onMessageUnavailable={() =>
+        showToast({ message: t('messagingUnavailable'), tone: 'info' })
+      }
+      onBack={() => navigation.goBack()}
+      onOpenProduct={(productId) =>
+        navigation.navigate('Product', { productId })
+      }
+    />
+  );
 }
 
 function CartRoute() {
@@ -369,11 +446,22 @@ const requestAuth = (returnTo: ReturnTo) => {
 };
 
 function NotificationsRoute() {
+  const { getNotifications, markAllRead } = useContainer();
   const { t } = useTranslation();
+  const { showToast } = useToast();
+  const navigation = useNavigation();
   const returnTo = { kind: 'account', screen: 'Notifications' } as const;
   return (
     <RequireAuth returnTo={returnTo} onRequireAuth={requestAuth}>
-      <ShellScreen title={t('notifications')} />
+      <NotificationsScreen
+        getNotifications={getNotifications}
+        markAllRead={markAllRead}
+        authenticated
+        onMarkAllFailed={() =>
+          showToast({ message: t('markAllReadFailed'), tone: 'error' })
+        }
+        onBack={() => navigation.goBack()}
+      />
     </RequireAuth>
   );
 }
@@ -639,7 +727,7 @@ function HomeNavigator() {
       <HomeStack.Screen name="Search" component={SearchRoute} />
       <HomeStack.Screen name="Product" component={ProductRoute} />
       <HomeStack.Screen name="Seller" component={SellerRoute} />
-      <HomeStack.Screen name="Influencer" component={GenericRoute} />
+      <HomeStack.Screen name="Influencer" component={InfluencerRoute} />
       <HomeStack.Screen name="Notifications" component={NotificationsRoute} />
     </HomeStack.Navigator>
   );
@@ -663,7 +751,7 @@ function InfluencersNavigator() {
         name="Influencers"
         component={InfluencersRoute}
       />
-      <InfluencersStack.Screen name="Influencer" component={GenericRoute} />
+      <InfluencersStack.Screen name="Influencer" component={InfluencerRoute} />
       <InfluencersStack.Screen name="Product" component={ProductRoute} />
     </InfluencersStack.Navigator>
   );
@@ -692,7 +780,10 @@ function AccountNavigator() {
       <AccountStack.Screen name="Ticket" component={AccountGatedRoute} />
       <AccountStack.Screen name="Profile" component={ProfileRoute} />
       <AccountStack.Screen name="Wishlist" component={WishlistRoute} />
-      <AccountStack.Screen name="Notifications" component={AccountGatedRoute} />
+      <AccountStack.Screen
+        name="Notifications"
+        component={NotificationsRoute}
+      />
     </AccountStack.Navigator>
   );
 }

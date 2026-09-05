@@ -183,6 +183,166 @@ const addresses = [
   },
 ];
 
+/**
+ * Social commerce is the one feature area with no backend contract (GAP-1 / FA1), so the shape
+ * served here is also the specification handed to the backend. Names, handles, bios, follower
+ * counts and the two captions are the customer prototype's own
+ * (`design-reference/BRANDHUB App.dc.html`, `const INFLUENCERS`), so the screens can be compared
+ * against it directly.
+ */
+const influencerSeed = [
+  {
+    name: { ar: 'ليان المعمري', en: 'Layan Al Maamari' },
+    handle: '@layan.style',
+    followerCount: 215_000,
+    bio: {
+      ar: 'أزياء وإطلالات يومية · مسقط',
+      en: 'Fashion & daily looks · Muscat',
+    },
+    productIds: ['product-9', 'product-5'],
+  },
+  {
+    name: { ar: 'مريم الحبسي', en: 'Maryam Al Habsi' },
+    handle: '@maryam.beauty',
+    followerCount: 340_000,
+    bio: { ar: 'العناية بالبشرة والمكياج', en: 'Skincare and makeup' },
+    productIds: ['product-6', 'product-12'],
+  },
+  {
+    name: { ar: 'سالم البلوشي', en: 'Salim Al Balushi' },
+    handle: '@salim.tech',
+    followerCount: 182_000,
+    bio: { ar: 'مراجعات تقنية أسبوعية', en: 'Weekly tech reviews' },
+    productIds: ['product-1', 'product-11'],
+  },
+  {
+    name: { ar: 'نورة السيابي', en: 'Noura Al Siyabi' },
+    handle: '@noura.kitchen',
+    followerCount: 188_000,
+    bio: { ar: 'مطبخ وأدوات منزلية', en: 'Kitchen and home tools' },
+    productIds: ['product-10', 'product-4'],
+  },
+  {
+    name: { ar: 'خالد العامري', en: 'Khalid Al Amri' },
+    handle: '@khalid.games',
+    followerCount: 113_000,
+    bio: { ar: 'ألعاب وإعدادات المكتب', en: 'Gaming and desk setups' },
+    productIds: ['product-3', 'product-11'],
+  },
+  {
+    name: { ar: 'يوسف الراشدي', en: 'Yousef Al Rashdi' },
+    handle: '@yousef.fit',
+    followerCount: 98_000,
+    bio: { ar: 'رياضة ولياقة', en: 'Fitness and training' },
+    productIds: ['product-9', 'product-2'],
+  },
+] as const;
+
+/** The prototype's two post captions, alternating down the feed. */
+const postCaptions = [
+  {
+    ar: 'إطلالة اليوم بالكامل من المتجر، والرابط بالأسفل 🤍',
+    en: 'Today\u2019s look, all from the store — tagged below 🤍',
+  },
+  {
+    ar: 'جربت هالمنتج أسبوعين وهذي صراحتي عنه.',
+    en: 'Two weeks with this one. Here\u2019s my honest take.',
+  },
+] as const;
+
+const influencers = influencerSeed.map((influencer, index) => ({
+  id: `influencer-${index + 1}`,
+  name: influencer.name,
+  handle: influencer.handle,
+  bio: influencer.bio,
+  avatarUrl: null,
+  followerCount: influencer.followerCount,
+  /** The profile's three stats. The server owns all three; the client never derives them. */
+  postCount: 128 - index * 7,
+  productCount: 46 - index * 3,
+  taggedProductIds: [...influencer.productIds],
+}));
+
+/** Two posts per influencer, matching the prototype's feed and its likes and comments. */
+const posts = influencerSeed.flatMap((influencer, influencerIndex) =>
+  influencer.productIds.map((productId, postIndex) => ({
+    id: `post-${influencerIndex * 2 + postIndex + 1}`,
+    influencerId: `influencer-${influencerIndex + 1}`,
+    imageUrl: `/api/v1/mock-assets/${productId}.png`,
+    caption: postCaptions[postIndex % postCaptions.length]!,
+    likeCount: postIndex === 0 ? 2_400 : 1_100,
+    commentCount: postIndex === 0 ? 86 : 34,
+    productIds: [productId],
+    createdAt: new Date(
+      Date.UTC(2026, 8, 2, 12) - (influencerIndex * 2 + postIndex) * 86_400_000,
+    ).toISOString(),
+  })),
+);
+
+/**
+ * The prototype's five notification rows, in its order, with its unread pattern. `GET
+ * /notifications` is contracted but carries no response example, so the field set is the mock's
+ * (see INVENTED_ENDPOINTS.md).
+ */
+const notificationSeed = [
+  {
+    type: 'ORDER',
+    title: {
+      ar: 'طلبك #BH-284193 قيد التجهيز',
+      en: 'Order #BH-284193 is being prepared',
+    },
+    body: {
+      ar: 'سيخرج للتوصيل خلال 24 ساعة.',
+      en: 'It ships within 24 hours.',
+    },
+    minutesAgo: 5,
+    isRead: false,
+  },
+  {
+    type: 'PROMOTION',
+    title: { ar: 'خصم 25% على الصوتيات', en: '25% off audio' },
+    body: { ar: 'العرض ينتهي منتصف الليل.', en: 'Offer ends at midnight.' },
+    minutesAgo: 120,
+    isRead: false,
+  },
+  {
+    type: 'SOCIAL',
+    title: {
+      ar: 'ليان المعمري نشرت منشوراً جديداً',
+      en: 'Layan Al Maamari posted',
+    },
+    body: {
+      ar: 'إطلالة جديدة مع 3 منتجات مرتبطة.',
+      en: 'A new look with 3 tagged products.',
+    },
+    minutesAgo: 1_500,
+    isRead: true,
+  },
+  {
+    type: 'PRICE_DROP',
+    title: {
+      ar: 'انخفض سعر منتج في مفضلتك',
+      en: 'Price drop in your wishlist',
+    },
+    body: {
+      ar: 'حذاء رياضي خفيف — الآن 19.900 ر.ع.',
+      en: 'Lightweight running shoe — now OMR 19.900',
+    },
+    minutesAgo: 1_800,
+    isRead: true,
+  },
+  {
+    type: 'DELIVERY',
+    title: { ar: 'تم تسليم طلبك #BH-283740', en: 'Order #BH-283740 delivered' },
+    body: {
+      ar: 'قيّم تجربتك واحصل على نقاط.',
+      en: 'Rate it and collect your points.',
+    },
+    minutesAgo: 4_320,
+    isRead: true,
+  },
+] as const;
+
 export function buildSeedDatabase(): MockDatabase {
   const now = '2026-09-02T12:00:00.000Z';
   const orderItems = (offset: number) => [
@@ -221,23 +381,8 @@ export function buildSeedDatabase(): MockDatabase {
     ],
     categories,
     products,
-    influencers: Array.from({ length: 6 }, (_, index) => ({
-      id: `influencer-${index + 1}`,
-      name: ['Layan', 'Maha', 'Aisha', 'Noor', 'Salma', 'Reem'][index],
-      handle: `creator${index + 1}`,
-      followerCount: 12000 + index * 3700,
-      taggedProductIds: [`product-${index + 1}`, `product-${index + 9}`],
-    })),
-    posts: Array.from({ length: 6 }, (_, index) => ({
-      id: `post-${index + 1}`,
-      influencerId: `influencer-${index + 1}`,
-      caption: {
-        ar: 'اختياراتي لهذا الأسبوع من براند هب.',
-        en: 'My BrandHub picks for this week.',
-      },
-      productIds: [`product-${index + 1}`],
-      createdAt: now,
-    })),
+    influencers,
+    posts,
     follows: [],
     cartItems: [
       {
@@ -325,14 +470,16 @@ export function buildSeedDatabase(): MockDatabase {
       comment: 'A useful product and prompt local delivery.',
       createdAt: now,
     })),
-    notifications: Array.from({ length: 5 }, (_, index) => ({
+    notifications: notificationSeed.map((notification, index) => ({
       id: `notification-${index + 1}`,
       userId: 'user-customer',
-      type: ['ORDER', 'PROMOTION', 'SOCIAL', 'PRICE_DROP', 'ORDER'][index],
-      title: `Notification ${index + 1}`,
-      body: 'A BRANDHUB update is ready for you.',
-      isRead: index > 2,
-      createdAt: now,
+      type: notification.type,
+      title: notification.title,
+      body: notification.body,
+      isRead: notification.isRead,
+      createdAt: new Date(
+        Date.parse(now) - notification.minutesAgo * 60_000,
+      ).toISOString(),
     })),
     coupons: [
       {

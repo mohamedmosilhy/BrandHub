@@ -1124,7 +1124,26 @@ function registerCommerceRoutes(app: Express, store: MockStore): void {
         item['userId'] === authenticatedUserId(response) &&
         (isRead === undefined || item['isRead'] === (isRead === 'true')),
     );
-    response.json(pageOf(items, request));
+    response.json(
+      pageOf(
+        items.map((item) => localise(item, localeOf(request)) as Row),
+        request,
+      ),
+    );
+  });
+  /**
+   * Invented (FA1). The collection contracts reading notifications but nothing that marks one
+   * read, and the prototype's list has a mark-all-read action. Answers the number of rows it
+   * changed so the client can tell a no-op from a change.
+   */
+  app.post('/api/v1/notifications/read-all', (_request, response) => {
+    const userId = authenticatedUserId(response);
+    const unread = store.data.notifications.filter(
+      (item) => item['userId'] === userId && item['isRead'] === false,
+    );
+    for (const item of unread) item['isRead'] = true;
+    store.write();
+    response.json(envelope({ updated: unread.length }));
   });
 
   app.get('/api/v1/areas/governorate/:name', (request, response) =>
@@ -1528,8 +1547,49 @@ function registerSupportAndGiftRoutes(app: Express, store: MockStore): void {
 }
 
 function registerSocialAndPaymentRoutes(app: Express, store: MockStore): void {
+  /**
+   * An influencer as the client reads it. `isFollowing` is resolved per request from `follows`,
+   * so the follow state survives a restart and a guest — who has no session — always reads
+   * `false` rather than someone else's relationship.
+   */
+  const influencerView = (
+    influencer: Row,
+    request: Request,
+    response: Response,
+  ): Row => {
+    const userId = response.locals['userId'];
+    return {
+      ...(localise(influencer, localeOf(request)) as Row),
+      isFollowing:
+        typeof userId === 'string' &&
+        store.data.follows.some(
+          (follow) =>
+            follow['userId'] === userId &&
+            follow['influencerId'] === influencer['id'],
+        ),
+    };
+  };
+
+  /** A post carries its tagged products inline, so a feed never fans out into per-product requests. */
+  const postView = (post: Row, request: Request): Row => ({
+    ...(localise(post, localeOf(request)) as Row),
+    products: (post['productIds'] as string[])
+      .map((id) => byId(store.data.products, id))
+      .filter((product): product is Row => product !== undefined)
+      .map((product) => productResponse(product, request)),
+  });
+
   app.get('/api/v1/influencers', (request, response) =>
-    response.json(envelope(pageOf(store.data.influencers, request))),
+    response.json(
+      envelope(
+        pageOf(
+          store.data.influencers.map((influencer) =>
+            influencerView(influencer, request, response),
+          ),
+          request,
+        ),
+      ),
+    ),
   );
   app.get('/api/v1/influencers/:id', (request, response) => {
     const influencer = byId(store.data.influencers, request.params.id);
@@ -1540,25 +1600,37 @@ function registerSocialAndPaymentRoutes(app: Express, store: MockStore): void {
         'INFLUENCER_NOT_FOUND',
         'Influencer was not found',
       );
-    response.json(envelope(influencer));
+    response.json(envelope(influencerView(influencer, request, response)));
   });
-  app.get('/api/v1/posts', (request, response) =>
+  app.get('/api/v1/posts', (request, response) => {
+    const influencerId = request.query['influencerId'];
+    const posts = store.data.posts.filter(
+      (post) =>
+        influencerId === undefined || post['influencerId'] === influencerId,
+    );
     response.json(
       envelope(
         pageOf(
-          store.data.posts.map(
-            (post) => localise(post, localeOf(request)) as Row,
-          ),
+          posts.map((post) => postView(post, request)),
           request,
         ),
       ),
-    ),
-  );
+    );
+  });
   app.post('/api/v1/influencers/:id/follow', (request, response) => {
+    const userId = authenticatedUserId(response);
+    const influencerId = request.params.id;
+    const existing = store.data.follows.find(
+      (follow) =>
+        follow['userId'] === userId && follow['influencerId'] === influencerId,
+    );
+    // Following twice is the same relationship, not a second one: a repeated tap after a lost
+    // response must not leave two rows behind for the DELETE to have to clean up.
+    if (existing) return response.status(201).json(envelope(existing));
     const follow = {
       id: nextId(store.data.follows, 'follow'),
-      userId: authenticatedUserId(response),
-      influencerId: request.params.id,
+      userId,
+      influencerId,
       createdAt: now(),
     };
     store.data.follows.push(follow);

@@ -42,8 +42,8 @@ second write.
 ## Data and localisation
 
 `seed/data.ts` owns the deterministic source data; `db.json` is its generated, committed output.
-Product and category content is stored as `{ ar, en }`. Responses use `Accept-Language` to expose
-only a single `name`/`description` string. Areas and their shipping economics are plain database
+Product, category, influencer, post and notification content is stored as `{ ar, en }`. Responses
+use `Accept-Language` to expose only a single localised string per field. Areas and their shipping economics are plain database
 records, so changing and restarting `db.json` changes the API without a code edit.
 
 Catalogue discovery accepts `q`, `categoryId`, `sellerId`, `sort`, `inStock`, `minPrice`,
@@ -52,4 +52,6 @@ Catalogue discovery accepts `q`, `categoryId`, `sellerId`, `sort`, `inStock`, `m
 express field exists in the authoritative contract (D21 / GAP-15); the v1 UI does not expose it.
 
 Only the endpoints in [`INVENTED_ENDPOINTS.md`](./INVENTED_ENDPOINTS.md) are not backed by the
-authoritative Postman collection.
+authoritative Postman collection. Note that a **public** route still reads a bearer token when one
+is sent: `GET /influencers` is browsable by a guest and must still report `isFollowing` for a
+signed-in customer.

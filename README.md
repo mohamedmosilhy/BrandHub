@@ -6,7 +6,8 @@ Design and planning live in [`docs/architecture.md`](docs/architecture.md) and
 [`docs/plan.md`](docs/plan.md). The UI/UX source of truth is `design-reference/`, which is read-only
 and never modified.
 
-**Current state: Phase 9 (account, orders and addresses) implemented.** The app opens on Arabic
+**Current state: Phase 9 (account, orders and addresses) and Phase 11 (social commerce and
+notifications) implemented.** The app opens on Arabic
 onboarding, supports the Phase 5 identity/navigation shell, and browses a live catalogue through
 Home, Browse, Category and Search. A product opens a real detail page — image pager, variant
 selector, seller strip, specifications, reviews, related products and a sticky buy bar — with the
@@ -14,7 +15,11 @@ seller store and the wishlist behind it. The complete guest-cart purchase path p
 merges them after sign-in, applies coupons and shipping/payment economics, places one idempotent
 order, and ends on the reference-aligned confirmation timeline. After the sale, the account hub now
 carries live counts into order history and detail with its delivery-OTP panel, the return request,
-full address management and profile editing, and a language switch that survives a restart.
+full address management and profile editing, and a language switch that survives a restart. The
+social layer is live too: an influencer directory, a profile with its shoppable feed whose tagged
+products open the PDP, a persisted follow, and an in-app notification list with mark-all-read
+behind the home bell's unread dot. Phase 10 (wallet, gifts and the payment result) is the one
+customer feature still outstanding.
 
 ## Requirements
 
@@ -114,6 +119,15 @@ one variant resolves it silently; anything else has to be chosen before the buy 
 The wishlist is optimistic and lives in one cache above the navigator, so every heart in the app
 agrees and a failed toggle rolls back with an error toast. See
 [`docs/reports/phase-7-report.md`](docs/reports/phase-7-report.md).
+
+Phase 11 adds the social and notification slices. Influencers, shoppable posts and follows are the
+one feature area with **no backend contract** (GAP-1 / FA1): they run through
+`MockInfluencerRepository` against routes specified in full for the backend in
+[`mock-server/INVENTED_ENDPOINTS.md`](mock-server/INVENTED_ENDPOINTS.md), and nothing above the
+repository knows it. A post carries its tagged products inline, so opening a profile is one request
+rather than one per product. Notifications are an in-app list only — no push, no permission prompt,
+no device token (D17). See
+[`docs/reports/phase-11-report.md`](docs/reports/phase-11-report.md).
 
 ## Architecture in one screen
 

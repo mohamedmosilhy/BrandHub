@@ -21273,62 +21273,122 @@
   "influencers": [
     {
       "id": "influencer-1",
-      "name": "Layan",
-      "handle": "creator1",
-      "followerCount": 12000,
+      "name": {
+        "ar": "ليان المعمري",
+        "en": "Layan Al Maamari"
+      },
+      "handle": "@layan.style",
+      "bio": {
+        "ar": "أزياء وإطلالات يومية · مسقط",
+        "en": "Fashion & daily looks · Muscat"
+      },
+      "avatarUrl": null,
+      "followerCount": 215000,
+      "postCount": 128,
+      "productCount": 46,
       "taggedProductIds": [
-        "product-1",
-        "product-9"
+        "product-9",
+        "product-5"
       ]
     },
     {
       "id": "influencer-2",
-      "name": "Maha",
-      "handle": "creator2",
-      "followerCount": 15700,
+      "name": {
+        "ar": "مريم الحبسي",
+        "en": "Maryam Al Habsi"
+      },
+      "handle": "@maryam.beauty",
+      "bio": {
+        "ar": "العناية بالبشرة والمكياج",
+        "en": "Skincare and makeup"
+      },
+      "avatarUrl": null,
+      "followerCount": 340000,
+      "postCount": 121,
+      "productCount": 43,
       "taggedProductIds": [
-        "product-2",
-        "product-10"
+        "product-6",
+        "product-12"
       ]
     },
     {
       "id": "influencer-3",
-      "name": "Aisha",
-      "handle": "creator3",
-      "followerCount": 19400,
+      "name": {
+        "ar": "سالم البلوشي",
+        "en": "Salim Al Balushi"
+      },
+      "handle": "@salim.tech",
+      "bio": {
+        "ar": "مراجعات تقنية أسبوعية",
+        "en": "Weekly tech reviews"
+      },
+      "avatarUrl": null,
+      "followerCount": 182000,
+      "postCount": 114,
+      "productCount": 40,
+      "taggedProductIds": [
+        "product-1",
+        "product-11"
+      ]
+    },
+    {
+      "id": "influencer-4",
+      "name": {
+        "ar": "نورة السيابي",
+        "en": "Noura Al Siyabi"
+      },
+      "handle": "@noura.kitchen",
+      "bio": {
+        "ar": "مطبخ وأدوات منزلية",
+        "en": "Kitchen and home tools"
+      },
+      "avatarUrl": null,
+      "followerCount": 188000,
+      "postCount": 107,
+      "productCount": 37,
+      "taggedProductIds": [
+        "product-10",
+        "product-4"
+      ]
+    },
+    {
+      "id": "influencer-5",
+      "name": {
+        "ar": "خالد العامري",
+        "en": "Khalid Al Amri"
+      },
+      "handle": "@khalid.games",
+      "bio": {
+        "ar": "ألعاب وإعدادات المكتب",
+        "en": "Gaming and desk setups"
+      },
+      "avatarUrl": null,
+      "followerCount": 113000,
+      "postCount": 100,
+      "productCount": 34,
       "taggedProductIds": [
         "product-3",
         "product-11"
       ]
     },
     {
-      "id": "influencer-4",
-      "name": "Noor",
-      "handle": "creator4",
-      "followerCount": 23100,
-      "taggedProductIds": [
-        "product-4",
-        "product-12"
-      ]
-    },
-    {
-      "id": "influencer-5",
-      "name": "Salma",
-      "handle": "creator5",
-      "followerCount": 26800,
-      "taggedProductIds": [
-        "product-5",
-        "product-13"
-      ]
-    },
-    {
       "id": "influencer-6",
-      "name": "Reem",
-      "handle": "creator6",
-      "followerCount": 30500,
+      "name": {
+        "ar": "يوسف الراشدي",
+        "en": "Yousef Al Rashdi"
+      },
+      "handle": "@yousef.fit",
+      "bio": {
+        "ar": "رياضة ولياقة",
+        "en": "Fitness and training"
+      },
+      "avatarUrl": null,
+      "followerCount": 98000,
+      "postCount": 93,
+      "productCount": 31,
       "taggedProductIds": [
-        "product-6",
-        "product-14"
+        "product-9",
+        "product-2"
       ]
     }
   ],
@@ -21336,74 +21396,182 @@
     {
       "id": "post-1",
       "influencerId": "influencer-1",
+      "imageUrl": "/api/v1/mock-assets/product-9.png",
       "caption": {
-        "ar": "اختياراتي لهذا الأسبوع من براند هب.",
-        "en": "My BrandHub picks for this week."
+        "ar": "إطلالة اليوم بالكامل من المتجر، والرابط بالأسفل 🤍",
+        "en": "Today’s look, all from the store — tagged below 🤍"
       },
+      "likeCount": 2400,
+      "commentCount": 86,
       "productIds": [
-        "product-1"
+        "product-9"
       ],
       "createdAt": "2026-09-02T12:00:00.000Z"
     },
     {
       "id": "post-2",
-      "influencerId": "influencer-2",
+      "influencerId": "influencer-1",
+      "imageUrl": "/api/v1/mock-assets/product-5.png",
       "caption": {
-        "ar": "اختياراتي لهذا الأسبوع من براند هب.",
-        "en": "My BrandHub picks for this week."
+        "ar": "جربت هالمنتج أسبوعين وهذي صراحتي عنه.",
+        "en": "Two weeks with this one. Here’s my honest take."
       },
-      "productIds": [
-        "product-2"
-      ],
-      "createdAt": "2026-09-02T12:00:00.000Z"
-    },
-    {
-      "id": "post-3",
-      "influencerId": "influencer-3",
-      "caption": {
-        "ar": "اختياراتي لهذا الأسبوع من براند هب.",
-        "en": "My BrandHub picks for this week."
-      },
-      "productIds": [
-        "product-3"
-      ],
-      "createdAt": "2026-09-02T12:00:00.000Z"
-    },
-    {
-      "id": "post-4",
-      "influencerId": "influencer-4",
-      "caption": {
-        "ar": "اختياراتي لهذا الأسبوع من براند هب.",
-        "en": "My BrandHub picks for this week."
-      },
-      "productIds": [
-        "product-4"
-      ],
-      "createdAt": "2026-09-02T12:00:00.000Z"
-    },
-    {
-      "id": "post-5",
-      "influencerId": "influencer-5",
-      "caption": {
-        "ar": "اختياراتي لهذا الأسبوع من براند هب.",
-        "en": "My BrandHub picks for this week."
-      },
+      "likeCount": 1100,
+      "commentCount": 34,
       "productIds": [
         "product-5"
       ],
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "createdAt": "2026-09-01T12:00:00.000Z"
     },
     {
-      "id": "post-6",
-      "influencerId": "influencer-6",
+      "id": "post-3",
+      "influencerId": "influencer-2",
+      "imageUrl": "/api/v1/mock-assets/product-6.png",
       "caption": {
-        "ar": "اختياراتي لهذا الأسبوع من براند هب.",
-        "en": "My BrandHub picks for this week."
+        "ar": "إطلالة اليوم بالكامل من المتجر، والرابط بالأسفل 🤍",
+        "en": "Today’s look, all from the store — tagged below 🤍"
       },
+      "likeCount": 2400,
+      "commentCount": 86,
       "productIds": [
         "product-6"
       ],
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "createdAt": "2026-08-31T12:00:00.000Z"
+    },
+    {
+      "id": "post-4",
+      "influencerId": "influencer-2",
+      "imageUrl": "/api/v1/mock-assets/product-12.png",
+      "caption": {
+        "ar": "جربت هالمنتج أسبوعين وهذي صراحتي عنه.",
+        "en": "Two weeks with this one. Here’s my honest take."
+      },
+      "likeCount": 1100,
+      "commentCount": 34,
+      "productIds": [
+        "product-12"
+      ],
+      "createdAt": "2026-08-30T12:00:00.000Z"
+    },
+    {
+      "id": "post-5",
+      "influencerId": "influencer-3",
+      "imageUrl": "/api/v1/mock-assets/product-1.png",
+      "caption": {
+        "ar": "إطلالة اليوم بالكامل من المتجر، والرابط بالأسفل 🤍",
+        "en": "Today’s look, all from the store — tagged below 🤍"
+      },
+      "likeCount": 2400,
+      "commentCount": 86,
+      "productIds": [
+        "product-1"
+      ],
+      "createdAt": "2026-08-29T12:00:00.000Z"
+    },
+    {
+      "id": "post-6",
+      "influencerId": "influencer-3",
+      "imageUrl": "/api/v1/mock-assets/product-11.png",
+      "caption": {
+        "ar": "جربت هالمنتج أسبوعين وهذي صراحتي عنه.",
+        "en": "Two weeks with this one. Here’s my honest take."
+      },
+      "likeCount": 1100,
+      "commentCount": 34,
+      "productIds": [
+        "product-11"
+      ],
+      "createdAt": "2026-08-28T12:00:00.000Z"
+    },
+    {
+      "id": "post-7",
+      "influencerId": "influencer-4",
+      "imageUrl": "/api/v1/mock-assets/product-10.png",
+      "caption": {
+        "ar": "إطلالة اليوم بالكامل من المتجر، والرابط بالأسفل 🤍",
+        "en": "Today’s look, all from the store — tagged below 🤍"
+      },
+      "likeCount": 2400,
+      "commentCount": 86,
+      "productIds": [
+        "product-10"
+      ],
+      "createdAt": "2026-08-27T12:00:00.000Z"
+    },
+    {
+      "id": "post-8",
+      "influencerId": "influencer-4",
+      "imageUrl": "/api/v1/mock-assets/product-4.png",
+      "caption": {
+        "ar": "جربت هالمنتج أسبوعين وهذي صراحتي عنه.",
+        "en": "Two weeks with this one. Here’s my honest take."
+      },
+      "likeCount": 1100,
+      "commentCount": 34,
+      "productIds": [
+        "product-4"
+      ],
+      "createdAt": "2026-08-26T12:00:00.000Z"
+    },
+    {
+      "id": "post-9",
+      "influencerId": "influencer-5",
+      "imageUrl": "/api/v1/mock-assets/product-3.png",
+      "caption": {
+        "ar": "إطلالة اليوم بالكامل من المتجر، والرابط بالأسفل 🤍",
+        "en": "Today’s look, all from the store — tagged below 🤍"
+      },
+      "likeCount": 2400,
+      "commentCount": 86,
+      "productIds": [
+        "product-3"
+      ],
+      "createdAt": "2026-08-25T12:00:00.000Z"
+    },
+    {
+      "id": "post-10",
+      "influencerId": "influencer-5",
+      "imageUrl": "/api/v1/mock-assets/product-11.png",
+      "caption": {
+        "ar": "جربت هالمنتج أسبوعين وهذي صراحتي عنه.",
+        "en": "Two weeks with this one. Here’s my honest take."
+      },
+      "likeCount": 1100,
+      "commentCount": 34,
+      "productIds": [
+        "product-11"
+      ],
+      "createdAt": "2026-08-24T12:00:00.000Z"
+    },
+    {
+      "id": "post-11",
+      "influencerId": "influencer-6",
+      "imageUrl": "/api/v1/mock-assets/product-9.png",
+      "caption": {
+        "ar": "إطلالة اليوم بالكامل من المتجر، والرابط بالأسفل 🤍",
+        "en": "Today’s look, all from the store — tagged below 🤍"
+      },
+      "likeCount": 2400,
+      "commentCount": 86,
+      "productIds": [
+        "product-9"
+      ],
+      "createdAt": "2026-08-23T12:00:00.000Z"
+    },
+    {
+      "id": "post-12",
+      "influencerId": "influencer-6",
+      "imageUrl": "/api/v1/mock-assets/product-2.png",
+      "caption": {
+        "ar": "جربت هالمنتج أسبوعين وهذي صراحتي عنه.",
+        "en": "Two weeks with this one. Here’s my honest take."
+      },
+      "likeCount": 1100,
+      "commentCount": 34,
+      "productIds": [
+        "product-2"
+      ],
+      "createdAt": "2026-08-22T12:00:00.000Z"
     }
   ],
   "follows": [],
@@ -21713,46 +21881,76 @@
       "id": "notification-1",
       "userId": "user-customer",
       "type": "ORDER",
-      "title": "Notification 1",
-      "body": "A BRANDHUB update is ready for you.",
+      "title": {
+        "ar": "طلبك #BH-284193 قيد التجهيز",
+        "en": "Order #BH-284193 is being prepared"
+      },
+      "body": {
+        "ar": "سيخرج للتوصيل خلال 24 ساعة.",
+        "en": "It ships within 24 hours."
+      },
       "isRead": false,
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "createdAt": "2026-09-02T11:55:00.000Z"
     },
     {
       "id": "notification-2",
       "userId": "user-customer",
       "type": "PROMOTION",
-      "title": "Notification 2",
-      "body": "A BRANDHUB update is ready for you.",
+      "title": {
+        "ar": "خصم 25% على الصوتيات",
+        "en": "25% off audio"
+      },
+      "body": {
+        "ar": "العرض ينتهي منتصف الليل.",
+        "en": "Offer ends at midnight."
+      },
       "isRead": false,
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "createdAt": "2026-09-02T10:00:00.000Z"
     },
     {
       "id": "notification-3",
       "userId": "user-customer",
       "type": "SOCIAL",
-      "title": "Notification 3",
-      "body": "A BRANDHUB update is ready for you.",
-      "isRead": false,
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "title": {
+        "ar": "ليان المعمري نشرت منشوراً جديداً",
+        "en": "Layan Al Maamari posted"
+      },
+      "body": {
+        "ar": "إطلالة جديدة مع 3 منتجات مرتبطة.",
+        "en": "A new look with 3 tagged products."
+      },
+      "isRead": true,
+      "createdAt": "2026-09-01T11:00:00.000Z"
     },
     {
       "id": "notification-4",
       "userId": "user-customer",
       "type": "PRICE_DROP",
-      "title": "Notification 4",
-      "body": "A BRANDHUB update is ready for you.",
+      "title": {
+        "ar": "انخفض سعر منتج في مفضلتك",
+        "en": "Price drop in your wishlist"
+      },
+      "body": {
+        "ar": "حذاء رياضي خفيف — الآن 19.900 ر.ع.",
+        "en": "Lightweight running shoe — now OMR 19.900"
+      },
       "isRead": true,
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "createdAt": "2026-09-01T06:00:00.000Z"
     },
     {
       "id": "notification-5",
       "userId": "user-customer",
-      "type": "ORDER",
-      "title": "Notification 5",
-      "body": "A BRANDHUB update is ready for you.",
+      "type": "DELIVERY",
+      "title": {
+        "ar": "تم تسليم طلبك #BH-283740",
+        "en": "Order #BH-283740 delivered"
+      },
+      "body": {
+        "ar": "قيّم تجربتك واحصل على نقاط.",
+        "en": "Rate it and collect your points."
+      },
       "isRead": true,
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "createdAt": "2026-08-30T12:00:00.000Z"
     }
   ],
   "coupons": [
@@ -21837,13 +22035,7 @@
       "productId": "product-4"
     }
   ],
-  "refreshTokens": [
-    {
-      "token": "eyJzdWIiOiJ1c2VyLWN1c3RvbWVyIiwicm9sZSI6IlJPTEVfQ1VTVE9NRVIiLCJraW5kIjoicmVmcmVzaCIsImV4cCI6MTc4ODU1OTI0Nywibm9uY2UiOiJ1N2JqbzY0ZXExZiJ9._eTwCw8Hh5S8NFZnDP1iIhaoVn-vaeoCUL8yIhlPvu8",
-      "userId": "user-customer",
-      "revoked": false
-    }
-  ],
+  "refreshTokens": [],
   "revokedTokens": [],
   "idempotency": [],
   "otpChallenges": []

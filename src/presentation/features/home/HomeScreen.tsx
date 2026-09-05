@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
@@ -8,6 +7,8 @@ import type {
   GetProductDetailUseCase,
   ProductRepository,
 } from '@domain/catalog';
+import type { GetNotificationsUseCase } from '@domain/notifications';
+import type { GetInfluencersUseCase } from '@domain/social';
 
 import {
   AsyncBoundary,
@@ -30,17 +31,13 @@ import {
   useHomeQueries,
   useProductPrefetch,
 } from '@presentation/features/catalog/useCatalogQueries';
+import {
+  InfluencerAvatar,
+  useInfluencers,
+} from '@presentation/features/influencers';
+import { useUnreadNotifications } from '@presentation/features/notifications';
 import { useWishlistCardProps } from '@presentation/features/wishlist';
 import { mobile, toneAt, useTheme } from '@presentation/theme';
-
-const creators = [
-  ['influencer-1', 'Layan'],
-  ['influencer-2', 'Maha'],
-  ['influencer-3', 'Aisha'],
-  ['influencer-4', 'Noor'],
-  ['influencer-5', 'Salma'],
-  ['influencer-6', 'Reem'],
-] as const;
 
 function flattenCategories(
   categories: readonly Category[],
@@ -54,6 +51,9 @@ export function HomeScreen({
   categoryRepository,
   productRepository,
   getProductDetail,
+  getInfluencers,
+  getNotifications,
+  authenticated,
   onSearch,
   onNotifications,
   onBrowse,
@@ -64,6 +64,9 @@ export function HomeScreen({
   categoryRepository: CategoryRepository;
   productRepository: ProductRepository;
   getProductDetail: GetProductDetailUseCase;
+  getInfluencers: GetInfluencersUseCase;
+  getNotifications: GetNotificationsUseCase;
+  authenticated: boolean;
   onSearch: () => void;
   onNotifications: () => void;
   onBrowse: () => void;
@@ -78,6 +81,12 @@ export function HomeScreen({
   const prefetch = useProductPrefetch(getProductDetail, locale);
   const wishlist = useWishlistCardProps();
   const categories = flattenCategories(queries.categories.data ?? []);
+  const influencers = useInfluencers(getInfluencers, locale).data ?? [];
+  const unread = useUnreadNotifications({
+    getNotifications,
+    locale,
+    authenticated,
+  });
 
   return (
     <Screen
@@ -106,15 +115,21 @@ export function HomeScreen({
           style={styles.bell}
         >
           <Icon name="bell" />
-          <View
-            style={[
-              styles.unread,
-              {
-                backgroundColor: theme.colors.pink,
-                borderColor: theme.colors.background,
-              },
-            ]}
-          />
+          {/* The prototype's unread dot. It reads the same cache the list does, so
+              mark-all-read clears it without a second request (AC11.8). */}
+          {unread > 0 ? (
+            <View
+              accessibilityLabel={t('notifications')}
+              style={[
+                styles.unread,
+                {
+                  backgroundColor: theme.colors.pink,
+                  borderColor: theme.colors.background,
+                },
+              ]}
+              testID="home-unread-dot"
+            />
+          ) : null}
         </Pressable>
       </View>
 
@@ -161,37 +176,28 @@ export function HomeScreen({
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.creatorRail}
       >
-        {creators.map(([id, name]) => (
+        {influencers.map((influencer, index) => (
           <Pressable
-            key={id}
-            accessibilityLabel={name}
+            key={influencer.id}
+            accessibilityLabel={influencer.name}
             compact
-            onPress={() => onOpenInfluencer(id)}
+            onPress={() => onOpenInfluencer(influencer.id)}
             style={styles.creator}
           >
-            <LinearGradient
-              colors={theme.gradients.brand.colors}
-              end={theme.gradients.brand.end}
-              start={theme.gradients.brand.start}
-              style={styles.creatorRing}
-            >
-              <View
-                style={[
-                  styles.creatorInner,
-                  { backgroundColor: theme.colors.surface },
-                ]}
-              >
-                <Text variant="h3" weight="bold">
-                  {name[0]}
-                </Text>
-              </View>
-            </LinearGradient>
+            <InfluencerAvatar
+              influencer={influencer}
+              index={index}
+              ring={2.5}
+              size={62}
+              variant="h3"
+            />
             <Text
               color={theme.colors.textSecondary}
               numberOfLines={1}
               variant="micro"
             >
-              {name}
+              {/* The prototype labels the rail with the first name alone. */}
+              {influencer.name.split(' ')[0]}
             </Text>
           </Pressable>
         ))}
@@ -345,15 +351,7 @@ const styles = StyleSheet.create({
   bell: { alignItems: 'center', justifyContent: 'center' },
   categoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   creator: { alignItems: 'center', gap: 6, width: 64 },
-  creatorInner: {
-    alignItems: 'center',
-    borderRadius: 99,
-    flex: 1,
-    justifyContent: 'center',
-    margin: 3,
-  },
   creatorRail: { flexDirection: 'row', gap: 14, overflow: 'hidden' },
-  creatorRing: { borderRadius: 99, height: 62, width: 62 },
   dealSkeletons: { flexDirection: 'row', gap: 12 },
   flex: { flex: 1 },
   locationRow: { alignItems: 'center', flexDirection: 'row', gap: 8 },

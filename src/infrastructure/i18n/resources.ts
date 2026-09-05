@@ -181,6 +181,14 @@ const ar = {
     profileSaved: 'تم تحديث الملف الشخصي',
     localeArabic: 'العربية',
     localeEnglish: 'English',
+    // Phase 11 — social commerce and notifications.
+    followingAction: 'تتابعه',
+    followFailed: 'تعذّر تحديث المتابعة. حاول مرة أخرى.',
+    followRequiresAuth: 'سجّل الدخول لمتابعة المؤثرين',
+    messagingUnavailable: 'المراسلة المباشرة غير متاحة في الإصدار الأول',
+    viewProduct: 'عرض المنتج',
+    markAllReadFailed: 'تعذّر تعليم الإشعارات كمقروءة. حاول مرة أخرى.',
+    allRead: 'تم تعليم كل الإشعارات كمقروءة',
   },
   states: {
     genericErrorTitle: 'تعذّر تحميل المحتوى',
@@ -380,6 +388,14 @@ const en = {
     profileSaved: 'Profile updated',
     localeArabic: 'العربية',
     localeEnglish: 'English',
+    // Phase 11 — social commerce and notifications.
+    followingAction: 'Following',
+    followFailed: 'We couldn\u2019t update that follow. Try again.',
+    followRequiresAuth: 'Sign in to follow influencers',
+    messagingUnavailable: 'Direct messaging is not in v1',
+    viewProduct: 'View product',
+    markAllReadFailed: 'We couldn\u2019t mark those as read. Try again.',
+    allRead: 'All notifications marked as read',
   },
   states: {
     genericErrorTitle: 'We couldn\u2019t load this content',
