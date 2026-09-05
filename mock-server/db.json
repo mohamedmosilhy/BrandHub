@@ -21868,48 +21868,64 @@
       "id": "wallet-transaction-1",
       "userId": "user-customer",
       "type": "CREDIT",
-      "amount": 5,
+      "amount": 50,
       "currency": "OMR",
-      "description": "Wallet transaction 1",
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "description": {
+        "ar": "شحن رصيد",
+        "en": "Wallet top-up"
+      },
+      "createdAt": "2026-08-12T12:00:00.000Z"
     },
     {
       "id": "wallet-transaction-2",
       "userId": "user-customer",
       "type": "PURCHASE",
-      "amount": 8.25,
+      "amount": 64.2,
       "currency": "OMR",
-      "description": "Wallet transaction 2",
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "description": {
+        "ar": "طلب BH-283740",
+        "en": "Order BH-283740"
+      },
+      "createdAt": "2026-08-09T12:00:00.000Z"
     },
     {
       "id": "wallet-transaction-3",
       "userId": "user-customer",
-      "type": "CREDIT",
-      "amount": 11.5,
+      "type": "REFUND",
+      "amount": 15.2,
       "currency": "OMR",
-      "description": "Wallet transaction 3",
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "description": {
+        "ar": "استرجاع RT-0231",
+        "en": "Refund RT-0231"
+      },
+      "createdAt": "2026-07-27T12:00:00.000Z"
     },
     {
       "id": "wallet-transaction-4",
       "userId": "user-customer",
-      "type": "PURCHASE",
-      "amount": 14.75,
+      "type": "CREDIT",
+      "amount": 25,
       "currency": "OMR",
-      "description": "Wallet transaction 4",
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "description": {
+        "ar": "شحن رصيد",
+        "en": "Wallet top-up"
+      },
+      "createdAt": "2026-07-12T12:00:00.000Z"
     },
     {
       "id": "wallet-transaction-5",
       "userId": "user-customer",
-      "type": "CREDIT",
-      "amount": 18,
+      "type": "PURCHASE",
+      "amount": 12.5,
       "currency": "OMR",
-      "description": "Wallet transaction 5",
-      "createdAt": "2026-09-02T12:00:00.000Z"
+      "description": {
+        "ar": "طلب BH-279902",
+        "en": "Order BH-279902"
+      },
+      "createdAt": "2026-07-03T12:00:00.000Z"
     }
   ],
+  "walletCharges": [],
   "walletTransfers": [],
   "gifts": [],
   "returns": [],

@@ -77,9 +77,9 @@ export function SellerStoreScreen({
       scroll={false}
     >
       <LinearGradient
-        colors={[...gradients.sellerCover.colors]}
-        start={gradients.sellerCover.start}
-        end={gradients.sellerCover.end}
+        colors={[...gradients.inkPanel.colors]}
+        start={gradients.inkPanel.start}
+        end={gradients.inkPanel.end}
         style={styles.cover}
       >
         <Pressable

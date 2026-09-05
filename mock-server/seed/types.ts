@@ -13,6 +13,7 @@ export type MockDatabase = {
   tickets: Record<string, unknown>[];
   ticketAttachments: Record<string, unknown>[];
   walletTransactions: Record<string, unknown>[];
+  walletCharges: Record<string, unknown>[];
   walletTransfers: Record<string, unknown>[];
   gifts: Record<string, unknown>[];
   returns: Record<string, unknown>[];

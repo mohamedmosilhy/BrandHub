@@ -158,6 +158,28 @@ describe('BRANDHUB theme tokens', () => {
     );
   });
 
+  it('pins the wallet, gift and payment-result geometry to the prototype', () => {
+    // The balance card: `margin: 16px; padding: 20px; border-radius: 20px` on a 30 px number.
+    expect(mobile.wallet.cardPadding).toBe(20);
+    expect(mobile.wallet.cardRadius).toBe(20);
+    expect(mobile.wallet.balanceSize).toBe(30);
+    // Four 46 px quick amounts at radius 12, and a 34 px sign token at radius 10 on each row.
+    expect(mobile.wallet.amountHeight).toBe(46);
+    expect(mobile.wallet.amountRadius).toBe(12);
+    expect(mobile.wallet.signSize).toBe(34);
+    expect(mobile.wallet.signRadius).toBe(10);
+    // The result banner: `46px 24px 30px` around a 66 px mark, over a `7px 18px` amount chip.
+    expect(mobile.payResult.markSize).toBe(66);
+    expect(mobile.payResult.bannerPaddingTop).toBe(46);
+    expect(mobile.payResult.amountPaddingX).toBe(18);
+    expect(mobile.payResult.copyMaxWidth).toBe(260);
+    // One token for the one ink→indigo ramp the prototype paints on two surfaces.
+    expect(gradients.inkPanel.css).toBe(
+      'linear-gradient(135deg, #1A1A2E 0%, #4A4470 100%)',
+    );
+    expect(colors.mintOnInk).toBe('#8FE3B8');
+  });
+
   it('pins the support geometry to the prototype', () => {
     // The form: `padding: 16px; gap: 13px`, with 12 px-radius priority blocks.
     expect(mobile.support.formPadding).toBe(16);

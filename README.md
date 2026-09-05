@@ -6,8 +6,8 @@ Design and planning live in [`docs/architecture.md`](docs/architecture.md) and
 [`docs/plan.md`](docs/plan.md). The UI/UX source of truth is `design-reference/`, which is read-only
 and never modified.
 
-**Current state: Phase 9 (account, orders and addresses), Phase 11 (social commerce and
-notifications) and Phase 12 (support) implemented.** The app opens on Arabic
+**Current state: every customer feature is implemented — Phases 1–12.** Phase 13 (integration, QA
+and release preparation) is next. The app opens on Arabic
 onboarding, supports the Phase 5 identity/navigation shell, and browses a live catalogue through
 Home, Browse, Category and Search. A product opens a real detail page — image pager, variant
 selector, seller strip, specifications, reviews, related products and a sticky buy bar — with the
@@ -20,8 +20,9 @@ social layer is live too: an influencer directory, a profile with its shoppable 
 products open the PDP, a persisted follow, and an in-app notification list with mark-all-read
 behind the home bell's unread dot. Support closes the after-sales path: a ticket form with the
 prototype's six categories and three priorities, a related-order select that order detail can
-preselect, and a two-sided thread with a reply box. Phase 10 (wallet, gifts and the payment result)
-is the one customer feature still outstanding.
+preselect, and a two-sided thread with a reply box. The wallet closes the set: a balance card,
+quick amounts, a hosted Paymob top-up that never sees a card number inside the app, a payment
+result that resolves a pending charge by polling, and gift money that debits the same balance.
 
 ## Requirements
 
@@ -137,6 +138,14 @@ response example, so the field set and the two open enum questions are recorded 
 `INVENTED_ENDPOINTS.md`. The thread's two sides align by reading direction rather than by a locale
 check, so they swap correctly in Arabic without a conditional. See
 [`docs/reports/phase-12-report.md`](docs/reports/phase-12-report.md).
+
+Phase 10 adds the wallet, gifts and the payment result. The top-up opens PAYMOB's hosted page in a
+browser session — card details never enter BRANDHUB's own process — and handles the return on both
+paths: caught by the session when the app was backgrounded, and delivered by the OS as
+`brandhub://payment/result?…` when it was killed. A dismissed browser reads as _pending_, never as
+failed, and the result screen asks the gateway rather than guessing. The charge carries an
+`Idempotency-Key` that a retry reuses (D20). See
+[`docs/reports/phase-10-report.md`](docs/reports/phase-10-report.md).
 
 ## Architecture in one screen
 

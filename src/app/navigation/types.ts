@@ -75,6 +75,13 @@ export type RootStackParamList = {
     status: 'success' | 'failed' | 'pending';
     amount: string;
     reference?: string;
+    /**
+     * The gateway's own order id, which `GET /payments/PAYMOB/status` answers about. Present
+     * whenever the charge that started the payment is known, and absent only when the app was
+     * handed a return it cannot attribute — in which case the screen stays pending rather than
+     * claiming an outcome.
+     */
+    gatewayOrderId?: string;
   };
   FilterSheet: { initial: SearchCriteria; returnTo: string };
 };

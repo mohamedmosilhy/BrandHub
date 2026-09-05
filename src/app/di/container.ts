@@ -49,6 +49,14 @@ import {
   GetTicketsUseCase,
   ReplyToTicketUseCase,
 } from '@domain/support';
+import {
+  CheckPaymentStatusUseCase,
+  GetSentGiftsUseCase,
+  GetTransactionsUseCase,
+  GetWalletUseCase,
+  SendGiftUseCase,
+  TopUpWalletUseCase,
+} from '@domain/wallet';
 import { ToggleWishlistUseCase } from '@domain/wishlist';
 
 import {
@@ -96,6 +104,7 @@ import {
   MockInfluencerRepository,
 } from '@data/social';
 import { HttpSupportRepository, SupportRemoteDataSource } from '@data/support';
+import { HttpWalletRepository, WalletRemoteDataSource } from '@data/wallet';
 import {
   HttpWishlistRepository,
   WishlistRemoteDataSource,
@@ -245,6 +254,17 @@ const getTickets = new GetTicketsUseCase(supportRepository);
 const getTicket = new GetTicketUseCase(supportRepository);
 const createTicket = new CreateTicketUseCase(supportRepository);
 const replyToTicket = new ReplyToTicketUseCase(supportRepository);
+/** D19 — the wallet, the payment status and gifts are all contracted, so this is HTTP too. */
+const walletRepository = new HttpWalletRepository(
+  new WalletRemoteDataSource(httpClient),
+);
+const getWallet = new GetWalletUseCase(walletRepository);
+const getWalletTransactions = new GetTransactionsUseCase(walletRepository);
+/** One instance, so a retry after a lost response reuses the attempt's key (D20). */
+const topUpWallet = new TopUpWalletUseCase(walletRepository);
+const checkPaymentStatus = new CheckPaymentStatusUseCase(walletRepository);
+const sendGift = new SendGiftUseCase(walletRepository);
+const getSentGifts = new GetSentGiftsUseCase(walletRepository);
 const queryClient = createAppQueryClient(logger);
 
 export const container = Object.freeze({
@@ -299,6 +319,13 @@ export const container = Object.freeze({
   notificationRepository,
   getNotifications,
   markAllRead,
+  walletRepository,
+  getWallet,
+  getWalletTransactions,
+  topUpWallet,
+  checkPaymentStatus,
+  sendGift,
+  getSentGifts,
   supportRepository,
   getTickets,
   getTicket,

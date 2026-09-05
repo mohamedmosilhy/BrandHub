@@ -446,6 +446,44 @@ const ticketSeed = [
   },
 ] as const;
 
+/**
+ * The prototype's wallet history (`design-reference/BRANDHUB App.dc.html`, `const WALLET_TX`).
+ * `type` drives the sign and tint the row is drawn with, so the seed carries one of each kind the
+ * app knows: a top-up, a purchase and a refund.
+ */
+const walletTransactionSeed = [
+  {
+    type: 'CREDIT',
+    amount: 50,
+    description: { ar: 'شحن رصيد', en: 'Wallet top-up' },
+    daysAgo: 21,
+  },
+  {
+    type: 'PURCHASE',
+    amount: 64.2,
+    description: { ar: 'طلب BH-283740', en: 'Order BH-283740' },
+    daysAgo: 24,
+  },
+  {
+    type: 'REFUND',
+    amount: 15.2,
+    description: { ar: 'استرجاع RT-0231', en: 'Refund RT-0231' },
+    daysAgo: 37,
+  },
+  {
+    type: 'CREDIT',
+    amount: 25,
+    description: { ar: 'شحن رصيد', en: 'Wallet top-up' },
+    daysAgo: 52,
+  },
+  {
+    type: 'PURCHASE',
+    amount: 12.5,
+    description: { ar: 'طلب BH-279902', en: 'Order BH-279902' },
+    daysAgo: 61,
+  },
+] as const;
+
 export function buildSeedDatabase(): MockDatabase {
   const now = '2026-09-02T12:00:00.000Z';
   const orderItems = (offset: number) => [
@@ -563,15 +601,18 @@ export function buildSeedDatabase(): MockDatabase {
       };
     }),
     ticketAttachments: [],
-    walletTransactions: Array.from({ length: 5 }, (_, index) => ({
+    walletTransactions: walletTransactionSeed.map((entry, index) => ({
       id: `wallet-transaction-${index + 1}`,
       userId: 'user-customer',
-      type: index % 2 === 0 ? 'CREDIT' : 'PURCHASE',
-      amount: Number((5 + index * 3.25).toFixed(3)),
+      type: entry.type,
+      amount: entry.amount,
       currency: 'OMR',
-      description: `Wallet transaction ${index + 1}`,
-      createdAt: now,
+      description: entry.description,
+      createdAt: new Date(
+        Date.parse(now) - entry.daysAgo * 24 * 60 * 60_000,
+      ).toISOString(),
     })),
+    walletCharges: [],
     walletTransfers: [],
     gifts: [],
     returns: [],

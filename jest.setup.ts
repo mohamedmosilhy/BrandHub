@@ -34,3 +34,12 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 );
+
+// Native modules the wallet's hosted-payment flow uses. Both are composition-root concerns; the
+// screens never import them, so the mocks only have to keep the navigator mountable.
+jest.mock('expo-web-browser', () => ({
+  openAuthSessionAsync: jest.fn(async () => ({ type: 'dismiss' })),
+}));
+jest.mock('expo-screen-capture', () => ({
+  usePreventScreenCapture: jest.fn(),
+}));

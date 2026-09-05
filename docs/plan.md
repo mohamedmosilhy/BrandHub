@@ -1,12 +1,12 @@
 # BRANDHUB Mobile — Implementation Plan
 
-**Status:** **Implemented through Phase 9, plus Phases 11 and 12 — Phase 10 is the last customer feature open** · **Companion document:** [`architecture.md`](./architecture.md)
+**Status:** **Implemented through Phase 12 — every customer feature is built; Phase 13 is cleared to begin** · **Companion document:** [`architecture.md`](./architecture.md)
 **Date:** 2026-09-05 · **Reviewer / decision maker:** repository owner
 
 > This is the implementation roadmap for the BRANDHUB customer React Native application.
-> Phases 1–9, 11 and 12 are implemented. Their completion reports are in `docs/reports/`.
-> Phase 11 depends on Phase 6 and Phase 12 on Phase 9, so both were taken ahead of Phase 10.
-> **Phase 10 — wallet, gifts and the payment result — is the only customer feature still open.**
+> **Phases 1–12 are implemented.** Their completion reports are in `docs/reports/`.
+> Phases 11 and 12 were taken ahead of Phase 10, which depends on neither; Phase 10 then closed
+> the last customer feature. **Phase 13 — integration, QA and release preparation — is next.**
 > All 17 open questions were approved as recommended on 2026-09-02 and are recorded as decisions
 > **D1–D17** in `architecture.md` §34. **Nothing blocks Phase 6.**
 
@@ -69,10 +69,10 @@ behaviour. They are collected at the end of this document under
 | 7     | Product detail and wishlist                      | 6          | Done       |
 | 8     | Cart and checkout                                | 7          | Done       |
 | 9     | Account, orders and addresses                    | 5, 8       | Done       |
-| 10    | Wallet, gifts and payment result                 | 9          | **Medium** |
+| 10    | Wallet, gifts and payment result                 | 9          | Done       |
 | 11    | Social commerce and notifications                | 6          | Done       |
 | 12    | Support                                          | 9          | Done       |
-| 13    | Integration, QA and release preparation          | 1–12       | **Large**  |
+| 13    | Integration, QA and release preparation          | 1–12       | **Next**   |
 | 14    | Seller app — deferred track, not part of v1 (D1) | 13         | Out of v1  |
 
 Phases 6–12 each follow the same internal order: **Domain → Data → Presentation → UI → Tests →
@@ -900,18 +900,35 @@ Phase 9 done.
 - AC10.13 A pending payment resolves by polling `GET /payments/PAYMOB/status`, and the screen moves from pending to success or failure without a manual refresh.
 - AC10.14 Repeating a top-up after a lost connection reuses the attempt's `Idempotency-Key` and charges once (D20).
 
-### Review checklist
+### Review checklist — implementation audit 2026-09-05
 
-- [ ] Does the deep-link return work when the app was backgrounded, and when it was killed?
-- [ ] Are wallet screens excluded from screenshots on Android per §28 S10?
-- [ ] Do the gift payloads match the contract exactly, including `deliveryMethod` and `senderMode`?
-- [ ] Is `/wallet/transfers` deliberately left unbuilt, and is that recorded as a product question rather than an oversight?
-- [ ] Wallet, gifts and result screens compared against the prototype.
+- [x] Does the deep-link return work when the app was backgrounded, and when it was killed? Both
+      paths are built and end on the same screen with the same params. **Backgrounded:**
+      `openAuthSessionAsync` catches the redirect and `parsePaymentReturn` reads it.
+      **Killed:** the browser session is gone, so the OS delivers `brandhub://payment/result?…` and
+      React Navigation's `linking` config parses the query into the route's params. A dismissed
+      browser reads as pending — closing it says nothing about the payment — and the result screen
+      resolves it by polling.
+- [x] Are wallet screens excluded from screenshots on Android per §28 S10? `useScreenProtection`
+      sets `FLAG_SECURE` on the wallet, gifts and payment-result routes. It lives in the
+      composition root so the screens stay free of native modules. iOS has no equivalent flag; that
+      gap is recorded rather than faked (`architecture.md` §33 item 23).
+- [x] Do the gift payloads match the contract exactly, including `deliveryMethod` and `senderMode`?
+      Asserted field by field in `HttpWalletRepository.test.ts` and again in the domain suite.
+      `deliveryMethod` follows the recipient's form — `EMAIL` or `SMS` — and `senderMode` is
+      `NAMED`, with `scheduledAt: null`; the prototype offers a control for neither, so both are
+      stated rather than omitted.
+- [x] Is `/wallet/transfers` deliberately left unbuilt, and is that recorded as a product question
+      rather than an oversight? Yes — `architecture.md` §33 item 17 and `INVENTED_ENDPOINTS.md`.
+- [ ] Wallet, gifts and result screens compared against the prototype. Automated geometry checks
+      pass; the physical AR/EN visual sign-off carries over to the Phase 13 release gate, as it does
+      for Phases 7–9, 11 and 12.
 
 ### Definition of done
 
-All twelve criteria pass; the top-up journey is green end to end including the deep-link return;
-the invented gift endpoints are documented for the backend team.
+All fourteen criteria pass; the top-up journey is green end to end including the deep-link return;
+the gift and payment shapes the mock had to define are documented for the backend team.
+**Met 2026-09-05** — see [`reports/phase-10-report.md`](./reports/phase-10-report.md).
 
 ---
 

@@ -49,6 +49,7 @@ import {
 } from '@presentation/features/cart';
 import { CategoryScreen } from '@presentation/features/category';
 import { CheckoutScreen } from '@presentation/features/checkout';
+import { GiftsScreen } from '@presentation/features/gifts';
 import { HomeScreen } from '@presentation/features/home';
 import {
   InfluencerProfileScreen,
@@ -63,11 +64,13 @@ import {
   OrdersScreen,
   ReturnFormScreen,
 } from '@presentation/features/orders';
+import { PaymentResultScreen } from '@presentation/features/paymentResult';
 import { ProductScreen } from '@presentation/features/product';
 import { ProfileScreen } from '@presentation/features/profile';
 import { SearchScreen } from '@presentation/features/search';
 import { SellerStoreScreen } from '@presentation/features/sellerStore';
 import { SupportScreen, TicketScreen } from '@presentation/features/support';
+import { WalletScreen } from '@presentation/features/wallet';
 import {
   WishlistProvider,
   WishlistScreen,
@@ -75,6 +78,11 @@ import {
 import { useTheme } from '@presentation/theme';
 
 import { useContainer } from '@app/di';
+import {
+  openHostedPayment,
+  useScreenProtection,
+  type PaymentReturn,
+} from '@app/payments';
 
 import { linking } from './linking';
 import { RequireAuth } from './RequireAuth';
@@ -651,6 +659,105 @@ function ProfileRoute() {
   );
 }
 
+/**
+ * The wallet, gifts and the payment result all show money, so all three set `FLAG_SECURE` while
+ * mounted (§28 S10). The policy lives here rather than in the screens, which stay free of native
+ * modules.
+ */
+function WalletRoute() {
+  const { getWallet, getWalletTransactions, topUpWallet } = useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  useScreenProtection();
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'Wallet' }}
+      onRequireAuth={requestAuth}
+    >
+      <WalletScreen
+        getWallet={getWallet}
+        getTransactions={getWalletTransactions}
+        topUpWallet={topUpWallet}
+        onBack={() => navigation.goBack()}
+        onCharge={(charge) => {
+          // The charge is the app's last act before the hosted page takes over; whatever comes
+          // back — a redirect the session caught, or a dismissal — lands on the result screen.
+          const fallback: PaymentReturn = {
+            status: 'pending',
+            amount: charge.amount.toDecimalString(),
+            gatewayOrderId: charge.gatewayOrderId,
+            reference: charge.referenceId,
+          };
+          void openHostedPayment(charge.paymentUrl, fallback).then((outcome) =>
+            navigationRef.navigate('PaymentResult', {
+              status: outcome.status,
+              amount: outcome.amount ?? charge.amount.toDecimalString(),
+              ...(outcome.gatewayOrderId
+                ? { gatewayOrderId: outcome.gatewayOrderId }
+                : {}),
+              ...(outcome.reference ? { reference: outcome.reference } : {}),
+            }),
+          );
+        }}
+      />
+    </RequireAuth>
+  );
+}
+
+function GiftsRoute() {
+  const { sendGift, getSentGifts } = useContainer();
+  const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
+  useScreenProtection();
+  return (
+    <RequireAuth
+      returnTo={{ kind: 'account', screen: 'Gifts' }}
+      onRequireAuth={requestAuth}
+    >
+      <GiftsScreen
+        sendGift={sendGift}
+        getSentGifts={getSentGifts}
+        onBack={() => navigation.goBack()}
+      />
+    </RequireAuth>
+  );
+}
+
+function PaymentResultRoute() {
+  const { checkPaymentStatus } = useContainer();
+  const route = useRoute<RouteProp<RootStackParamList, 'PaymentResult'>>();
+  const returnTo = { kind: 'account', screen: 'Wallet' } as const;
+  const params = route.params;
+  useScreenProtection();
+  const backToWallet = () =>
+    navigationRef.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'Main',
+          params: {
+            screen: 'AccountTab',
+            params: { screen: 'Wallet' },
+          },
+        },
+      ],
+    });
+  return (
+    <RequireAuth returnTo={returnTo} onRequireAuth={requestAuth}>
+      <PaymentResultScreen
+        status={params.status}
+        amount={params.amount}
+        {...(params.gatewayOrderId
+          ? { gatewayOrderId: params.gatewayOrderId }
+          : {})}
+        checkPaymentStatus={checkPaymentStatus}
+        onBackToWallet={backToWallet}
+        // AC10.7 — retry sends the customer back to the wallet to start a new charge, rather than
+        // silently re-posting one the gateway already refused.
+        onRetry={backToWallet}
+      />
+    </RequireAuth>
+  );
+}
+
 function SupportRoute() {
   const { getTickets, getOrders, createTicket } = useContainer();
   const navigation = useNavigation<NavigationProp<AccountStackParamList>>();
@@ -690,19 +797,6 @@ function TicketRoute() {
         replyToTicket={replyToTicket}
         onBack={() => navigation.goBack()}
       />
-    </RequireAuth>
-  );
-}
-
-function AccountGatedRoute() {
-  const route = useRoute();
-  const returnTo = {
-    kind: 'account',
-    screen: route.name as keyof AccountStackParamList,
-  } as const;
-  return (
-    <RequireAuth returnTo={returnTo} onRequireAuth={requestAuth}>
-      <ShellScreen title={route.name} />
     </RequireAuth>
   );
 }
@@ -749,16 +843,6 @@ function OrderConfirmationRoute() {
           })
         }
       />
-    </RequireAuth>
-  );
-}
-
-function RootGatedRoute() {
-  const route = useRoute();
-  const returnTo = { kind: 'account' } as const;
-  return (
-    <RequireAuth returnTo={returnTo} onRequireAuth={requestAuth}>
-      <ShellScreen title={route.name} />
     </RequireAuth>
   );
 }
@@ -818,8 +902,8 @@ function AccountNavigator() {
       <AccountStack.Screen name="ReturnForm" component={ReturnFormRoute} />
       <AccountStack.Screen name="Addresses" component={AddressesRoute} />
       <AccountStack.Screen name="AddressForm" component={AddressFormRoute} />
-      <AccountStack.Screen name="Wallet" component={AccountGatedRoute} />
-      <AccountStack.Screen name="Gifts" component={AccountGatedRoute} />
+      <AccountStack.Screen name="Wallet" component={WalletRoute} />
+      <AccountStack.Screen name="Gifts" component={GiftsRoute} />
       <AccountStack.Screen name="Support" component={SupportRoute} />
       <AccountStack.Screen name="Ticket" component={TicketRoute} />
       <AccountStack.Screen name="Profile" component={ProfileRoute} />
@@ -973,7 +1057,10 @@ export function AppNavigator() {
                   name="OrderConfirmation"
                   component={OrderConfirmationRoute}
                 />
-                <Root.Screen name="PaymentResult" component={RootGatedRoute} />
+                <Root.Screen
+                  name="PaymentResult"
+                  component={PaymentResultRoute}
+                />
               </Root.Group>
               <Root.Group
                 screenOptions={{

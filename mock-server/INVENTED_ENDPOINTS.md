@@ -105,7 +105,7 @@ the app saved always matches by name.
 **To replace:** add `areaId` to the address payload. `resolveAddressArea` already returns an
 explicit `areaId` unchanged when one is present, so the function can then be deleted.
 
-# Contracted routes the mock had to shape (Phases 7, 11 and 12)
+# Contracted routes the mock had to shape (Phases 7, 10, 11 and 12)
 
 These routes **are** in `docs/ECommerce_API_Postman_Collection.json`, but it carries no response
 example for them, so the mock defines their payloads. They are listed here separately from the
@@ -121,6 +121,45 @@ Spring page — **unwrapped**, like `GET /orders` — of
   the prototype's list draws. The client narrows an unrecognised value to `UNKNOWN` and renders a
   neutral row, so a kind the backend adds later still reaches the customer.
 - `isRead=` filters; the client reads the whole list and counts unread itself for the home bell.
+
+## `POST /wallet/charge` and the PAYMOB return (Phase 10)
+
+The charge route **is** contracted, and the collection's own test script pins three of its fields:
+it reads `data.paymentUrl`, `data.gateway` and `data.referenceId`. The mock answers with all three,
+plus `id`, `amount`, `currency`, `status` and `createdAt` — and one addition:
+
+- **`gatewayOrderId` is a mock addition.** `GET /payments/PAYMOB/status?orderId=` is contracted and
+  is the only way a payment-result screen can resolve a pending charge, but **nothing in the
+  collection hands the client that id**: `PAYMOBGatewayOrderId` is a variable the tester fills in
+  by hand from the PAYMOB portal. Without it the app would have to guess an outcome it can simply
+  ask about. The backend is asked to return it on the charge. If it will not, the fallback is the
+  `order` query parameter on the return URL below, which the client already parses.
+- `GET /payments/PAYMOB/status` answers **bare**, not enveloped — the collection's test script
+  reads `status` off the response root. The client's unwrapping helper accepts either (D22).
+
+**Settlement.** `POST /payments/webhook/paymob` is the gateway's server-to-server callback and is
+what actually credits the wallet; the mock also settles from the contracted return URL, because a
+redirect and a callback are two reports of the same event. Settling is idempotent: a charge that is
+no longer `PENDING` is left alone, so a gateway that retries its webhook cannot credit twice.
+
+**The hosted page.** `paymentUrl` points at `GET /api/v1/payments/paymob/checkout/{gatewayOrderId}`,
+a stand-in page with two buttons — pay, and fail the payment — each linking to the contracted
+`GET /api/v1/payments/paymob/wallet-return?order=&success=`. That route settles the charge and
+302-redirects to `brandhub://payment/result?status=&amount=&gatewayOrderId=&reference=`. None of
+this models PAYMOB's real UI; it models its two exits, so the deep-link return can be exercised
+end to end. **These three routes are public**: a browser carries no bearer token, and each is
+addressed by an unguessable gateway order id.
+
+**Top-up limits are the client's.** The contract publishes minimum, maximum and daily limits for
+wallet **transfers** (`GET /wallet/transfers/settings`) and none for top-up. `TOP_UP_MINIMUM` and
+`TOP_UP_MAXIMUM` in `src/domain/wallet` are set to the transfer figures so the two scales agree.
+**To replace:** a top-up limits endpoint, or an extension of the transfer settings resource to
+cover it.
+
+Not built, and deliberately: **`/wallet/transfers`**. The API offers a full person-to-person
+transfer — recipient preview, password confirmation, a transfer history — and the prototype shows
+none of it. Gift money is the feature the reference has. This is a product question, not an
+oversight (`architecture.md` §33 item 17).
 
 ## `GET /support/tickets` and `GET /support/tickets/{id}` (Phase 12)
 

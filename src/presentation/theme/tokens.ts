@@ -57,6 +57,13 @@ export const colors = {
   onDarkBorder: 'rgba(255, 255, 255, 0.18)',
   onDarkSurface: 'rgba(255, 255, 255, 0.07)',
   textSubtleAccessible: '#686879',
+  /** `#8FE3B8` — the wallet-active pill's mint, drawn only on the ink balance card. */
+  mintOnInk: '#8FE3B8',
+  /** Its `rgba(143,227,184,.18)` bed, and the translucent chip the payment result uses. */
+  mintOnInkSurface: 'rgba(143, 227, 184, 0.18)',
+  onDarkChip: 'rgba(255, 255, 255, 0.16)',
+  onDarkRing: 'rgba(255, 255, 255, 0.5)',
+  onDarkMark: 'rgba(255, 255, 255, 0.2)',
   pinkAccessible: '#9D3155',
   successAccessible: '#0F6B45',
   warningAccessible: '#765800',
@@ -103,8 +110,12 @@ export const gradients = {
     end: { x: 0, y: 1 },
     css: 'linear-gradient(180deg, transparent 40%, rgba(26,26,46,0.75) 100%)',
   },
-  /** `linear-gradient(135deg, #1A1A2E 0%, #4A4470 100%)` seller-store cover. */
-  sellerCover: {
+  /**
+   * `linear-gradient(135deg, #1A1A2E 0%, #4A4470 100%)`. The prototype paints two surfaces with
+   * this ink-to-indigo ramp — the seller-store cover and the wallet balance card — so the token is
+   * named for the ramp rather than for either screen.
+   */
+  inkPanel: {
     colors: [colors.ink, colors.inkIndigo] as const,
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
@@ -401,6 +412,69 @@ export const mobile = {
     taggedThumbRadius: 10,
     taggedActionSize: 34,
     taggedActionIconSize: 16,
+  },
+  /**
+   * Wallet. The ink balance card, the quick-amount grid and the transaction row, read off
+   * `design-reference/BRANDHUB App.dc.html`.
+   */
+  wallet: {
+    /** `margin: 16px; padding: 20px; border-radius: 20px` balance card. */
+    cardMargin: 16,
+    cardPadding: 20,
+    cardRadius: 20,
+    cardGap: 10,
+    /** The decorative ring bled off the card's trailing top corner. */
+    ringSize: 150,
+    ringInsetEnd: -50,
+    ringTop: -52,
+    /** `font-size: 30px; font-weight: 800` — the largest number in the app after the PDP price. */
+    balanceSize: 30,
+    /** `padding: 4px 11px; border-radius: 99px` wallet-active pill with a 5 px dot. */
+    pillPaddingX: 11,
+    pillPaddingY: 4,
+    pillDotSize: 5,
+    /** Four `46px` quick amounts at radius 12 on an 8 px grid gap. */
+    amountHeight: 46,
+    amountRadius: 12,
+    amountGap: 8,
+    sectionGap: 11,
+    /** `border-radius: 14px; padding: 12px` transaction row with a 34 px sign token at radius 10. */
+    rowRadius: 14,
+    rowPadding: 12,
+    rowGap: 12,
+    signSize: 34,
+    signRadius: 10,
+  },
+  /** Gifts: the same form rhythm as support, over a 34 px round token on each history row. */
+  gift: {
+    formPadding: 16,
+    formGap: 13,
+    fieldGap: 8,
+    chipGap: 7,
+    rowRadius: 14,
+    rowPadding: 12,
+    rowGap: 12,
+    tokenSize: 34,
+  },
+  /**
+   * The payment result: a full-bleed banner with a 66 px mark, then the actions, then the
+   * translucent amount chip.
+   */
+  payResult: {
+    bannerPaddingX: 24,
+    bannerPaddingTop: 46,
+    bannerPaddingBottom: 30,
+    bannerGap: 14,
+    markSize: 66,
+    markBorder: 2,
+    /** `padding: 7px 18px; border-radius: 99px` amount chip on the banner. */
+    amountPaddingX: 18,
+    amountPaddingY: 7,
+    /** `max-width: 260px` on the explanatory line, so it never runs the full width. */
+    copyMaxWidth: 260,
+    actionsPadding: 16,
+    actionsPaddingY: 20,
+    actionsGap: 11,
   },
   /**
    * Support. The ticket form, the my-tickets row and the two-sided thread, read off

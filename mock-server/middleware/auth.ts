@@ -80,6 +80,12 @@ const publicGetPrefixes = [
   // D3: browsing is public, and a product's reviews are part of the product page a guest sees.
   // Writing one still needs a session — only the GET prefix is listed here.
   '/reviews/product',
+  // The hosted payment page and the gateway's return URL are opened by a **browser**, which
+  // carries no bearer token. Both are addressed by an unguessable gateway order id and neither
+  // reveals anything about the account; the customer's own identity rides on the charge.
+  '/payments/paymob/checkout',
+  '/payments/paymob/wallet-return',
+  '/payments/paymob/order-return',
 ];
 
 function isPublic(request: Request): boolean {

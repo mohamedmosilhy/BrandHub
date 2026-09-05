@@ -1299,13 +1299,25 @@ function registerWalletRoutes(app: Express, store: MockStore): void {
   app.get('/api/v1/wallet/transactions', (request, response) =>
     response.json(
       pageOf(
-        store.data.walletTransactions.filter(
-          (item) => item['userId'] === authenticatedUserId(response),
-        ),
+        store.data.walletTransactions
+          .filter((item) => item['userId'] === authenticatedUserId(response))
+          .sort((a, b) =>
+            stringValue(b['createdAt']).localeCompare(
+              stringValue(a['createdAt']),
+            ),
+          )
+          .map((item) => localise(item, localeOf(request)) as Row),
         request,
       ),
     ),
   );
+  /**
+   * The collection's own test script reads `data.paymentUrl`, `data.gateway` and
+   * `data.referenceId`, so the response is enveloped and carries all three. `gatewayOrderId` is a
+   * mock addition: nothing in the collection hands the client the id that
+   * `GET /payments/PAYMOB/status?orderId=` needs, and a payment-result screen cannot poll for a
+   * status it has no key for. See INVENTED_ENDPOINTS.md.
+   */
   app.post('/api/v1/wallet/charge', (request: RouteRequest, response) => {
     if (idempotentResult(store, request, response, 'wallet-charge')) return;
     const amount = numberValue(request.body['amount']);
@@ -1316,18 +1328,25 @@ function registerWalletRoutes(app: Express, store: MockStore): void {
         'INVALID_CHARGE',
         'A positive amount and PAYMOB are required',
       );
+    const sequence = store.data.walletCharges.length + 1;
     const charge = {
-      id: nextId(store.data.walletTransactions, 'charge'),
-      amount,
+      id: `charge-${sequence}`,
+      userId: authenticatedUserId(response),
+      amount: roundMoney(amount),
       currency: 'OMR',
       status: 'PENDING',
+      gateway: 'PAYMOB',
       paymentMethod: 'PAYMOB',
-      paymentUrl: `https://paymob.example/checkout/${store.data.walletTransactions.length + 1}`,
+      referenceId: `PAYMOB-REF-${String(sequence).padStart(6, '0')}`,
+      gatewayOrderId: `PAYMOB-ORDER-${String(sequence).padStart(6, '0')}`,
+      paymentUrl: `${request.protocol}://${request.get('host') ?? 'localhost:3001'}/api/v1/payments/paymob/checkout/PAYMOB-ORDER-${String(sequence).padStart(6, '0')}`,
       createdAt: now(),
     };
-    rememberIdempotency(store, request, 'wallet-charge', charge);
+    store.data.walletCharges.push(charge);
+    const result = envelope(charge);
+    rememberIdempotency(store, request, 'wallet-charge', result);
     store.write();
-    response.status(201).json(charge);
+    response.status(201).json(result);
   });
   app.get('/api/v1/wallet', (_request, response) => {
     const user = byId(store.data.users, authenticatedUserId(response));
@@ -1551,10 +1570,41 @@ function registerSupportAndGiftRoutes(app: Express, store: MockStore): void {
         'INVALID_GIFT',
         'The full OMR gift payload is required',
       );
+    // Gift money moves money. The client blocks an over-balance gift for the customer's sake; the
+    // server refuses it because the server is the authority (§28 S13).
+    const sender = byId(store.data.users, authenticatedUserId(response));
+    const amount = numberValue(request.body['amount']);
+    if (!sender || amount <= 0)
+      return error(
+        response,
+        400,
+        'INVALID_GIFT',
+        'A positive amount is required',
+      );
+    if (numberValue(sender['walletBalance']) < amount)
+      return error(
+        response,
+        400,
+        'INSUFFICIENT_BALANCE',
+        'The wallet balance is lower than the gift',
+      );
+    sender['walletBalance'] = roundMoney(
+      numberValue(sender['walletBalance']) - amount,
+    );
+    store.data.walletTransactions.push({
+      id: `wallet-transaction-${store.data.walletTransactions.length + 1}`,
+      userId: sender['id'],
+      type: 'GIFT_SENT',
+      amount: roundMoney(amount),
+      currency: 'OMR',
+      description: { ar: 'هدية مرسلة', en: 'Gift sent' },
+      createdAt: now(),
+    });
     const gift = {
       id: nextId(store.data.gifts, 'gift'),
-      senderId: authenticatedUserId(response),
+      senderId: sender['id'],
       ...request.body,
+      amount: roundMoney(amount),
       status: request.body['scheduledAt'] ? 'SCHEDULED' : 'SENT',
       createdAt: now(),
     };
@@ -1562,6 +1612,33 @@ function registerSupportAndGiftRoutes(app: Express, store: MockStore): void {
     store.write();
     response.status(201).json(envelope(gift));
   });
+}
+
+/**
+ * Settles a pending charge once. A gateway reports the same payment twice — once by redirect and
+ * once by webhook — so this is idempotent: a charge that is no longer `PENDING` is left alone,
+ * and the wallet is credited exactly once.
+ */
+function settleCharge(store: MockStore, charge: Row, paid: boolean): void {
+  if (charge['status'] !== 'PENDING') return;
+  charge['status'] = paid ? 'PAID' : 'FAILED';
+  if (paid) {
+    const user = byId(store.data.users, stringValue(charge['userId']));
+    if (user)
+      user['walletBalance'] = roundMoney(
+        numberValue(user['walletBalance']) + numberValue(charge['amount']),
+      );
+    store.data.walletTransactions.push({
+      id: `wallet-transaction-${store.data.walletTransactions.length + 1}`,
+      userId: charge['userId'],
+      type: 'CREDIT',
+      amount: charge['amount'],
+      currency: 'OMR',
+      description: { ar: 'شحن رصيد', en: 'Wallet top-up' },
+      createdAt: now(),
+    });
+  }
+  store.write();
 }
 
 function registerSocialAndPaymentRoutes(app: Express, store: MockStore): void {
@@ -1667,17 +1744,93 @@ function registerSocialAndPaymentRoutes(app: Express, store: MockStore): void {
     store.write();
     response.status(204).end();
   });
-  app.get('/api/v1/payments/PAYMOB/status', (request, response) =>
-    response.json(
-      envelope({
-        orderId: request.query['orderId'],
-        status: 'PAID',
-        paymentMethod: 'PAYMOB',
-      }),
-    ),
-  );
-  app.post('/api/v1/payments/webhook/paymob', (_request, response) =>
-    response.json({ received: true }),
+  /**
+   * The stand-in for PAYMOB's hosted page.
+   *
+   * `paymentUrl` has to lead somewhere a browser can actually open, or the top-up journey stops at
+   * the first step and the deep-link return can never be exercised. This page offers the two
+   * outcomes the gateway can produce and hands each to the **contracted** wallet-return route.
+   * Nothing here models PAYMOB's real UI; it models its two exits.
+   */
+  app.get('/api/v1/payments/paymob/checkout/:orderId', (request, response) => {
+    const charge = store.data.walletCharges.find(
+      (item) => item['gatewayOrderId'] === request.params.orderId,
+    );
+    if (!charge)
+      return error(response, 404, 'PAYMENT_NOT_FOUND', 'Payment was not found');
+    const returnUrl = `/api/v1/payments/paymob/wallet-return?order=${encodeURIComponent(stringValue(charge['gatewayOrderId']))}`;
+    response
+      .type('html')
+      .send(
+        `<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">` +
+          `<title>Mock PAYMOB checkout</title>` +
+          `<body style="font-family:system-ui;margin:0;display:grid;place-items:center;height:100vh;background:#F5F5F7">` +
+          `<div style="width:min(92vw,380px);background:#fff;border-radius:16px;padding:24px;display:grid;gap:14px">` +
+          `<strong style="font-size:18px">Mock PAYMOB checkout</strong>` +
+          `<span style="color:#5A5A72">OMR ${numberValue(charge['amount']).toFixed(3)} · ${stringValue(charge['referenceId'])}</span>` +
+          `<a href="${returnUrl}&success=true" style="display:block;text-align:center;text-decoration:none;background:#7F77DD;color:#fff;border-radius:12px;padding:14px">Pay</a>` +
+          `<a href="${returnUrl}&success=false" style="display:block;text-align:center;text-decoration:none;border:1.5px solid #D4537E;color:#D4537E;border-radius:12px;padding:14px">Fail the payment</a>` +
+          `</div></body>`,
+      );
+  });
+  /**
+   * The contracted return URL. It settles the charge exactly as the webhook would — a gateway
+   * redirect and a gateway callback are two reports of the same event — and then hands the
+   * customer back to the app on its own scheme, carrying enough to render the result screen even
+   * if the app was killed while the browser was open.
+   */
+  app.get('/api/v1/payments/paymob/wallet-return', (request, response) => {
+    const charge = store.data.walletCharges.find(
+      (item) => item['gatewayOrderId'] === request.query['order'],
+    );
+    if (!charge)
+      return error(response, 404, 'PAYMENT_NOT_FOUND', 'Payment was not found');
+    const paid = request.query['success'] === 'true';
+    settleCharge(store, charge, paid);
+    const amount = numberValue(charge['amount']).toFixed(3);
+    response.redirect(
+      `brandhub://payment/result?status=${paid ? 'success' : 'failed'}` +
+        `&amount=${amount}` +
+        `&gatewayOrderId=${encodeURIComponent(stringValue(charge['gatewayOrderId']))}` +
+        `&reference=${encodeURIComponent(stringValue(charge['referenceId']))}`,
+    );
+  });
+  /**
+   * Bare, not enveloped: the collection's test script reads `status` off the response root. The
+   * status is the charge's real one, so a screen that polls this route actually learns something.
+   */
+  app.get('/api/v1/payments/PAYMOB/status', (request, response) => {
+    const charge = store.data.walletCharges.find(
+      (item) => item['gatewayOrderId'] === request.query['orderId'],
+    );
+    if (!charge)
+      return error(response, 404, 'PAYMENT_NOT_FOUND', 'Payment was not found');
+    response.json({
+      orderId: charge['gatewayOrderId'],
+      status: charge['status'],
+      amount: charge['amount'],
+      paymentMethod: 'PAYMOB',
+    });
+  });
+  /**
+   * The gateway's server-to-server callback, and the only thing that settles a charge. A success
+   * credits the wallet and writes the CREDIT row the history shows; a failure marks the charge and
+   * moves no money. Settling twice is a no-op, because a gateway retries its webhooks.
+   */
+  app.post(
+    '/api/v1/payments/webhook/paymob',
+    (request: RouteRequest, response) => {
+      const charge = store.data.walletCharges.find(
+        (item) =>
+          item['gatewayOrderId'] === request.body['orderId'] ||
+          item['referenceId'] === request.body['receiptId'] ||
+          item['referenceId'] === request.body['reference_id'],
+      );
+      const status = stringValue(request.body['status']).toUpperCase();
+      if (charge)
+        settleCharge(store, charge, status === 'PAID' || status === 'SUCCESS');
+      response.json({ received: true });
+    },
   );
 }
 

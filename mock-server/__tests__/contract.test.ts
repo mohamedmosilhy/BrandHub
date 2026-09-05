@@ -366,7 +366,7 @@ describe('stateful and money-moving contracts', () => {
       .set('Authorization', tokens.authorization)
       .set('Idempotency-Key', 'charge-1')
       .send(chargePayload);
-    expect(secondCharge.body.id).toBe(firstCharge.body.id);
+    expect(secondCharge.body.data.id).toBe(firstCharge.body.data.id);
 
     const transferPayload = {
       recipientEmail: 'friend@brandhub.om',
@@ -598,6 +598,8 @@ describe('customer endpoint inventory', () => {
     for (const path of publicPaths)
       expect((await request(app).get(path)).status).toBe(200);
 
+    // `GET /payments/PAYMOB/status` is not in this list: it answers about a charge that has to
+    // exist first, so it is exercised in the Phase 10 test alongside the charge that creates it.
     const protectedPaths = [
       '/api/v1/cart',
       '/api/v1/orders',
@@ -611,7 +613,6 @@ describe('customer endpoint inventory', () => {
       '/api/v1/wallet/transfers',
       '/api/v1/gifts/sent',
       '/api/v1/gifts/received',
-      '/api/v1/payments/PAYMOB/status?orderId=order-1',
       '/api/v1/users/me',
       '/api/v1/users/me/addresses',
       '/api/v1/wishlist',
@@ -788,6 +789,142 @@ describe('customer endpoint inventory', () => {
     expect(slots.body.data).toEqual(
       expect.arrayContaining([expect.objectContaining({ express: true })]),
     );
+  });
+
+  it('runs the whole top-up journey Phase 10 renders', async () => {
+    const { authorization } = await signIn();
+    const authenticated = () => ({ Authorization: authorization });
+
+    const before = await request(app)
+      .get('/api/v1/wallet')
+      .set(authenticated());
+    expect(before.body).toMatchObject({ balance: 125.5, currency: 'OMR' });
+
+    // The collection's own test script reads data.paymentUrl, data.gateway and data.referenceId.
+    const charge = await request(app)
+      .post('/api/v1/wallet/charge')
+      .set(authenticated())
+      .set('Idempotency-Key', 'topup-1')
+      .send({ amount: 25, paymentMethod: 'PAYMOB' });
+    expect(charge.status).toBe(201);
+    expect(charge.body.data).toMatchObject({
+      gateway: 'PAYMOB',
+      status: 'PENDING',
+      amount: 25,
+    });
+    expect(charge.body.data.referenceId).toEqual(expect.any(String));
+    const order = charge.body.data.gatewayOrderId as string;
+
+    // Pending until something settles it, and the status route reads the charge's real state.
+    const pending = await request(app)
+      .get(`/api/v1/payments/PAYMOB/status?orderId=${order}`)
+      .set(authenticated());
+    expect(pending.body).toMatchObject({ status: 'PENDING' });
+
+    // `paymentUrl` leads to a page a browser can actually open.
+    const checkout = await request(app).get(
+      `/api/v1/payments/paymob/checkout/${order}`,
+    );
+    expect(checkout.status).toBe(200);
+    expect(checkout.text).toContain('Mock PAYMOB checkout');
+
+    // The contracted return settles the charge and hands the customer back on the app's scheme.
+    const returned = await request(app).get(
+      `/api/v1/payments/paymob/wallet-return?order=${order}&success=true`,
+    );
+    expect(returned.status).toBe(302);
+    expect(returned.headers['location']).toBe(
+      `brandhub://payment/result?status=success&amount=25.000` +
+        `&gatewayOrderId=${order}&reference=${charge.body.data.referenceId}`,
+    );
+
+    // AC10.6 — the balance really moved, and the history says why.
+    const after = await request(app).get('/api/v1/wallet').set(authenticated());
+    expect(after.body.balance).toBe(150.5);
+    const history = await request(app)
+      .get('/api/v1/wallet/transactions')
+      .set('Accept-Language', 'en')
+      .set(authenticated());
+    expect(history.body.content[0]).toMatchObject({
+      type: 'CREDIT',
+      amount: 25,
+      description: 'Wallet top-up',
+    });
+    expect(
+      (
+        await request(app)
+          .get(`/api/v1/payments/PAYMOB/status?orderId=${order}`)
+          .set(authenticated())
+      ).body.status,
+    ).toBe('PAID');
+
+    // A gateway reports the same payment twice; settling twice must not credit twice.
+    await request(app)
+      .post('/api/v1/payments/webhook/paymob')
+      .send({ orderId: order, status: 'success', amount: 25 });
+    expect(
+      (await request(app).get('/api/v1/wallet').set(authenticated())).body
+        .balance,
+    ).toBe(150.5);
+
+    // AC10.7 — a failed return moves no money.
+    const failing = await request(app)
+      .post('/api/v1/wallet/charge')
+      .set(authenticated())
+      .set('Idempotency-Key', 'topup-2')
+      .send({ amount: 10, paymentMethod: 'PAYMOB' });
+    await request(app).get(
+      `/api/v1/payments/paymob/wallet-return?order=${failing.body.data.gatewayOrderId}&success=false`,
+    );
+    expect(
+      (await request(app).get('/api/v1/wallet').set(authenticated())).body
+        .balance,
+    ).toBe(150.5);
+  });
+
+  it('moves money when a gift is sent, and refuses one the wallet cannot fund', async () => {
+    const { authorization } = await signIn();
+    const authenticated = () => ({ Authorization: authorization });
+    const payload = {
+      recipient: 'friend@brandhub.om',
+      amount: 10,
+      currency: 'OMR',
+      occasion: 'BIRTHDAY',
+      message: 'Happy birthday',
+      deliveryMethod: 'EMAIL',
+      senderMode: 'NAMED',
+      scheduledAt: null,
+    };
+
+    const sent = await request(app)
+      .post('/api/v1/gifts')
+      .set(authenticated())
+      .send(payload);
+    expect(sent.status).toBe(201);
+    expect(sent.body.data).toMatchObject({
+      status: 'SENT',
+      deliveryMethod: 'EMAIL',
+      senderMode: 'NAMED',
+      currency: 'OMR',
+    });
+
+    // AC10.10 — it appears in GET /gifts/sent, and the wallet paid for it.
+    const history = await request(app)
+      .get('/api/v1/gifts/sent')
+      .set(authenticated());
+    expect(history.body.data).toHaveLength(1);
+    expect(
+      (await request(app).get('/api/v1/wallet').set(authenticated())).body
+        .balance,
+    ).toBe(115.5);
+
+    // AC10.11 — the server refuses an over-balance gift; the client's block is the message.
+    const refused = await request(app)
+      .post('/api/v1/gifts')
+      .set(authenticated())
+      .send({ ...payload, amount: 5_000 });
+    expect(refused.status).toBe(400);
+    expect(refused.body.error).toBe('INSUFFICIENT_BALANCE');
   });
 
   it('serves the support shapes Phase 12 renders', async () => {
